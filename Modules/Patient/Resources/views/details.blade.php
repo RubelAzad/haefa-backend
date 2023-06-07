@@ -122,13 +122,18 @@
             </div>
 
             <div class="signatureBox text-center">
+            @foreach($prescriptionCreation as $pc)
+              @if($pc->EmployeeSignature != null)
               <img
-                src="{{ asset('storage/logo/signature.png') }}"
+                src="{{ $pc->EmployeeSignature }}"
                 alt="img"
                 class="signatureImage"
               />
-              <p class="mb-0">Jiaur Rahman</p>
-              <i class="my-0">MBBS, MPH, MS(Orthopedics)</i>
+              @endif
+              <p class="mb-0">{{ $pc->FirstName }} {{ $pc->LastName }}</p>
+              <i class="my-0">{{ $pc->Designation }}</i>
+          @endforeach
+              
             </div>
           </div>
         </div>
