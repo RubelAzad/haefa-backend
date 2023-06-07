@@ -162,14 +162,16 @@ class PatientController extends BaseController
 
             $patientDetails=Patient::with('Gender')->where('PatientId','=',$request->id)->get();
 
-            $prescriptionCreation= DB::select("SELECT TOP 1 MAX(PrescriptionId) AS PrescriptionId, CAST(CreateDate AS date) as CreateDate
-            FROM PrescriptionCreation WHERE PatientId = '$request->id' AND CAST(CreateDate AS date) 
+            $prescriptionCreation= DB::select("SELECT TOP 1 MAX(PPC.PrescriptionId) AS PrescriptionId,MAX(E.FirstName) AS FirstName,MAX(E.LastName) AS LastName,MAX(E.Designation) AS Designation,MAX(E.EmployeeSignature) AS EmployeeSignature, CAST(PPC.CreateDate AS date) as CreateDate
+            FROM PrescriptionCreation as PPC 
+            INNER JOIN Employee as E on E.EmployeeId = PPC.EmployeeId
+            WHERE PatientId = '$request->id' AND CAST(PPC.CreateDate AS date) 
             = CAST(
                 (SELECT TOP 1 MAX(CreateDate) AS MaxCreateDate
                 FROM PrescriptionCreation WHERE PatientId = '$request->id'
                 GROUP BY CAST(CreateDate AS date)
                 ORDER BY MaxCreateDate DESC)
-                AS date) GROUP BY CreateDate ORDER BY CreateDate");
+                AS date) GROUP BY PPC.CreateDate ORDER BY PPC.CreateDate");
 
         $Complaints= DB::select("SELECT MAX(PC.ChiefComplain) AS ChiefComplain, MAX(PC.CCDurationValue) AS CCDurationValue, MAX(PC.OtherCC) AS OtherCC, MAX(RD.DurationInEnglish) AS DurationInEnglish, CAST(PC.CreateDate AS date) as CreateDate
             FROM MDataPatientCCDetails as PC
