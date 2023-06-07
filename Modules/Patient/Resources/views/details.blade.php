@@ -14,7 +14,9 @@
           <span class="me-3"><b>Age :</b> {{ $patientDetail->Age }}</span>
           <span class="me-3"><b>Gender :</b> {{ $patientDetail->Gender->GenderCode }}</span>
           @endforeach
+          @foreach($prescriptionCreation as $pc)
           <span class="me-3"><b>Date :</b> {{ date('d-m-Y', strtotime($pc->CreateDate)) }}</span>
+          @endforeach
           
         </div>
 
@@ -35,7 +37,7 @@
               @endforeach
               @foreach($BP as $bps)
               <p class="mb-0 mt-2 pe-2">Pulse: {{$bps->HeartRate}}</p>
-              <p class="mb-0 mt-2 pe-2">Blood Pressure: {{$bps->Blood Pressure}} mmHg</p>
+              <p class="mb-0 mt-2 pe-2">Blood Pressure: {{$bps->BPSystolic1}}/{{$bps->BPDiastolic1}} mmHg</p>
               @endforeach
               @foreach($GlucoseHb as $GHB)
               <p class="mb-0 mt-2 pe-2">RBG: {{$GHB->RBG}} mMol</p>
