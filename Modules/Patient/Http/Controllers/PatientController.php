@@ -231,17 +231,17 @@ class PatientController extends BaseController
                 AS date) GROUP BY I.CreateDate ORDER BY I.CreateDate");
 
 
-        $Treatment= DB::select("SELECT MAX(T.Frequency) AS Frequency, MAX(T.DrugDurationValue) AS DrugDurationValue,MAX(T.OtherDrug) AS OtherDrug, MAX(Dr.DrugCode) AS DrugCode, MAX(Dr.DrugDose) AS DrugDose, MAX(Ins.InstructionInBangla) AS InstructionInBangla, CAST(T.CreateDate AS date) as CreateDate
-            FROM MDataTreatmentSuggestion as T
-            INNER JOIN RefDrug as Dr on Dr.DrugId = T.DrugId
-            INNER JOIN RefInstruction as Ins on Ins.RefInstructionId = T.RefInstructionId
-            WHERE PatientId = '$request->id' AND CAST(T.CreateDate AS date) 
-            = CAST(
-                (SELECT TOP 1 MAX(CreateDate) AS MaxCreateDate
-                FROM MDataTreatmentSuggestion WHERE PatientId = '$request->id'
-                GROUP BY CAST(CreateDate AS date)
-                ORDER BY MaxCreateDate DESC)
-                AS date) GROUP BY T.CreateDate ORDER BY T.CreateDate");
+        $Treatment= DB::select("SELECT MAX(T.Frequency) AS Frequency, MAX(T.DrugDurationValue) AS DrugDurationValue,MAX(T.OtherDrug) AS OtherDrug,MAX(T.SpecialInstruction) AS SpecialInstruction, MAX(Dr.DrugCode) AS DrugCode, MAX(Dr.Description) AS Description, MAX(Dr.DrugDose) AS DrugDose, MAX(Ins.InstructionInBangla) AS InstructionInBangla, CAST(T.CreateDate AS date) as CreateDate
+        FROM MDataTreatmentSuggestion as T
+        INNER JOIN RefDrug as Dr on Dr.DrugId = T.DrugId
+        INNER JOIN RefInstruction as Ins on Ins.RefInstructionId = T.RefInstructionId
+        WHERE PatientId = '$request->id' AND CAST(T.CreateDate AS date) 
+        = CAST(
+            (SELECT TOP 1 MAX(CreateDate) AS MaxCreateDate
+            FROM MDataTreatmentSuggestion WHERE PatientId = '$request->id'
+            GROUP BY CAST(CreateDate AS date)
+            ORDER BY MaxCreateDate DESC)
+            AS date) GROUP BY T.CreateDate ORDER BY T.CreateDate");
 
 
         $Advice= DB::select("SELECT MAX(RA.AdviceInBangla) AS AdviceInBangla, MAX(RA.AdviceInEnglish) AS AdviceInEnglish, CAST(A.CreateDate AS date) as CreateDate
