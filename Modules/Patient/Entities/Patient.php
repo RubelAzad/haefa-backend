@@ -2,6 +2,9 @@
 
 namespace Modules\Patient\Entities;
 use Modules\Patient\Entities\Gender;
+use Modules\Patient\Entities\MaritalStatus;
+use Modules\Patient\Entities\Address;
+use Modules\Patient\Entities\SelfType;
 use Modules\Base\Entities\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -22,6 +25,18 @@ class Patient extends BaseModel
     public function Gender()
     {
         return $this->hasOne(Gender::class, 'GenderId', 'GenderId')->select('GenderId','GenderCode'); 
+    }
+    public function MaritalStatus()
+    {
+        return $this->hasOne(MaritalStatus::class, 'MaritalStatusId', 'MaritalStatusId')->select('MaritalStatusId','MaritalStatusCode');
+    }
+    public function self_type()
+    {
+        return $this->hasOne(SelfType::class,'HeadOfFamilyId', 'IdOwner')->select('HeadOfFamilyId','HeadOfFamilyCode');
+    }
+    public function address()
+    {
+        return $this->hasOne(Address::class,'PatientId', 'PatientId');
     }
     
     private function get_datatable_query()

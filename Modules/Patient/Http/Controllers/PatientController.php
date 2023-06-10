@@ -46,8 +46,14 @@ class PatientController extends BaseController
                     // if(permission('patient-edit')){
                     //     $action .= ' <a class="dropdown-item edit_data" data-id="' . $value->PatientId . '"><i class="fas fa-edit text-primary"></i> Edit</a>';
                     // }
+                    if(permission('patient-viewid')){
+                        $action .= ' <a class="dropdown-item viewid_data" data-id="' . $value->PatientId . '"><i class="fas fa-eye text-success"></i> View</a>';
+                    }
                     if(permission('patient-view')){
-                        $action .= ' <a class="dropdown-item view_data" data-id="' . $value->PatientId . '"><i class="fas fa-eye text-success"></i> View</a>';
+                        $action .= ' <a class="dropdown-item view_data" data-id="' . $value->PatientId . '"><i class="fas fa-eye text-success"></i> Last Prescription</a>';
+                    }
+                    if(permission('patient-edit')){
+                        $action .= ' <a class="dropdown-item" href="'.route("patient.edit",$value->PatientId).'"><i class="fas fa-eye text-success"></i> Edit</a>';
                     }
                     
 
@@ -96,17 +102,20 @@ class PatientController extends BaseController
 
     public function edit(Request $request)
     {
-        if($request->ajax()){
+        $this->setPageData('Edit Patient','Edit Patient','fab fa-pencil',[['name'=>'Patient','link'=> route('patient')],['name' => 'Edit Patient']]);
+
+
             if(permission('patient-edit')){
-                $data = $this->model->findOrFail($request->id);
-                $output = $this->data_message($data);
+                
+
+                $data = [
+                    $patientDetails=Patient::with('Gender')->findOrFail($request->PatientId)
+                ];
+                return view('patient::edit',$data);
             }else{
-                $output = $this->access_blocked();
+                return $this->access_blocked();
             }
-            return response()->json($output);
-        }else{
-            return response()->json($this->access_blocked());
-        }
+
     }
 
     public function delete(Request $request)
@@ -287,6 +296,13 @@ class PatientController extends BaseController
         }
 
         return view('patient::details',compact('patientDetails','prescriptionCreation','Complaints','HeightWeight','BP','GlucoseHb','ProvisionalDx','Investigation','Treatment','Advice','PatientReferral','FollowUpDate'))->render();
+    }
+
+    public function showid(Request $request){
+
+        $patientDetails=Patient::with('Gender','MaritalStatus','self_type','address')->where('PatientId','=',$request->id)->first();
+        return view('patient::detailsp',compact('patientDetails'))->render();
+
     }
 
 

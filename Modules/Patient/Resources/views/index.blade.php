@@ -52,6 +52,24 @@
   margin-top: 150px;
 }
 
+.userImg {
+  margin-top: 20px;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 20px;
+  border: 10px solid rgba(122,122,122,.35);
+}
+
+.dataItem p{
+  font-weight: 400;
+  font-size: 15px;
+}
+.dataItem span{
+  font-weight: 600;
+  font-size: 15px;
+}
+
 @media (max-width: 767px){
     #prescription, .logoText, address p, .header p{
         font-size: 12px !important;
@@ -157,6 +175,7 @@
 
 </div>
 @include('patient::view-modal')
+@include('patient::viewid-modal')
 @endsection
 
 @push('script')
@@ -301,37 +320,6 @@ $(document).ready(function(){
         store_or_update_data(table, method, url, formData);
     });
 
-    $(document).on('click', '.edit_data', function () {
-        let id = $(this).data('id');
-        $('#store_or_update_form')[0].reset();
-        $('#store_or_update_form').find('.is-invalid').removeClass('is-invalid');
-        $('#store_or_update_form').find('.error').remove();
-        if (id) {
-            $.ajax({
-                url: "{{route('patient.edit')}}",
-                type: "POST",
-                data: { id: id,_token: _token},
-                dataType: "JSON",
-                success: function (data) {
-                    $('#store_or_update_form #update_id').val(data.id);
-                    $('#store_or_update_form #name').val(data.name);
-
-                    $('#store_or_update_modal').modal({
-                        keyboard: false,
-                        backdrop: 'static',
-                    });
-                    $('#store_or_update_modal .modal-title').html(
-                        '<i class="fas fa-edit"></i> <span>Edit ' + data.name + '</span>');
-                    $('#store_or_update_modal #save-btn').text('Update');
-
-                },
-                error: function (xhr, ajaxOption, thrownError) {
-                    console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
-                }
-            });
-        }
-    });
-
     $(document).on('click', '.view_data', function () {
         let id = $(this).data('id');
         if (id) {
@@ -350,6 +338,32 @@ $(document).ready(function(){
                     });
                     $('#view_modal .modal-title').html(
                         '<i class="fas fa-eye"></i> <span>Prescription</span>');
+                },
+                error: function (xhr, ajaxOption, thrownError) {
+                    console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
+                }
+            });
+        }
+    });
+
+    $(document).on('click', '.viewid_data', function () {
+        let id = $(this).data('id');
+        if (id) {
+            $.ajax({
+                url: "{{route('patient.showid')}}",
+                type: "POST",
+                data: { id: id,_token: _token},
+                success: function (data) {
+
+                    $('#viewid_modal .detailsp').html();
+                    $('#viewid_modal .detailsp').html(data);
+
+                    $('#viewid_modal').modal({
+                        keyboard: false,
+                        backdrop: 'static',
+                    });
+                    $('#viewid_modal .modal-title').html(
+                        '<i class="fas fa-eye"></i> <span>Patient Details</span>');
                 },
                 error: function (xhr, ajaxOption, thrownError) {
                     console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
