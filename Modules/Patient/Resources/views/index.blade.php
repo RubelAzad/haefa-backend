@@ -58,7 +58,7 @@
   height: 200px;
   object-fit: cover;
   border-radius: 20px;
-  border: 10px solid rgba(122,122,122,.35);
+  border: 10px solid rgba(122,122,122,.15);
 }
 
 .dataItem p{
@@ -77,6 +77,38 @@
     .header h4{
         font-size: 18px !important;
     }
+    .patientLeftSide {
+    width: 100% !important;
+    min-height: auto !important;
+    border: 0 !important;
+  }
+  .itemMerge{
+    flex-direction: column;
+  }
+  .patientLeftSide h5{
+    font-size: 18px !important;
+  }
+  .userImg {
+    width: 140px !important;
+    height: 140px !important;
+    border-width: 5px;
+  }
+  .patientRightSide .dataItem p,
+  .patientRightSide .dataItem span,
+  .patientLeftSide p{
+    margin-bottom: 0;
+    font-size: 14px;
+  }
+  .patientRightSide .dataItem h5{
+    font-size: 16px !important;
+    margin-bottom: 5px !important;
+  }
+  .patientRightSide{
+    padding: 10px 10px !important;
+  }
+  .patientRightSide .dataItem{
+    margin-top: 15px !important;
+  }
 
 }
     </style>

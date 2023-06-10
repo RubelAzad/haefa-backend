@@ -12,8 +12,9 @@
               <img src="{{ $patientDetails->PatientImage }}" alt="img" class="userImg">
               <div class="text-left">
                 <h5 class="mt-3 text-primary text-left">Name : {{ $patientDetails->GivenName }} {{ $patientDetails->GivenName }}</h5>
-                <p class="mb-0 text-left">Registration Number: <span>{{ $patientDetails->RegistrationId }}</span></p>
+                <p class="mb-0 text-left">Reg. No: <span>{{ $patientDetails->RegistrationId }}</span></p>
                 <p class="mb-0 text-left">Reg. Date: <span>{{ date('d-m-Y', strtotime($patientDetails->CreateDate)) }}</span></p>
+                <p class="mb-0 text-left">Last Update: <span>{{ date('d-m-Y', strtotime($patientDetails->UpdateDate)) }}</span></p>
               </div>
             </div>
           </aside>
