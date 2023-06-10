@@ -33,5 +33,6 @@
     "VaccineDose": true,
     "Religion": true,
     "MaritalStatus": true,
-    "Organization": true
+    "Organization": true,
+    "Prescription": true
 }

@@ -4,3 +4,6 @@
 Homestead.json
 Homestead.yaml
 .phpunit.result.cache
+.history
+modules_statuses.json
+/modules_statuses.json
