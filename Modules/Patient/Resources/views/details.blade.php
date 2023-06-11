@@ -11,6 +11,7 @@
         <div class="topHeading border border-start-0 border-end-0 py-2">
           @foreach($patientDetails as $patientDetail)
           <span class="me-3"><b>Name :</b> {{ $patientDetail->GivenName }} {{ $patientDetail->FamilyName }}</span>
+          <span class="me-3"><b>Reg. No. :</b> {{ $patientDetail->RegistrationId }}</span>
           <span class="me-3"><b>Age :</b> {{ $patientDetail->Age }}</span>
           <span class="me-3"><b>Gender :</b> {{ $patientDetail->Gender->GenderCode }}</span>
           @endforeach
