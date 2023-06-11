@@ -4,9 +4,17 @@ namespace Modules\Patient\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Modules\Patient\Entities\Patient;
+use Modules\Patient\Entities\Gender;
+use Modules\Patient\Entities\MaritalStatus;
+use Modules\Patient\Entities\Address;
+use Modules\Patient\Entities\SelfType;
+use Modules\Patient\Entities\District;
 use Modules\Base\Http\Controllers\BaseController;
 use Modules\Patient\Http\Requests\PatientFormRequest;
+use Illuminate\Http\RedirectResponse;
 use DB;
+use Carbon\Carbon;
+use Auth;
 
 class PatientController extends BaseController
 {
@@ -100,17 +108,83 @@ class PatientController extends BaseController
         }
     }
 
+    public function store_or_update_data1(Request $request)
+    {
+        if($request->ajax()){
+            if(permission('patient-add') || permission('patient-edit')){
+                $currentTime = Carbon::now();
+                $date=$currentTime->toDateTimeString();
+                Patient::where('PatientId','=' ,$request->update_id)
+                    ->update([
+                        'PatientCode' => $request->PatientCode,
+                        'RegistrationId' => $request->RegistrationId,
+                        'WorkPlaceId' => $request->WorkPlaceId,
+                        'WorkPlaceBranchId' => $request->WorkPlaceBranchId,
+                        'GivenName' => $request->GivenName,
+                        'FamilyName' => $request->FamilyName,
+                        'BirthDate' => $request->BirthDate,
+                        'Age' => $request->Age,
+                        'CellNumber' => $request->CellNumber,
+                        'GenderId' => $request->GenderId,
+                        'IdType' => $request->IdType,
+                        'IdNumber' => $request->IdNumber,
+                        'IdOwner' => $request->IdOwner,
+                        'MaritalStatusId' => $request->MaritalStatusId,
+                        'UpdateUser' => auth()->user()->id,
+                        'UpdateDate' => $date,
+                ]);
+                Address::where('AddressId','=' ,$request->address_update_id)
+                    ->update([
+                        'PatientId' => $request->update_id,
+                        'AddressLine1' => $request->AddressLine1,
+                        'Village' => $request->Village,
+                        'Thana' => $request->Thana,
+                        'PostCode' => $request->PostCode,
+                        'District' => $request->District,
+                        'Country' => $request->Country,
+                        'AddressLine1Parmanent' => $request->AddressLine1Parmanent,
+                        'VillageParmanent' => $request->VillageParmanent,
+                        'ThanaParmanent' => $request->ThanaParmanent,
+                        'District' => $request->District,
+                        'CountryParmanent' => $request->CountryParmanent,
+                        'Camp' => $request->Camp,
+                        'BlockNumber' => $request->BlockNumber,
+                        'Majhi' => $request->Majhi,
+                        'TentNumber' => $request->TentNumber,
+                        'FCN' => $request->FCN,
+                        'UpdateUser' => auth()->user()->id,
+                        'UpdateDate' => $date,
+                ]);
+                $output = $this->store_message('ok',$request->update_id);
+            }else{
+                $output = $this->access_blocked();
+            }
+            return response()->json($output);
+        }else{
+           return response()->json($this->access_blocked());
+        }
+    }
+
     public function edit(Request $request)
     {
-        $this->setPageData('Edit Patient','Edit Patient','fab fa-pencil',[['name'=>'Patient','link'=> route('patient')],['name' => 'Edit Patient']]);
 
+            $this->setPageData('Edit Patient','Edit Patient','fab fa-pencil',[['name'=>'Patient','link'=> route('patient')],['name' => 'Edit Patient']]);
 
             if(permission('patient-edit')){
                 
-
+                $data =  Patient::where('PatientId','=',$request->id);
+                
+                $output = $this->data_message($data);
                 $data = [
-                    $patientDetails=Patient::with('Gender')->findOrFail($request->PatientId)
+                    'patient' => Patient::where('PatientId','=',$request->id)->first(),
+                    'genders' => Gender::all(),
+                    'maritals' => MaritalStatus::all(),
+                    'selfTypes' => SelfType::all(),
+                    'address' => Address::where('PatientId','=',$request->id)->first(),
+                    'districts' => District::all(),
                 ];
+             
+                
                 return view('patient::edit',$data);
             }else{
                 return $this->access_blocked();

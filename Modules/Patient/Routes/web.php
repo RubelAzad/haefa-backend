@@ -17,6 +17,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['prefix' => 'patient', 'as'=>'patient.'], function () {
         Route::post('datatable-data', 'PatientController@get_datatable_data')->name('datatable.data');
         Route::post('store-or-update', 'PatientController@store_or_update_data')->name('store.or.update');
+        Route::post('store-or-update1', 'PatientController@store_or_update_data1')->name('store.or.update1');
         Route::post('delete', 'PatientController@delete')->name('delete');
         Route::post('bulk-delete', 'PatientController@bulk_delete')->name('bulk.delete');
         Route::post('change-status', 'PatientController@change_status')->name('change.status');

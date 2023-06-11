@@ -12,10 +12,11 @@ class Patient extends BaseModel
 {
     protected $table = 'Patient';
     public $timestamps = false;
-    protected $fillable = ['PatientId','status','created_by','updated_by'];
+    protected $fillable = ['PatientId', 'WorkPlaceId', 'WorkPlaceBranchId','PatientCode','RegistrationId','GivenName','FamilyName','GenderId','BirthDate','Age','AgeYear','AgeMonth','AgeDay','JoiningDate','ReligionId','RefDepartmentId','RefDesignationId','MaritalStatusId','EducationId','FatherName','MotherName','SpouseName','HeadOfFamilyId','IdNumber','CellNumber','FamilyMembers','ChildrenNumber','ChildAge0To1','ChildAge1To5','ChildAgeOver5','EmailAddress','PatientImage','Status','CreateDate', 'CreateUser', 'UpdateDate', 'UpdateUser', 'OrgId'];
     protected $order = ['CreateDate'=>'desc'];
     
     protected $name;
+    public $incrementing = false;
 
     public function setName($name)
     {
