@@ -71,7 +71,6 @@ class PatientController extends BaseController
                         $row[] = table_checkbox($value->PatientId);
                     }
                     $row[] = $no;
-                    $row[] = $value->PatientId;
                     $row[] = $value->RegistrationId;
                     $row[] = $value->GivenName.' '.$value->FamilyName;
                     $row[] = $value->IdNumber;
@@ -355,7 +354,7 @@ class PatientController extends BaseController
 
         
 
-        $FollowUpDate= DB::select("SELECT MAX(FD. FollowUpDate) AS FollowUpDate, MAX(FD.Comment) AS Comment, CAST(FD.CreateDate AS date) as CreateDate
+        $FollowUpDate= DB::select("SELECT TOP 1 MAX(FD. FollowUpDate) AS FollowUpDate, MAX(FD.Comment) AS Comment, CAST(FD.CreateDate AS date) as CreateDate
             FROM MDataFollowUpDate as FD
             WHERE PatientId = '$request->id' AND CAST(FD.CreateDate AS date) 
             = CAST(

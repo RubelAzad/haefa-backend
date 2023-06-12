@@ -11,7 +11,9 @@
         <div class="topHeading border border-start-0 border-end-0 py-2">
           @foreach($patientDetails as $patientDetail)
           <span class="me-3"><b>Name :</b> {{ $patientDetail->GivenName }} {{ $patientDetail->FamilyName }}</span>
+          <span class="me-3"><b>Reg. No. :</b> {{ $patientDetail->RegistrationId }}</span>
           <span class="me-3"><b>Age :</b> {{ $patientDetail->Age }}</span>
+          <span class="me-3"><b>Gender :</b> {{ $patientDetail->Gender->GenderCode }}</span>
           @endforeach
           @foreach($prescriptionCreation as $pc)
           <span class="me-3"><b>Date :</b> {{ date('d-m-Y', strtotime($pc->CreateDate)) }}</span>
@@ -49,7 +51,7 @@
               @foreach($ProvisionalDx as $key => $PDX)
               
 
-              <p class="mb-0 mt-2  pe-2">Date: {{ date('d-m-Y', strtotime($PDX->CreateDate)) }}</p>
+              <p class="mb-0 mt-2  pe-2">Date:</p>
               <p class="mb-0 mt-2  pe-2">{{ ++$key }}.{{ $PDX->ProvisionalDiagnosis !="" ? $PDX->ProvisionalDiagnosis : $PDX->OtherProvisionalDiagnosis }} [
                 <?php if($PDX->DiagnosisStatus == "P"){?>
                   Presumptive
@@ -64,15 +66,15 @@
             
             <div class="item pt-3">
               <b class="d-block mb-0 py-2 border-bottom">Lab Investigations</b>
-              <!-- @foreach($Investigation as $key => $IGS)
+              @foreach($Investigation as $key => $IGS)
               <p class="mb-0 mt-2 pe-2">{{ ++$key }}. {{ $IGS->Investigation !="" ? $IGS->Investigation : $IGS->OtherInvestigation }}</p>
-              @endforeach -->
+              @endforeach
             </div>
           </aside>
           <div class="rightSide position-relative w-100 py-3 px-4">
             <h2 class="mb-4">℞</h2>
             <div class="medicine mb-4">
-              <!-- @foreach($Treatment as $key => $TMS)
+              @foreach($Treatment as $key => $TMS)
               <p class="mb-0"><b>{{ ++$key }} .</b> {{ $TMS->Description }}</p>
               <i>{{ $TMS->Frequency }} - {{ $TMS->SpecialInstruction }}
 
@@ -95,33 +97,33 @@
 ?>
 
               </i>
-              @endforeach -->
+              @endforeach
             </div>
 
             <div class="nextinfo">
               <div class="medicine mb-4">
                 <p class="mb-0"><b>Follow-up / পরবর্তী সাক্ষাৎ</b></p>
-                <!-- @foreach($FollowUpDate as $key =>$FD)
+                @foreach($FollowUpDate as $key =>$FD)
                 <p class="mb-0"><b>{{ ++$key }} . </b>{{ date('d-m-Y', strtotime($FD->FollowUpDate)) }}: {{ $FD->Comment }}</p>
-                @endforeach -->
+                @endforeach
               </div>
               <div class="medicine mb-4">
                 <p class="mb-0"><b>Advice / পরামর্শ</b></p>
-                <!-- @foreach($Advice as $key =>$AS)
+                @foreach($Advice as $key =>$AS)
                 <p class="mb-0"><b>{{ ++$key }} . </b>{{$AS->AdviceInBangla}}</p>
-                @endforeach -->
+                @endforeach
                
               </div>
               <div class="medicine mb-4">
                 <p class="mb-0"><b>Referral / রেফারেল</b></p>
-                <!-- @foreach($PatientReferral as $key =>$PRF)
+                @foreach($PatientReferral as $key =>$PRF)
                 <p class="mb-0"><b>{{ ++$key }} . </b>{{ date('d-m-Y', strtotime($PRF->CreateDate)) }}:{{ $PRF->Description }}, {{ $PRF->HealthCenterName }}</p>
-                @endforeach -->
+                @endforeach
               </div>
             </div>
 
             <div class="signatureBox text-center">
-            <!-- @foreach($prescriptionCreation as $pc)
+            @foreach($prescriptionCreation as $pc)
               @if($pc->EmployeeSignature != null)
               <img
                 src="{{ $pc->EmployeeSignature }}"
@@ -131,7 +133,7 @@
               @endif
               <p class="mb-0">{{ $pc->FirstName }} {{ $pc->LastName }}</p>
               <i class="my-0">{{ $pc->Designation }}</i>
-          @endforeach -->
+          @endforeach
               
             </div>
           </div>

@@ -6,8 +6,8 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Prescription\Entities\Prescription;
+use Modules\Patient\Entities\Patient;
 use Modules\Base\Http\Controllers\BaseController;
-use Modules\Patient\Http\Requests\PatientFormRequest;
 use DB;
 
 class PrescriptionController extends BaseController
@@ -22,7 +22,7 @@ class PrescriptionController extends BaseController
      */
     public function index()
     {
-        if(permission('patient-access')){
+        if(permission('prescription-access')){
             $this->setPageData('Prescription','prescription','fas fa-th-list');
             return view('prescription::index');
         }else{
@@ -33,7 +33,7 @@ class PrescriptionController extends BaseController
 
     public function get_datatable_data(Request $request)
     {
-        if(permission('patient-access')){
+        if(permission('prescription-access')){
             if($request->ajax()){
                 
                 if (!empty($request->name)) {
@@ -49,25 +49,24 @@ class PrescriptionController extends BaseController
                     $no++;
                     $action = '';
 
-                    // if(permission('patient-edit')){
-                    //     $action .= ' <a class="dropdown-item edit_data" data-id="' . $value->PatientId . '"><i class="fas fa-edit text-primary"></i> Edit</a>';
+                    // if(permission('prescription-edit')){
+                    //     $action .= ' <a class="dropdown-item edit_data" data-id="' . $value->prescriptionId . '"><i class="fas fa-edit text-primary"></i> Edit</a>';
                     // }
-                    if(permission('patient-view')){
+                    if(permission('prescription-view')){
                         $action .= ' <a class="dropdown-item view_data" data-id="' . $value->PrescriptionCreationId . '"><i class="fas fa-eye text-success"></i> View</a>';
                     }
                     
-
                     $row = [];
 
-                    if(permission('patient-bulk-delete')){
+                    if(permission('prescription-bulk-delete')){
                         $row[] = table_checkbox($value->PrescriptionCreationId);
                     }
                     $row[] = $no;
                     $row[] = $value->PrescriptionId;
-                    $row[] = $value->PatientId;
+                    $row[] = $value->patient->RegistrationId;
                     $row[] = $value->CreateDate;
-                    //$row[] = permission('patient-access') ? change_status($value->PatientId,$value->Status) : STATUS_LABEL[$value->Status];
-                    //$row[] = permission('patient-edit') ? change_status($value->PatientId,$value->Status) : STATUS_LABEL[$value->Status];
+                    //$row[] = permission('prescription-access') ? change_status($value->prescriptionId,$value->Status) : STATUS_LABEL[$value->Status];
+                    //$row[] = permission('prescription-edit') ? change_status($value->prescriptionId,$value->Status) : STATUS_LABEL[$value->Status];
                     $row[] = action_button($action);
                     $data[] = $row;
                 }
@@ -109,76 +108,83 @@ class PrescriptionController extends BaseController
     {
 
         if($request->ajax()){
-            if (permission('patient-view')) {
+            if (permission('prescription-view')) {
             
-            $patientDetails=Prescription::where('PrescriptionCreationId','=',$request->id)->get();
+            $prescriptionDetails=Prescription::where('PrescriptionCreationId','=',$request->id)->first();
+
+            $create_date_time = $prescriptionDetails->CreateDate;
+
+            $create_date = date('Y-m-d',strtotime($create_date_time));
+
+            $patient_id= $prescriptionDetails->PatientId;
+
+            $patientDetails=Patient::with('Gender')->where('PatientId','=',$patient_id)->get();
 
             $prescriptionCreation= DB::select("SELECT PPC.PrescriptionId AS PrescriptionId,E.FirstName AS FirstName,E.LastName AS LastName,E.Designation AS Designation,E.EmployeeSignature AS EmployeeSignature, PPC.CreateDate
             FROM PrescriptionCreation as PPC 
             INNER JOIN Employee as E on E.EmployeeId = PPC.EmployeeId
-            WHERE PPC.PrescriptionCreationId = '$request->id' ");
+            WHERE PPC.PatientId = '$patient_id' ");
 
-            $create_date_time = $patientDetails[0]->CreateDate;
-            $create_date = date('Y-m-d',strtotime($create_date_time));
-
-            $patient_id= $patientDetails[0]->PatientId;
+            
                 
-            $Complaints= DB::select("SELECT TOP 1 MAX(PC.ChiefComplain) AS ChiefComplain, MAX(PC.CCDurationValue) AS CCDurationValue,
-            MAX(PC.OtherCC) AS OtherCC, MAX(RD.DurationInEnglish) AS DurationInEnglish, CAST(PC.CreateDate AS date) as CreateDate
+            $Complaints= DB::select("SELECT PC.ChiefComplain AS ChiefComplain, PC.CCDurationValue AS CCDurationValue,
+            PC.OtherCC AS OtherCC, RD.DurationInEnglish AS DurationInEnglish, PC.CreateDate
             FROM MDataPatientCCDetails as PC
             INNER JOIN RefDuration as RD on RD.DurationId = PC.DurationId
-            WHERE PatientId ='$patient_id' AND CAST(PC.CreateDate AS date) ='$create_date' GROUP BY PC.CreateDate 
-            ORDER BY PC.CreateDate DESC");
+            WHERE PC.PatientId ='$patient_id' AND PC.CreateDate ='$create_date'");
 
-            $HeightWeight= DB::select("SELECT TOP 1 MAX(Height) AS Height, MAX(Weight) AS Weight, MAX(BMI) AS BMI, MAX(BMIStatus) AS BMIStatus, CreateDate
-            FROM MDataHeightWeight
-            WHERE PatientId ='$patient_id' AND  CreateDate='$create_date' GROUP BY CreateDate ORDER BY CreateDate DESC");
+            
 
-            $BP= DB::select("SELECT TOP 1 MAX(BPSystolic1) AS BPSystolic1, MAX(BPDiastolic1) AS BPDiastolic1, MAX(BPSystolic2) AS BPSystolic2, MAX(BPDiastolic2) AS BPDiastolic2, MAX(HeartRate) AS HeartRate, MAX(CurrentTemparature) AS CurrentTemparature, CAST(CreateDate AS date) as CreateDate
+
+            $HeightWeight= DB::select("SELECT TOP 1 Height, Weight, BMI, BMIStatus, CreateDate FROM MDataHeightWeight WHERE PatientId ='$patient_id' AND CAST(CreateDate AS date)='$create_date' ORDER BY CAST(CreateDate AS date) DESC");
+
+
+
+            
+
+            $BP= DB::select("SELECT TOP 1 BPSystolic1, BPDiastolic1, BPSystolic2,BPDiastolic2,HeartRate,CurrentTemparature,CreateDate
             FROM MDataBP
-            WHERE PatientId ='$patient_id' AND  CreateDate='$create_date' GROUP BY CreateDate ORDER BY CreateDate DESC");
+            WHERE PatientId ='$patient_id' AND  CAST(CreateDate AS date) = '$create_date' ORDER BY CAST(CreateDate AS date) DESC");
 
-            $GlucoseHb= DB::select("SELECT TOP 1 MAX(RBG) AS RBG, MAX(FBG) AS FBG, MAX(Hemoglobin) AS Hemoglobin, MAX(HrsFromLastEat) AS HrsFromLastEat, CAST(CreateDate AS date) as CreateDate
+            $GlucoseHb= DB::select("SELECT TOP 1 RBG, FBG, Hemoglobin, HrsFromLastEat, CreateDate
             FROM MDataGlucoseHb
-            WHERE PatientId ='$patient_id' AND  CreateDate='$create_date' GROUP BY CreateDate ORDER BY CreateDate DESC");
+            WHERE PatientId ='$patient_id' AND  CAST(CreateDate AS date)='$create_date' ORDER BY CAST(CreateDate AS date) DESC");
 
-            $ProvisionalDx= DB::select("SELECT TOP 1 MAX(ProvisionalDiagnosis) AS ProvisionalDiagnosis, MAX(DiagnosisStatus) AS DiagnosisStatus, MAX(OtherProvisionalDiagnosis) AS OtherProvisionalDiagnosis, CAST(CreateDate AS date) as CreateDate
+            $ProvisionalDx= DB::select("SELECT TOP 1 ProvisionalDiagnosis, DiagnosisStatus, OtherProvisionalDiagnosis, CreateDate
             FROM MDataProvisionalDiagnosis
-            WHERE PatientId ='$patient_id' AND  CreateDate='$create_date' GROUP BY CreateDate ORDER BY CreateDate DESC");
+            WHERE PatientId ='$patient_id' AND  CAST(CreateDate AS date) ='$create_date'ORDER BY CAST(CreateDate AS date) DESC");
 
-            $Investigation= DB::select("SELECT TOP 1 MAX(RI.Investigation) AS Investigation, MAX(I.OtherInvestigation) AS OtherInvestigation, CAST(I.CreateDate AS date) as CreateDate
+            $Investigation= DB::select("SELECT TOP 1 RI.Investigation, I.OtherInvestigation, I.CreateDate
             FROM MDataInvestigation as I
             INNER JOIN RefLabInvestigation as RI on RI.RefLabInvestigationId = I.InvestigationId
-            WHERE I.PatientId ='$patient_id' AND  I.CreateDate='$create_date' GROUP BY I.CreateDate ORDER BY I.CreateDate DESC");
+            WHERE I.PatientId ='$patient_id' AND  CAST(I.CreateDate AS date)='$create_date' ORDER BY CAST(I.CreateDate AS date) DESC");
 
-            $Treatment= DB::select("SELECT TOP 1 MAX(T.Frequency) AS Frequency, MAX(T.DrugDurationValue) AS DrugDurationValue,MAX(T.OtherDrug) AS OtherDrug,MAX(T.SpecialInstruction) AS SpecialInstruction, MAX(Dr.DrugCode) AS DrugCode, MAX(Dr.Description) AS Description, MAX(Dr.DrugDose) AS DrugDose, MAX(Ins.InstructionInBangla) AS InstructionInBangla, CAST(T.CreateDate AS date) as CreateDate
+            $Treatment= DB::select("SELECT TOP 1 T.Frequency, T.DrugDurationValue, T.OtherDrug, T.SpecialInstruction, Dr.DrugCode, Dr.Description, Dr.DrugDose, Ins.InstructionInBangla, T.CreateDate
             FROM MDataTreatmentSuggestion as T
             INNER JOIN RefDrug as Dr on Dr.DrugId = T.DrugId
             INNER JOIN RefInstruction as Ins on Ins.RefInstructionId = T.RefInstructionId
-            WHERE T.PatientId ='$patient_id' AND  T.CreateDate='$create_date' GROUP BY T.CreateDate ORDER BY T.CreateDate DESC");
+            WHERE T.PatientId ='$patient_id' AND  CAST(T.CreateDate AS date)='$create_date' ORDER BY CAST(T.CreateDate AS date) DESC");
 
-            $Advice= DB::select("SELECT TOP 1 MAX(RA.AdviceInBangla) AS AdviceInBangla, MAX(RA.AdviceInEnglish) AS AdviceInEnglish, CAST(A.CreateDate AS date) as CreateDate
+            $Advice= DB::select("SELECT TOP 1 RA.AdviceInBangla, RA.AdviceInEnglish, A.CreateDate
             FROM MDataAdvice as A
             INNER JOIN RefAdvice as RA on RA.AdviceId = A.AdviceId
-            WHERE A.PatientId ='$patient_id' AND  A.CreateDate='$create_date' GROUP BY A.CreateDate ORDER BY A.CreateDate DESC");
+            WHERE A.PatientId ='$patient_id' AND  CAST(A.CreateDate AS date)='$create_date' ORDER BY CAST(A.CreateDate AS date) DESC");
 
-            $PatientReferral= DB::select("SELECT TOP 1 MAX(RR.Description) AS Description, MAX(HC.HealthCenterName) AS HealthCenterName, CAST(PR.CreateDate AS date) as CreateDate
+            $PatientReferral= DB::select("SELECT TOP 1 RR.Description, HC.HealthCenterName, PR.CreateDate
             FROM MDataPatientReferral as PR
             INNER JOIN RefReferral as RR on RR.RId = PR.RId
             INNER JOIN HealthCenter as HC on HC.HealthCenterId = PR.HealthCenterId
-            WHERE PR.PatientId ='$patient_id' AND  PR.CreateDate='$create_date' GROUP BY PR.CreateDate ORDER BY PR.CreateDate DESC");
+            WHERE PR.PatientId ='$patient_id' AND  CAST(PR.CreateDate AS date)='$create_date' ORDER BY CAST(PR.CreateDate AS date) DESC");
 
-            $FollowUpDate= DB::select("SELECT TOP 1 MAX(FollowUpDate) AS FollowUpDate, MAX(Comment) AS Comment, CAST(CreateDate AS date) as CreateDate
+            $FollowUpDate= DB::select("SELECT TOP 1 FollowUpDate, Comment, CreateDate
             FROM MDataFollowUpDate
-            WHERE PatientId ='$patient_id' AND  CreateDate='$create_date' GROUP BY CreateDate ORDER BY CreateDate DESC");
+            WHERE PatientId ='$patient_id' AND  CAST(CreateDate AS date)='$create_date' ORDER BY CAST(CreateDate AS date) DESC");
 
            }
         }
 
-       // return view('prescription::details',compact('patientDetails','prescriptionCreation','Complaints','HeightWeight','BP','GlucoseHb','ProvisionalDx'))->render();
         
-        return view('prescription::details',compact('patientDetails','prescriptionCreation','Complaints','HeightWeight','BP','GlucoseHb','ProvisionalDx','Investigation','Treatment','Advice','PatientReferral','FollowUpDate'))->render();
-        //return view('prescription::show');
+       return view('prescription::details',compact('patientDetails','prescriptionCreation','Complaints','HeightWeight','BP','GlucoseHb','ProvisionalDx','Investigation','Treatment','Advice','PatientReferral','FollowUpDate'))->render();
     }
 
     /**

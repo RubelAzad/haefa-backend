@@ -86,7 +86,7 @@
                     <h2 class="dt-page__title mb-0 text-primary"><i class="{{ $page_icon }}"></i> {{ $sub_title }}</h2>
                 </div>
                 <!-- /entry heading -->
-                @if (permission('patient-add'))
+                @if (permission('prescription-add'))
                 <button class="btn btn-primary btn-sm" onclick="showFormModal('Add New Prescription','Save')">
                     <i class="fas fa-plus-square"></i> Add New
                  </button>
@@ -106,7 +106,7 @@
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label for="name">Prescription Name</label>
-                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter patient name">
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter prescription name">
                             </div>
                             <div class="form-group col-md-8 pt-24">
                                <button type="button" class="btn btn-danger btn-sm float-right" id="btn-reset"
@@ -123,7 +123,7 @@
                     <table id="dataTable" class="table table-striped table-bordered table-hover">
                         <thead class="bg-primary">
                             <tr>
-                                @if (permission('patient-bulk-delete'))
+                                @if (permission('prescription-bulk-delete'))
                                 <th>
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="select_all" onchange="select_all()">
@@ -154,7 +154,7 @@
     <!-- /grid -->
 
 </div>
-@include('patient::view-modal')
+@include('prescription::view-modal')
 @endsection
 
 @push('script')
@@ -185,7 +185,7 @@ $(document).ready(function(){
             }
         },
         "columnDefs": [{
-                @if (permission('patient-bulk-delete'))
+                @if (permission('prescription-bulk-delete'))
                 "targets": [0,4],
                 @else 
                 "targets": [3],
@@ -194,7 +194,7 @@ $(document).ready(function(){
                 "className": "text-center"
             },
             {
-                @if (permission('patient-bulk-delete'))
+                @if (permission('prescription-bulk-delete'))
                 "targets": [1,3],
                 @else 
                 "targets": [0,2],
@@ -207,7 +207,7 @@ $(document).ready(function(){
             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'<'float-right'p>>>",
 
         "buttons": [
-            @if (permission('patient-report'))
+            @if (permission('prescription-report'))
             {
                 'extend':'colvis','className':'btn btn-secondary btn-sm text-white','text':'Column'
             },
@@ -232,7 +232,7 @@ $(document).ready(function(){
                 'text':'CSV',
                 'className':'btn btn-secondary btn-sm text-white',
                 "title": "Menu List",
-                "filename": "patient-list",
+                "filename": "prescription-list",
                 "exportOptions": {
                     columns: function (index, data, node) {
                         return table.column(index).visible();
@@ -244,7 +244,7 @@ $(document).ready(function(){
                 'text':'Excel',
                 'className':'btn btn-secondary btn-sm text-white',
                 "title": "Menu List",
-                "filename": "patient-list",
+                "filename": "prescription-list",
                 "exportOptions": {
                     columns: function (index, data, node) {
                         return table.column(index).visible();
@@ -256,7 +256,7 @@ $(document).ready(function(){
                 'text':'PDF',
                 'className':'btn btn-secondary btn-sm text-white',
                 "title": "Menu List",
-                "filename": "patient-list",
+                "filename": "prescription-list",
                 "orientation": "landscape", //portrait
                 "pageSize": "A4", //A3,A5,A6,legal,letter
                 "exportOptions": {
@@ -264,7 +264,7 @@ $(document).ready(function(){
                 },
             },
             @endif 
-            @if (permission('patient-bulk-delete'))
+            @if (permission('prescription-bulk-delete'))
             {
                 'className':'btn btn-danger btn-sm delete_btn d-none text-white',
                 'text':'Delete',
@@ -288,7 +288,7 @@ $(document).ready(function(){
     $(document).on('click', '#save-btn', function () {
         let form = document.getElementById('store_or_update_form');
         let formData = new FormData(form);
-        let url = "{{route('patient.store.or.update')}}";
+        let url = "{{route('prescription.store.or.update')}}";
         let id = $('#update_id').val();
         let method;
         if (id) {
@@ -299,36 +299,7 @@ $(document).ready(function(){
         store_or_update_data(table, method, url, formData);
     });
 
-    $(document).on('click', '.edit_data', function () {
-        let id = $(this).data('id');
-        $('#store_or_update_form')[0].reset();
-        $('#store_or_update_form').find('.is-invalid').removeClass('is-invalid');
-        $('#store_or_update_form').find('.error').remove();
-        if (id) {
-            $.ajax({
-                url: "{{route('patient.edit')}}",
-                type: "POST",
-                data: { id: id,_token: _token},
-                dataType: "JSON",
-                success: function (data) {
-                    $('#store_or_update_form #update_id').val(data.id);
-                    $('#store_or_update_form #name').val(data.name);
-
-                    $('#store_or_update_modal').modal({
-                        keyboard: false,
-                        backdrop: 'static',
-                    });
-                    $('#store_or_update_modal .modal-title').html(
-                        '<i class="fas fa-edit"></i> <span>Edit ' + data.name + '</span>');
-                    $('#store_or_update_modal #save-btn').text('Update');
-
-                },
-                error: function (xhr, ajaxOption, thrownError) {
-                    console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
-                }
-            });
-        }
-    });
+    
 
     $(document).on('click', '.view_data', function () {
         let id = $(this).data('id');
@@ -380,7 +351,7 @@ $(document).ready(function(){
                 icon: 'warning',
             });
         }else{
-            let url = "{{route('patient.bulk.delete')}}";
+            let url = "{{route('prescription.bulk.delete')}}";
             bulk_delete(ids,url,table,rows);
         }
     }
@@ -390,7 +361,7 @@ $(document).ready(function(){
         let status = $(this).data('status');
         let name  = $(this).data('name');
         let row   = table.row($(this).parent('tr'));
-        let url   = "{{ route('patient.change.status') }}";
+        let url   = "{{ route('prescription.change.status') }}";
         Swal.fire({
             title: 'Are you sure to change ' + name + ' status?',
             icon: 'warning',
