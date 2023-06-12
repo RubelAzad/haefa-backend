@@ -7,6 +7,7 @@ use Modules\Patient\Entities\Address;
 use Modules\Patient\Entities\SelfType;
 use Modules\Base\Entities\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Prescription\Entities\Prescription;
 
 class Patient extends BaseModel
 {
@@ -39,6 +40,12 @@ class Patient extends BaseModel
     {
         return $this->hasOne(Address::class,'PatientId', 'PatientId');
     }
+
+    public function prescription()
+    {
+      return $this->belongsTo(Prescription::class, 'PatientId', 'PatientId');
+    }
+    
     
     private function get_datatable_query()
     {
@@ -54,7 +61,7 @@ class Patient extends BaseModel
          * *Search Data **
          ******************/
         if (!empty($this->name)) {
-            $query->where('PatientId', 'like', '%' . $this->name . '%');
+            $query->where('RegistrationId',$this->name);
         }
 
         if (isset($this->orderValue) && isset($this->dirValue)) {

@@ -4,6 +4,7 @@ namespace Modules\Prescription\Entities;
 use Modules\Patient\Entities\Gender;
 use Modules\Base\Entities\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Patient\Entities\Patient;
 
 class Prescription extends BaseModel
 {
@@ -16,6 +17,11 @@ class Prescription extends BaseModel
     protected $order = ['CreateDate'=>'desc'];
     
     protected $name;
+
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class,'PatientId','PatientId');
+    }
 
     public function setName($name)
     {
@@ -30,13 +36,13 @@ class Prescription extends BaseModel
             $this->column_order = ['PatientId','name','status',null];
         }
 
-        $query = self::toBase();
+        $query = self::with('patient');
 
         /*****************
          * *Search Data **
          ******************/
         if (!empty($this->name)) {
-            $query->where('PatientId', 'like', '%' . $this->name . '%');
+            $query->where('PrescriptionId', $this->name );
         }
 
         if (isset($this->orderValue) && isset($this->dirValue)) {

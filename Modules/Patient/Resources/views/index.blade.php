@@ -155,8 +155,8 @@
                     <form id="form-filter">
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="name">Patient Name</label>
-                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter patient name">
+                                <label for="name">Registration Id</label>
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter patient Registration Id">
                             </div>
                             <div class="form-group col-md-8 pt-24">
                                <button type="button" class="btn btn-danger btn-sm float-right" id="btn-reset"
@@ -182,7 +182,6 @@
                                 </th>
                                 @endif
                                 <th>Sl</th>
-                                <th>Patient Id</th>
                                 <th>Registration Id</th>
                                 <th>Patient Name</th>
                                 <th>NID Number</th>
