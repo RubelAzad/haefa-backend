@@ -34,5 +34,7 @@
     "Religion": true,
     "MaritalStatus": true,
     "Organization": true,
-    "Prescription": true
+    "Prescription": true,
+    "BarcodeFormat": true,
+    "BarcodeGenerat": true
 }
