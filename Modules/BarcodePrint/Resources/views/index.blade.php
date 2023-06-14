@@ -9,96 +9,56 @@
 @endpush
 
 @section('content')
-<div class="dt-content">
-
-    <!-- Grid -->
-    <div class="row">
-        <div class="col-xl-12 pb-3">
-            <ol class="breadcrumb bg-white">
-                <li class="breadcrumb-item"><a href="{{ url('/') }}">Dashboard</a></li>
-                <li class="active breadcrumb-item">{{ $sub_title }}</li>
-              </ol>
-        </div>
-        <!-- Grid Item -->
-        <div class="col-xl-12">
-
-            <!-- Entry Header -->
-            <div class="dt-entry__header">
-
-                <!-- Entry Heading -->
-                <div class="dt-entry__heading">
-                    <h2 class="dt-page__title mb-0 text-primary"><i class="{{ $page_icon }}"></i> {{ $sub_title }}</h2>
+<div class="d-flex flex-column-fluid">
+    <div class="container-fluid">
+        <!--begin::Notice-->
+        <div class="card card-custom gutter-b">
+            <div class="card-header flex-wrap py-5">
+                <div class="card-title">
+                    <h3 class="card-label"><i class="{{ $page_icon }} text-primary"></i> {{ $sub_title }}</h3>
                 </div>
-                <!-- /entry heading -->
-                @if (permission('bgenerate-add'))
-                <button class="btn btn-primary btn-sm" onclick="showStoreFormModal('Add New Barcode Generate','Save')">
-                    <i class="fas fa-plus-square"></i> Add New
-                 </button>
-                @endif
-
-
+                <div class="card-toolbar">
+                    <!--begin::Button-->
+                    <a href="{{ route('barcodeprint') }}" class="btn btn-warning btn-sm font-weight-bolder">
+                        <i class="fas fa-arrow-left"></i> Back</a>
+                    <!--end::Button-->
+                </div>
             </div>
-            <!-- /entry header -->
-
-            <!-- Card -->
-            <div class="dt-card">
-
-                <!-- Card Body -->
-                <div class="dt-card__body">
-
-                    <form id="form-filter">
+        </div>
+        <!--end::Notice-->
+        <!--begin::Card-->
+        <div class="card card-custom" style="padding-bottom: 100px !important;">
+            <div class="card-body">
+            <form id="generate-barcode-form" method="POST">
+                        @csrf
                         <div class="row">
-                            <div class="form-group col-md-3">
-                                <label for="name">bgenerate Name</label>
-                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter Barcode Generate name">
-                            </div>
-                            <div class="form-group col-md-12">
-                               <button type="button" class="btn btn-danger btn-sm float-right" id="btn-reset"
-                               data-toggle="tooltip" data-placement="top" data-original-title="Reset Data">
-                                   <i class="fas fa-redo-alt"></i>
-                                </button>
-                               <button type="button" class="btn btn-primary btn-sm float-right mr-2" id="btn-filter"
-                               data-toggle="tooltip" data-placement="top" data-original-title="Filter Data">
-                                   <i class="fas fa-search"></i>
+                            
+                            <x-form.selectbox labelName="Barcode Start" name="mdata_barcode_prefix_number_start" onchange="getVariantOptionList(this.value)" col="col-md-4" class="selectpicker">
+                                @if (!$barcodeGenerates->isEmpty())
+                                    @foreach ($barcodeGenerates as $barcodeGenerate)
+                                        <option value="{{ $barcodeGenerate->mdata_barcode_prefix_number }}">{{ $barcodeGenerate->mdata_barcode_prefix_number }}</option>
+                                    @endforeach
+                                @endif
+                            </x-form.selectbox>
+                            <x-form.selectbox labelName="Barcode End" name="mdata_barcode_prefix_number_end" col="col-md-4 " class="mdata_barcode_prefix_number_end selectpicker" />
+
+                            <div class="form-group col-md-3" style="padding-top: 22px;">
+                               <button type="button" class="btn btn-primary btn-sm" id="generate_barcode"
+                               data-toggle="tooltip" data-placement="top" data-original-title="Generate Barcode">
+                                   <i class="fas fa-barcode"></i> Generate Barcode
                                 </button>
                             </div>
                         </div>
                     </form>
-                    <table id="dataTable" class="table table-striped table-bordered table-hover">
-                        <thead class="bg-primary">
-                            <tr>
-                                @if (permission('bgenerate-bulk-delete'))
-                                <th>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="select_all" onchange="select_all()">
-                                        <label class="custom-control-label" for="select_all"></label>
-                                    </div>
-                                </th>
-                                @endif
-                                <th>Sl</th>
-				                <th>Barcode Id</th>
-				                <th>Barcode Status</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                    <div class="row" id="barcode-section">
 
-                </div>
-                <!-- /card body -->
-
+                    </div>
             </div>
-            <!-- /card -->
-
         </div>
-        <!-- /grid item -->
-
+        <!--end::Card-->
     </div>
-    <!-- /grid -->
-
 </div>
-@include('barcodegenerat::modal')
+
 @endsection
 
 @push('script')
@@ -107,6 +67,7 @@
 <script>
 var table;
 $(document).ready(function(){
+    
       $('.summernote').summernote({
         tabsize: 2,
         height: 120,
@@ -254,66 +215,67 @@ $(document).ready(function(){
         table.ajax.reload();
     });
 
-        $(document).on('click', '#save-btn', function () {
-            let form = document.getElementById('store_or_update_form');
-            let formData = new FormData(form);
-            let url = "{{route('bgenerate.store.or.update')}}";
-            let id = $('#update_id').val();
-            let method;
-            if (id) {
-                method = 'update';
-            } else {
-                method = 'add';
-            }
-                $.ajax({
-                url: url,
-                type: "POST",
-                data: formData,
-                dataType: "JSON",
-                contentType: false,
-                processData: false,
-                cache: false,
-                beforeSend: function(){
-                    $('#save-btn').addClass('kt-spinner kt-spinner--md kt-spinner--light');
-                },
-                complete: function(){
-                    $('#save-btn').removeClass('kt-spinner kt-spinner--md kt-spinner--light');
-                },
-                success: function (data) {
-                    $('#store_or_update_form').find('.is-invalid').removeClass('is-invalid');
-                    $('#store_or_update_form').find('.error').remove();
-                    if (data.status == false) {
-                        $.each(data.errors, function (key, value) {
-                            $('#store_or_update_form input#' + key).addClass('is-invalid');
-                            $('#store_or_update_form textarea#' + key).addClass('is-invalid');
-                            $('#store_or_update_form select#' + key).parent().addClass('is-invalid');
-                            if(key == 'code'){
-                                $('#store_or_update_form #' + key).parents('.form-group').append(
-                                '<small class="error text-danger">' + value + '</small>');
-                            }else{
-                                $('#store_or_update_form #' + key).parent().append(
-                                '<small class="error text-danger">' + value + '</small>');
-                            }
-
-                        });
-                    } else {
-                        notification(data.status, data.message);
-                        if (data.status == 'success') {
-                            if (method == 'update') {
-                                table.ajax.reload(null, false);
-                            } else {
-                                table.ajax.reload();
-                            }
-                            $('#store_or_update_modal').modal('hide');
+    $(document).on('click', '#generate_barcode', function () {
+        var code        = $('#product option:selected').val();
+        var barcode_symbology    = $('#product option:selected').data('barcode');
+        
+        if($('#product_name').prop('checked') == true)
+        {
+            name = $('#product option:selected').data('name');
+        }
+        if($('#price').prop('checked') == true)
+        {
+            price = $('#product option:selected').data('price');
+        }
+        $.ajax({
+            url: "{{ url('generate-barcode') }}",
+            type: "POST",
+            data: {code:code, name:name, price:price, barcode_qty:barcode_qty, barcode_symbology:barcode_symbology,
+                row_qty:row_qty, width:width, height:height, unit:unit,_token:_token},
+            beforeSend: function(){
+                $('#generate_barcode').addClass('kt-spinner kt-spinner--md kt-spinner--light');
+            },
+            complete: function(){
+                $('#generate_barcode').removeClass('kt-spinner kt-spinner--md kt-spinner--light');
+            },
+            success: function (data) {
+                $('#form-barcode').find('.is-invalid').removeClass('is-invalid');
+                $('#form-barcode').find('.error').remove();
+                if (data.status == false) {
+                    $.each(data.errors, function (key, value) {
+                        if(key == 'code'){
+                            $('#form-barcode select#product').parent().addClass('is-invalid');
+                            $('#form-barcode #product').parent().append(
+                            '<small class="error text-danger">' + value + '</small>');
                         }
-                    }
-
-                },
-                error: function (xhr, ajaxOption, thrownError) {
-                    console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
+                        $('#form-barcode input#' + key).addClass('is-invalid');
+                        $('#form-barcode select#' + key).parent().addClass('is-invalid');
+                            $('#form-barcode #' + key).parent().append(
+                            '<small class="error text-danger">' + value + '</small>');
+                        
+                    });
+                } else {
+                    $('#barcode-section').html('');
+                    $('#barcode-section').html(data);
                 }
-            });
+
+            },
+            error: function (xhr, ajaxOption, thrownError) {
+                console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
+            }
         });
+    });
+
+    $(document).on('click','#print-barcode',function()
+    {
+        var mode = 'popup'; //popup
+        var close = mode == 'popup';
+        var options = {
+            mode:mode,
+            popClose:close
+        };
+        $('#printableArea').printArea(options);
+    })
 
     
 
@@ -411,26 +373,31 @@ $(document).ready(function(){
 
 });
 
-function getVariantOptionList(mdata_barcode_prefix,mdata_barcode_number=''){
+function getVariantOptionList(mdata_barcode_prefix_number_start,mdata_barcode_prefix_number_end=''){
     $.ajax({
-        url: "{{url('/latest-range-generate')}}/"+mdata_barcode_prefix,
+        url: "{{url('/latest-range')}}/"+mdata_barcode_prefix_number_start,
         type: "GET",
         dataType: "json",
-        success: function(data) {
+        success:function(data){
+            console.log(data);
+            $('#generate-barcode-form #mdata_barcode_prefix_number_end').empty();
+            $.each(data, function(key, value) {
+                if (!$.trim(data)){
+                    $('#generate-barcode-form .mdata_barcode_prefix_number_end').addClass('d-none');
+                }
+                else{
+                    $('#generate-barcode-form .mdata_barcode_prefix_number_end').removeClass('d-none');
+                    $('#generate-barcode-form #mdata_barcode_prefix_number_end').append('<option value="'+ key.mdata_barcode_prefix_number +'">'+ value.mdata_barcode_prefix_number +'</option>');
+                    $('#generate-barcode-form #mdata_barcode_prefix_number_end.selectpicker').selectpicker('refresh');
+                }
+            });
+            $('#generate-barcode-form .selectpicker').selectpicker('refresh');
 
-            if (!$.trim(data)){
-                    $('#store_or_update_form .mdata_barcode_number').addClass('d-none');
-            }
-            else{
-                $('#store_or_update_form .mdata_barcode_number').removeClass('d-none');
-                $('#store_or_update_form #mdata_barcode_number').val(data.barcode_number ? data.barcode_number : data.mdata_barcode_number);
-            }
+
         },
 
     });
 }
-
-
 
 
 

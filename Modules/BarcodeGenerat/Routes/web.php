@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('bgenerate', 'BarcodeGeneratController@index')->name('bgenerate');
-    Route::get('latest-range/{id}', 'BarcodeGeneratController@latest_range')->name('latest.range');
+    Route::get('latest-range-generate/{id}', 'BarcodeGeneratController@latest_range_generate')->name('latest.range.generate');
     Route::group(['prefix' => 'bgenerate', 'as'=>'bgenerate.'], function () {
         Route::post('datatable-data', 'BarcodeGeneratController@get_datatable_data')->name('datatable.data');
         Route::post('store-or-update', 'BarcodeGeneratController@store_or_update_data')->name('store.or.update');
@@ -21,6 +21,5 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('delete', 'BarcodeGeneratController@delete')->name('delete');
         Route::post('bulk-delete', 'BarcodeGeneratController@bulk_delete')->name('bulk.delete');
         Route::post('change-status', 'BarcodeGeneratController@change_status')->name('change.status');
-        Route::get('latest-range/{id}', 'BarcodeGeneratController@latest_range')->name('latest.range');
     });
 });
