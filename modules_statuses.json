@@ -36,5 +36,6 @@
     "Organization": true,
     "Prescription": true,
     "BarcodeFormat": true,
-    "BarcodeGenerat": true
+    "BarcodeGenerat": true,
+    "BarcodePrint": true
 }

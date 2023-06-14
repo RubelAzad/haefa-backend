@@ -80,48 +80,63 @@ class BarcodeGeneratController extends BaseController
     }
 
     public function store_or_update_data(Request $request){
+
         $data = array();
         $data['code_format'] = $request->mdata_barcode_prefix;
-        $barcodeNumber= (int) $request->mdata_barcode_number;
-
-        if($request->mdata_barcode_number == "10000001"){
-            $intBarcodeNumber = $barcodeNumber-1;
-            $data['range'] = (string) $intBarcodeNumber;
-        }else{
-            $data['range'] = $request->mdata_barcode_number;
-        }
-        
+        $data['range'] = $request->mdata_barcode_number;
         $data['generate'] = $request->mdata_barcode_generate;
-
-        $jsonObjects = array(); // Array to store each iteration as a JSON object
-
-        foreach (range(0, $request->mdata_barcode_generate - 1) as $i) {
-            $data['range']++; // Increase the value of $data['range'] by 1
-            $data['create_date'] = Carbon::now()->toDateTimeString();
-            $data['status'] = '1';
-            $data['concat'] = $data['code_format'].$data['range'];
-            $data['barcode'] = DNS1D::getBarcodeHTML($data['concat'], 'C39');
-            $data['barcodeBase64'] = base64_encode($data['barcode']);
+        $check = BarcodeGenerate::where('mdata_barcode_prefix', $request->mdata_barcode_prefix)->latest('mdata_barcode_number')->first();
+        if(empty($check)){
+            foreach (range(0, $request->mdata_barcode_generate - 1) as $i) {
 
 
-            // Add a copy of the data array to the jsonObjects array
+
+                $data['range'] = $request->mdata_barcode_number + $i; // Increase the value of $data['range'] by 1
+                $data['create_date'] = Carbon::now()->toDateTimeString();
+                $data['status'] = '1';
+                $data['concat'] = $data['code_format'].$data['range'];
+
+                // Insert the data into the database
+                $result=DB::table('mdatacc_barcodes')->insert([
+                    'mdata_barcode_prefix' => $data['code_format'],
+                    'mdata_barcode_number' => $data['range'],
+                    'mdata_barcode_prefix_number'=>$data['concat'],
+                    'created_at' => Carbon::now()->toDateTimeString(),
+                    'status' => $data['status'],
+                    'created_by' => auth()->user()->name
+                ]);
+                $output = $this->store_message('ok',$request->update_id);
+
+            }
+            return response()->json($output);
+        }else{
+            foreach (range(0, $request->mdata_barcode_generate - 1) as $i) {
 
 
-            // Insert the data into the database
-            $result=DB::table('mdatacc_barcodes')->insert([
-                'mdata_barcode_prefix' => $data['code_format'],
-                'mdata_barcode_number' => $data['range'],
-                'mdata_barcode_prefix_number'=>$data['concat'],
-                'mdata_barcode_generate'=> $data['barcodeBase64'],
-                'created_at' => Carbon::now()->toDateTimeString(),
-                'status' => $data['status'],
-                'created_by' => auth()->user()->name
-            ]);
 
-            $output = $this->store_message('ok',$request->update_id);
+                $data['range']++; // Increase the value of $data['range'] by 1
+                $data['create_date'] = Carbon::now()->toDateTimeString();
+                $data['status'] = '1';
+                $data['concat'] = $data['code_format'].$data['range'];
 
+                // Insert the data into the database
+                
+                $result=DB::table('mdatacc_barcodes')->insert([
+                    'mdata_barcode_prefix' => $data['code_format'],
+                    'mdata_barcode_number' => $data['range'],
+                    'mdata_barcode_prefix_number'=>$data['concat'],
+                    'created_at' => Carbon::now()->toDateTimeString(),
+                    'status' => $data['status'],
+                    'created_by' => auth()->user()->name
+                ]);
+
+                $output = $this->store_message('ok',$request->update_id);
+                
+            }
+            return response()->json($output);
         }
-        return response()->json($output);
+
+
     }
 
     public function edit(Request $request)
@@ -184,7 +199,7 @@ class BarcodeGeneratController extends BaseController
             return response()->json($this->access_blocked());
         }
     }
-    public function latest_range($mdata_barcode_prefix){
+    public function latest_range_generate($mdata_barcode_prefix){
         
         $check=BarcodeGenerate::where('mdata_barcode_prefix',$mdata_barcode_prefix)->get();
         if($check->isEmpty()){

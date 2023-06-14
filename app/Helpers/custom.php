@@ -98,3 +98,10 @@ if(!function_exists('table_image')){
     }
 }
 
+if(!function_exists('table_image_base64')){
+    function table_image_base64($image = null,$path=null,string $name = null){
+            return $image ? "<img src='data:image/png;base64,".$image."' alt='".$name."' style='width:50px;'/>"
+            : "<img src='images/default.svg' alt='Default Image' style='width:50px;'/>";
+    }
+}
+
