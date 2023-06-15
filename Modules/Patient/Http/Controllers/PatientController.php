@@ -255,7 +255,7 @@ class PatientController extends BaseController
                 ORDER BY MaxCreateDate DESC)
                 AS date) GROUP BY PPC.CreateDate ORDER BY PPC.CreateDate");
 
-        $Complaints= DB::select("SELECT MAX(PC.ChiefComplain) AS ChiefComplain, MAX(PC.CCDurationValue) AS CCDurationValue, MAX(PC.OtherCC) AS OtherCC, MAX(RD.DurationInEnglish) AS DurationInEnglish, CAST(PC.CreateDate AS date) as CreateDate
+        $Complaints= DB::select("SELECT PC.ChiefComplain AS ChiefComplain, PC.CCDurationValue AS CCDurationValue, PC.OtherCC AS OtherCC, RD.DurationInEnglish AS DurationInEnglish, PC.CreateDate AS CreateDate
             FROM MDataPatientCCDetails as PC
             INNER JOIN RefDuration as RD on RD.DurationId = PC.DurationId
             WHERE PatientId = '$request->id' AND CAST(PC.CreateDate AS date) 
@@ -264,7 +264,7 @@ class PatientController extends BaseController
                 FROM MDataPatientCCDetails WHERE PatientId = '$request->id'
                 GROUP BY CAST(CreateDate AS date)
                 ORDER BY MaxCreateDate DESC)
-                AS date) GROUP BY PC.CreateDate ORDER BY PC.CreateDate");
+                AS date) ORDER BY PC.CreateDate");
 
         $HeightWeight= DB::select("SELECT TOP 1 MAX(Height) AS Height, MAX(Weight) AS Weight, MAX(BMI) AS BMI, MAX(BMIStatus) AS BMIStatus, CAST(CreateDate AS date) as CreateDate
             FROM MDataHeightWeight WHERE PatientId = '$request->id' AND CAST(CreateDate AS date) 
@@ -293,17 +293,17 @@ class PatientController extends BaseController
                 ORDER BY MaxCreateDate DESC)
                 AS date) GROUP BY CreateDate ORDER BY CreateDate");
 
-        $ProvisionalDx = DB::select("SELECT MAX(ProvisionalDiagnosis) AS ProvisionalDiagnosis, MAX(DiagnosisStatus) AS DiagnosisStatus, MAX(OtherProvisionalDiagnosis) AS OtherProvisionalDiagnosis, CAST(CreateDate AS date) as CreateDate
+        $ProvisionalDx = DB::select("SELECT ProvisionalDiagnosis, DiagnosisStatus, OtherProvisionalDiagnosis, CreateDate
         FROM MDataProvisionalDiagnosis WHERE PatientId = '$request->id' AND CAST(CreateDate AS date) 
         = CAST(
             (SELECT TOP 1 MAX(CreateDate) AS MaxCreateDate
             FROM MDataProvisionalDiagnosis WHERE PatientId = '$request->id'
             GROUP BY CAST(CreateDate AS date)
             ORDER BY MaxCreateDate DESC)
-            AS date) GROUP BY CreateDate ORDER BY CreateDate");
+            AS date) ORDER BY CreateDate");
 
 
-       $Investigation= DB::select("SELECT  MAX(RI.Investigation) AS Investigation, MAX(I.OtherInvestigation) AS OtherInvestigation, CAST(I.CreateDate AS date) as CreateDate
+       $Investigation= DB::select("SELECT  RI.Investigation AS Investigation, I.OtherInvestigation AS OtherInvestigation, I.CreateDate
             FROM MDataInvestigation as I
             INNER JOIN RefLabInvestigation as RI on RI.RefLabInvestigationId = I.InvestigationId
             WHERE PatientId = '$request->id' AND CAST(I.CreateDate AS date) 
@@ -312,10 +312,10 @@ class PatientController extends BaseController
                 FROM MDataInvestigation WHERE PatientId = '$request->id'
                 GROUP BY CAST(CreateDate AS date)
                 ORDER BY MaxCreateDate DESC)
-                AS date) GROUP BY I.CreateDate ORDER BY I.CreateDate");
+                AS date) ORDER BY I.CreateDate");
 
 
-        $Treatment= DB::select("SELECT MAX(T.Frequency) AS Frequency, MAX(T.DrugDurationValue) AS DrugDurationValue,MAX(T.OtherDrug) AS OtherDrug,MAX(T.SpecialInstruction) AS SpecialInstruction, MAX(Dr.DrugCode) AS DrugCode, MAX(Dr.Description) AS Description, MAX(Dr.DrugDose) AS DrugDose, MAX(Ins.InstructionInBangla) AS InstructionInBangla, CAST(T.CreateDate AS date) as CreateDate
+        $Treatment= DB::select("SELECT T.Frequency AS Frequency, T.DrugDurationValue AS DrugDurationValue,T.OtherDrug AS OtherDrug,T.SpecialInstruction AS SpecialInstruction, Dr.DrugCode AS DrugCode, Dr.Description AS Description, Dr.DrugDose AS DrugDose, Ins.InstructionInBangla AS InstructionInBangla, T.CreateDate
         FROM MDataTreatmentSuggestion as T
         INNER JOIN RefDrug as Dr on Dr.DrugId = T.DrugId
         INNER JOIN RefInstruction as Ins on Ins.RefInstructionId = T.RefInstructionId
@@ -325,10 +325,10 @@ class PatientController extends BaseController
             FROM MDataTreatmentSuggestion WHERE PatientId = '$request->id'
             GROUP BY CAST(CreateDate AS date)
             ORDER BY MaxCreateDate DESC)
-            AS date) GROUP BY T.CreateDate ORDER BY T.CreateDate");
+            AS date) ORDER BY T.CreateDate");
 
 
-        $Advice= DB::select("SELECT MAX(RA.AdviceInBangla) AS AdviceInBangla, MAX(RA.AdviceInEnglish) AS AdviceInEnglish, CAST(A.CreateDate AS date) as CreateDate
+        $Advice= DB::select("SELECT RA.AdviceInBangla AS AdviceInBangla, RA.AdviceInEnglish AS AdviceInEnglish, A.CreateDate
             FROM MDataAdvice as A
             INNER JOIN RefAdvice as RA on RA.AdviceId = A.AdviceId
             WHERE PatientId = '$request->id' AND CAST(A.CreateDate AS date) 
@@ -337,10 +337,10 @@ class PatientController extends BaseController
                 FROM MDataAdvice WHERE PatientId = '$request->id'
                 GROUP BY CAST(CreateDate AS date)
                 ORDER BY MaxCreateDate DESC)
-                AS date) GROUP BY A.CreateDate ORDER BY A.CreateDate");
+                AS date) ORDER BY A.CreateDate");
 
 
-        $PatientReferral= DB::select("SELECT MAX(RR.Description) AS Description, MAX(HC.HealthCenterName) AS HealthCenterName, CAST(PR.CreateDate AS date) as CreateDate
+        $PatientReferral= DB::select("SELECT RR.Description AS Description, HC.HealthCenterName AS HealthCenterName, PR.CreateDate
             FROM MDataPatientReferral as PR
             INNER JOIN RefReferral as RR on RR.RId = PR.RId
             INNER JOIN HealthCenter as HC on HC.HealthCenterId = PR.HealthCenterId
@@ -350,7 +350,7 @@ class PatientController extends BaseController
                 FROM MDataPatientReferral WHERE PatientId = '$request->id'
                 GROUP BY CAST(CreateDate AS date)
                 ORDER BY MaxCreateDate DESC)
-                AS date) GROUP BY PR.CreateDate ORDER BY PR.CreateDate");
+                AS date) ORDER BY PR.CreateDate");
 
         
 
