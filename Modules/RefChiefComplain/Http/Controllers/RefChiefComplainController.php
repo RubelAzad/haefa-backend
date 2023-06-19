@@ -71,15 +71,11 @@ class RefChiefComplainController extends BaseController
                     if(permission('refchiefcomplain-bulk-delete')){
                         $row[] = table_checkbox($value->CCId);
                     }
-                    if(isset($value->Status) && $value->Status==1){
-                        $status = 'Active';
-                    }else{
-                        $status = 'Inactive';
-                    }
+                    
                     $row[] = $no;
                     $row[] = $value->CCCode;
                     $row[] = $value->Description;
-                    $row[] = $status;
+                    $row[] = permission('refchiefcomplain-edit') ? change_status($value->CCId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
                     $row[] = action_button($action);
                     $data[] = $row;
                 }
@@ -91,6 +87,34 @@ class RefChiefComplainController extends BaseController
 
             return response()->json($output);
         }
+    }
+
+    public function change_status(Request $request)
+    {
+        try{
+            if($request->ajax()){
+            if (permission('user-edit')) {
+                    $result = $this->update_change_status($request);
+            if($result){
+                return response()->json(['status'=>'success','message'=>'Status CHanged Successfully']);
+            }else{
+                return response()->json(['status'=>'error','message'=>'Something went wrong!']);
+            }
+            }else{
+                $output = $this->access_blocked();
+                return response()->json($output);
+            }
+            }else{
+                return response()->json(['status'=>'error','message'=>'Something went wrong!']);
+            }
+        }catch(\Exception $e){
+            return response()->json(['status'=>'error','message'=>$e->getMessage()]);
+        }
+    }
+
+    public function update_change_status(Request $request)
+    {
+        return $this->model->where('CCId',$request->CCId)->update(['Status'=>$request->Status]);
     }
 
     /**

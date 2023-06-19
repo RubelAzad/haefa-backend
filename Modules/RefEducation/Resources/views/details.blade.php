@@ -3,15 +3,15 @@
         <table class="table table-borderless">
             <tbody>
                 <tr>
-                    <td><b>CCCode</b></td>
+                    <td><b>EducationCode</b></td>
                     <td><b>:</b></td>
-                    <td>{{$RefChiefComplaints->CCCode??""}}</td>
+                    <td>{{$RefEducations->EducationCode??""}}</td>
                 </tr>
 
                 <tr>
                     <td><b>Description</b></td>
                     <td><b>:</b></td>
-                    <td>{{$RefChiefComplaints->Description??""}}</td>
+                    <td>{{$RefEducations->Description??""}}</td>
                 </tr>
             </tbody>
         </table>

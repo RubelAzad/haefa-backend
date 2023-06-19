@@ -39,5 +39,6 @@
     "BarcodeGenerat": true,
     "BarcodePrint": true,
     "RefAddressType": true,
-    "RefChiefComplain": true
+    "RefChiefComplain": true,
+    "RefEducation": true
 }

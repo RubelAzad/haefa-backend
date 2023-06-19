@@ -86,8 +86,8 @@
                     <h2 class="dt-page__title mb-0 text-primary"><i class="{{ $page_icon }}"></i> {{ $sub_title }}</h2>
                 </div>
                 <!-- /entry heading -->
-                @if (permission('refchiefcomplain-add'))
-                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add Refchiefcomplain','Save')">
+                @if (permission('refeducation-add'))
+                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add Refeducation','Save')">
                     <i class="fas fa-plus-square"></i> Add New
                  </button>
                 @endif
@@ -104,8 +104,8 @@
                     <form id="form-filter">
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="name">CCCode</label>
-                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter CCCode">
+                                <label for="name">EducationCode</label>
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter EducationCode">
                             </div>
                             <div class="form-group col-md-8 pt-24">
                                <button type="button" class="btn btn-danger btn-sm float-right" id="btn-reset"
@@ -122,7 +122,7 @@
                     <table id="dataTable" class="table table-striped table-bordered table-hover">
                         <thead class="bg-primary">
                             <tr>
-                                @if (permission('refchiefcomplain-bulk-delete'))
+                                @if (permission('refeducation-bulk-delete'))
                                 <th>
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="select_all" onchange="select_all()">
@@ -131,7 +131,7 @@
                                 </th>
                                 @endif
                                 <th>Sl</th>
-                                <th>CCCode</th>
+                                <th>EducationCode</th>
                                 <th>Description</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -153,8 +153,8 @@
     <!-- /grid -->
 
 </div>
-@include('refchiefcomplain::view-modal')
-@include('refchiefcomplain::add-edit-modal')
+@include('refeducation::view-modal')
+@include('refeducation::add-edit-modal')
 @endsection
 
 @push('script')
@@ -177,7 +177,7 @@ $(document).ready(function(){
             zeroRecords: '<strong class="text-danger">No Data Found</strong>'
         },
         "ajax": {
-            "url": "{{route('refchiefcomplain.datatable.data')}}",
+            "url": "{{route('refeducation.datatable.data')}}",
             "type": "POST",
             "data": function (data) {
                 data.name = $("#form-filter #name").val();
@@ -185,7 +185,7 @@ $(document).ready(function(){
             }
         },
         "columnDefs": [{
-                @if (permission('refchiefcomplain-bulk-delete'))
+                @if (permission('refeducation-bulk-delete'))
                 "targets": [0,4],
                 @else 
                 "targets": [3],
@@ -194,7 +194,7 @@ $(document).ready(function(){
                 "className": "text-center"
             },
             {
-                @if (permission('refchiefcomplain-bulk-delete'))
+                @if (permission('refeducation-bulk-delete'))
                 "targets": [1,3],
                 @else 
                 "targets": [0,2],
@@ -207,7 +207,7 @@ $(document).ready(function(){
             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'<'float-right'p>>>",
 
         "buttons": [
-            @if (permission('refchiefcomplain-report'))
+            @if (permission('refeducation-report'))
             {
                 'extend':'colvis','className':'btn btn-secondary btn-sm text-white','text':'Column'
             },
@@ -236,7 +236,7 @@ $(document).ready(function(){
                 },
             },
             @endif 
-            @if (permission('refchiefcomplain-bulk-delete'))
+            @if (permission('refeducation-bulk-delete'))
             {
                 'className':'btn btn-danger btn-sm delete_btn d-none text-white',
                 'text':'Delete',
@@ -260,7 +260,7 @@ $(document).ready(function(){
     $(document).on('click', '#save-btn', function () {
         let form = document.getElementById('store_or_update_form');
         let formData = new FormData(form);
-        let url = "{{route('refchiefcomplain.store.or.update')}}";
+        let url = "{{route('refeducation.store.or.update')}}";
         let id = $('#CCId').val();
         let method;
         if (id) {
@@ -278,7 +278,7 @@ $(document).ready(function(){
        // let date = $(this).data('date');
         if (id) {
             $.ajax({
-                url: "{{route('refchiefcomplain.show')}}",
+                url: "{{route('refeducation.show')}}",
                 type: "POST",
                 data: { id: id,_token: _token},
                 success: function (data) {
@@ -291,7 +291,7 @@ $(document).ready(function(){
                         backdrop: 'static',
                     });
                     $('#view_modal .modal-title').html(
-                        '<i class="fas fa-eye"></i> <span>Refchiefcomplain</span>');
+                        '<i class="fas fa-eye"></i> <span>Refeducation</span>');
                 },
                 error: function (xhr, ajaxOption, thrownError) {
                     console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
@@ -303,10 +303,10 @@ $(document).ready(function(){
     $(document).on('click', '.delete_data', function () {
         let id    = $(this).data('id');
         // let name  = $(this).data('name');
-        let name  = "Refchiefcomplain";
+        let name  = "Refeducation";
         console.log(name);
         let row   = table.row($(this).parent('tr'));
-        let url   = "{{ route('refchiefcomplain.delete') }}";
+        let url   = "{{ route('refeducation.delete') }}";
         let response = delete_data(id, url, table, row, name);
         
     });
@@ -326,46 +326,46 @@ $(document).ready(function(){
                 icon: 'warning',
             });
         }else{
-            let url = "{{route('refchiefcomplain.bulk.delete')}}";
+            let url = "{{route('refeducation.bulk.delete')}}";
             bulk_delete(ids,url,table,rows);
         }
     }
 
-    $(document).on('click', '.change_status', function () {
-        let CCId    = $(this).data('id');
-        let Status    = $(this).data('status');
-        let name  = $(this).data('name');
-        let row   = table.row($(this).parent('tr'));
-        let url   = "{{ route('refchiefcomplain.change.status') }}";
-        Swal.fire({
-            title: 'Are you sure to change ' + name + ' status?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes!'
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    url: url,
-                    type: "POST",
-                    data: { CCId: CCId,Status:Status, _token: _token},
-                    dataType: "JSON",
-                }).done(function (response) {
-                    if (response.status == "success") {
-                        Swal.fire("Status Changed", response.message, "success").then(function () {
-                            table.ajax.reload(null, false);
-                        });
-                    }
-                    if (response.status == "error") {
-                        Swal.fire('Oops...', response.message, "error");
-                    }
-                }).fail(function () {
-                    Swal.fire('Oops...', "Somthing went wrong with ajax!", "error");
-                });
-            }
-        });
+});
 
+$(document).on('click', '.change_status', function () {
+    let EducationId    = $(this).data('id');
+    let Status    = $(this).data('status');
+    let name  = $(this).data('name');
+    let row   = table.row($(this).parent('tr'));
+    let url   = "{{ route('refeducation.change.status') }}";
+    Swal.fire({
+        title: 'Are you sure to change ' + name + ' status?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes!'
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: { EducationId: EducationId,Status:Status, _token: _token},
+                dataType: "JSON",
+            }).done(function (response) {
+                if (response.status == "success") {
+                    Swal.fire("Status Changed", response.message, "success").then(function () {
+                        table.ajax.reload(null, false);
+                    });
+                }
+                if (response.status == "error") {
+                    Swal.fire('Oops...', response.message, "error");
+                }
+            }).fail(function () {
+                Swal.fire('Oops...', "Somthing went wrong with ajax!", "error");
+            });
+        }
     });
 
 });
@@ -378,16 +378,22 @@ $(document).on('click', '.edit_data', function () {
     
     if (id) {
         $.ajax({
-            url: "{{route('refchiefcomplain.edit')}}",
+            url: "{{route('refeducation.edit')}}",
             type: "POST",
             data: { id: id,_token: _token},
             dataType: "JSON",
             success: function (data) {
                 console.log(data);
                 //$('#store_or_update_form #update_id').val(data.AddressTypeId);
-                $('#CCCode').val(data.CCCode);
+                $('#EducationCode').val(data.EducationCode);
                 $('#Description').val(data.Description);
-                $('#CCId').val(data.CCId);
+                $('#EducationId').val(data.EducationId);
+                var status = data.Status;
+                if(status=='1'){
+                    $('#activeCheckbox').prop('checked',true);
+                }else{
+                    $('#inactiveCheckbox').prop('checked', true);
+                }
 
                 //$('#store_or_update_form #AddressTypeCode').val(data.AddressTypeCode);
 
@@ -396,7 +402,7 @@ $(document).on('click', '.edit_data', function () {
                     backdrop: 'static',
                 });
                 $('#store_or_update_modal .modal-title').html(
-                    '<i class="fas fa-edit"></i> <span>Edit Refchiefcomplain</span>');
+                    '<i class="fas fa-edit"></i> <span>Edit Refeducation</span>');
                 $('#store_or_update_modal #save-btn').text('Update');
 
             },
