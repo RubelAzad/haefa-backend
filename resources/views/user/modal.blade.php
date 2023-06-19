@@ -19,6 +19,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <input type="hidden" name="update_id" id="update_id" />
+                        <input type="hidden" name="OrgId" value="73CA453C-5F08-4BE7-A8B8-A2FDDA006A2B"/>
                         <x-form.textbox labelName="Name" name="name" required="required" col="col-md-12"
                             placeholder="Enter name" />
                         <x-form.textbox labelName="Email" name="email" required="required" col="col-md-12"
@@ -36,25 +37,19 @@
                             <option value="{{ $role->id }}">{{ $role->role_name }}</option>
                             @endforeach
                         </x-form.selectbox>
-                       
-                        <label for="vehicle1">Patient Registration</label><br>
-                        <input name="Patient" id="checkbox_id" type="checkbox" checked>
-                        <label for="vehicle1">Station 1 Height & Weight</label><br>
-                        <input name="Station1" id="checkbox_id" type="checkbox" checked="on">
-                        <label for="vehicle1">Station 2 Blood Pressure</label><br>
-                        <input name="Station2" id="checkbox_id" type="checkbox" checked="yes">
-                        <label for="vehicle1">Station 3 Glucose & Hemoglobin</label><br>
-                        <input name="Station3" id="checkbox_id" type="checkbox" checked="checked">
-                        <label for="vehicle1">Station 4 Physician, Obs & Gynae Treatment Plan</label><br>
-                        <input name="Station4" id="checkbox_id" type="checkbox" checked="true">
-                        <label for="vehicle1">Fingerprint Verification</label><br>
-                        <input name="FingerprintVerification" id="checkbox_id" type="checkbox" checked="true">
-                        <label for="vehicle1">Patient Data</label><br>
-                        <input name="PatientData" id="checkbox_id" type="checkbox" checked="true">
-                        <label for="vehicle1">Counter [ 20 / 25 ]</label><br>
-                        <input name="Counter" id="checkbox_id" type="checkbox" checked="true">
-
-                      
+                        <x-form.selectbox labelName="Community Clinic" name="cc_id" required="required" col="col-md-12"
+                            class="selectpicker">
+                            @foreach ($barcodes as $barcode)
+                            <option value="{{ $barcode->id }}">{{ $barcode->barcode_community_clinic }}</option>
+                            @endforeach
+                        </x-form.selectbox>
+                        <x-form.selectbox labelName="Employee Name" name="EmployeeId" required="required" col="col-md-12"
+                            class="selectpicker">
+                            @foreach ($employees as $employee)
+                            <option value="{{ $employee->EmployeeId }}">{{ $employee->FirstName }} {{ $employee->LastName }} </option>
+                            @endforeach
+                        </x-form.selectbox>
+                        
                         <div class="form-group col-md-12">
                             <label for="password">Password</label>
                             <div class="input-group">

@@ -330,6 +330,8 @@ $(document).ready(function(){
                     $('#store_or_update_form #mobile_no').val(data.data.mobile_no);
                     $('#store_or_update_form #gender').val(data.data.gender);
                     $('#store_or_update_form #role_id').val(data.data.role_id);
+                    $('#store_or_update_form #cc_id').val(data.data.cc_id);
+                    $('#store_or_update_form #EmployeeId').val(data.data.EmployeeId);
                     $('#store_or_update_form .selectpicker').selectpicker('refresh');
                     $('#password, #password_confirmation').parents('.form-group').removeClass('required');
                     $('#store_or_update_modal').modal({
