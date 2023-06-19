@@ -264,6 +264,7 @@ $(document).ready(function(){
                     $('#store_or_update_form #update_id').val(data.id);
                     $('#store_or_update_form #name').val(data.name);
                     $('#store_or_update_form #deviceId').val(data.deviceId);
+                    $('#store_or_update_form #DeviceName').val(data.DeviceName);
 
                     $('#store_or_update_modal').modal({
                         keyboard: false,

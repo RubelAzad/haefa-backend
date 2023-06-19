@@ -30,6 +30,9 @@ class UserFormRequest extends FormRequest
         $this->rules['mobile_no'] = ['required','string','max:15','unique:users,mobile_no'];
         $this->rules['gender'] = ['required','integer'];
         $this->rules['role_id'] = ['required','integer'];
+        $this->rules['OrgId'] = ['required'];
+        $this->rules['cc_id'] = ['required'];
+        $this->rules['EmployeeId'] = ['required'];
         $this->rules['password'] = ['required','string','min:8','confirmed'];
         $this->rules['password_confirmation'] = ['required','string','min:8'];
         if(request()->update_id)
