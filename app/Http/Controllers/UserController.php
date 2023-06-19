@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Services\RoleService;
 use App\Services\UserService;
 use App\Http\Requests\UserFormRequest;
+use Modules\BarcodeFormat\Entities\BarcodeFormat;
+use Modules\Employee\Entities\Employee;
 use App\Http\Controllers\BaseController;
 
 
@@ -23,7 +25,9 @@ class UserController extends BaseController
         if (permission('user-access')) {
             $this->setPageData('User','User','fas fa-users');
             $roles = $this->role->index();
-            return view('user.index',compact('roles'));
+            $barcodes=BarcodeFormat::all();
+            $employees=Employee::all();
+            return view('user.index',compact('roles','barcodes','employees'));
         } else {
             return $this->unauthorized_access_blocked();
         }
@@ -47,6 +51,7 @@ class UserController extends BaseController
     public function store_or_update_data(UserFormRequest $request)
     {
         if($request->ajax()){
+            
             if (permission('user-access') || permission('user-edit')) {
                 $result = $this->service->store_or_update_data($request);
                 if($result){
