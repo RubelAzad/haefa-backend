@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class BaseController extends Controller
 {
@@ -69,6 +70,15 @@ class BaseController extends Controller
         $created_at = $updated_at = Carbon::now();
         return $update_id ? $collection->merge(compact('updated_by','updated_at'))
         : $collection->merge(compact('created_by','created_at'));
+    }
+    
+    protected function track_data_org($update_id=null,$collection){
+        $collection->forget('_token'); // remove _token
+        $CreateUser = $UpdateUser = auth()->user()->id;
+        $OrgId = auth()->user()->OrgId;
+        $CreateDate = $UpdateDate = Carbon::now();
+        return $update_id ? $collection->merge(compact('OrgId','UpdateDate','UpdateUser'))
+        : $collection->merge(compact('OrgId','CreateDate','CreateUser'));
     }
 
     protected function data_message($data)

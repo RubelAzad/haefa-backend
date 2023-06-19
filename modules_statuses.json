@@ -37,5 +37,7 @@
     "Prescription": true,
     "BarcodeFormat": true,
     "BarcodeGenerat": true,
-    "BarcodePrint": true
+    "BarcodePrint": true,
+    "RefAddressType": true,
+    "RefChiefComplain": true
 }
