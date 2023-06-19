@@ -18,9 +18,9 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <input type="hidden" name="CCId" value="" id="CCId"/>
+                        <input type="hidden" name="EducationId" value="" id="EducationId"/>
                         <input type="hidden" name="SortOrder" value="8" />
-                        <x-form.textbox labelName="CCCode" name="CCCode" id="CCCode" required="required" col="col-md-12" placeholder="Enter CCCode"/>
+                        <x-form.textbox labelName="EducationCode" name="EducationCode" id="EducationCode" required="required" col="col-md-12" placeholder="Enter EducationCode"/>
                     </div>
                 </div>
                 
