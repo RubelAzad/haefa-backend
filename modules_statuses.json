@@ -40,5 +40,8 @@
     "BarcodePrint": true,
     "RefAddressType": true,
     "RefChiefComplain": true,
-    "RefEducation": true
+    "RefEducation": true,
+    "RefGender": true,
+    "RefDepartment": true,
+    "RefDesignation": true
 }

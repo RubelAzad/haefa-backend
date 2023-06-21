@@ -1,17 +1,17 @@
 <?php
 
-namespace Modules\RefEducation\Entities;
+namespace Modules\RefDepartment\Entities;
 
 use Modules\Base\Entities\BaseModel;
 
-class RefEducation extends BaseModel
+class RefDepartment extends BaseModel
 {
-    protected $table = 'RefEducation';
-    protected $primaryKey = 'EducationId';
+    protected $table = 'RefDepartment';
+    protected $primaryKey = 'RefDepartmentId';
     public $timestamps = false;
 
-    protected $fillable = ['EducationId','EducationCode','Description','SortOrder','Status',
-    'CreateDate','CreateUser','UpdateDate','UpdateUser','OrgId'];
+    protected $fillable = ['RefDepartmentId','WorkPlaceId','DepartmentCode','Description','SortOrder',
+    'Status','CreateDate','CreateUser','UpdateDate','UpdateUser','OrgId'];
 
     protected $order = ['CreateDate'=>'desc'];
     
@@ -24,11 +24,11 @@ class RefEducation extends BaseModel
     
     private function get_datatable_query()
     {
-        if(permission('refeducation-bulk-delete')){
+        if(permission('patient-bulk-delete')){
             //datatable display data from the below fields
-            $this->column_order = [null,'EducationCode','Description','Status',null];
+            $this->column_order = [null,'DepartmentCode','Description','Status',null];
         }else{
-            $this->column_order = ['EducationCode','Description','Status',null];
+            $this->column_order = ['DepartmentCode','Description','Status',null];
         }
 
         $query = self::toBase();
@@ -38,7 +38,7 @@ class RefEducation extends BaseModel
             ******************/
         //    
         if (!empty($this->name)) {
-            $query->where('EducationCode','like', '%'.$this->name.'%');
+            $query->where('DepartmentCode','like', '%'.$this->name.'%');
         }
 
         if (isset($this->orderValue) && isset($this->dirValue)) {
@@ -67,5 +67,9 @@ class RefEducation extends BaseModel
     public function count_all()
     {
         return self::toBase()->get()->count();
+    }
+
+    public function get_workplace(){
+        
     }
 }
