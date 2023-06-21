@@ -49,7 +49,7 @@
                     <form id="form-filter">
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <label for="name">bgenerate Name</label>
+                                <label for="name">Barcode generate Name</label>
                                 <input type="text" class="form-control" name="name" id="name" placeholder="Enter Barcode Generate name">
                             </div>
                             <div class="form-group col-md-12">

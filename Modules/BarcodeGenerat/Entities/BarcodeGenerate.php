@@ -34,7 +34,7 @@ class BarcodeGenerate extends BaseModel
          * *Search Data **
          ******************/
         if (!empty($this->name)) {
-            $query->where('name', 'like', '%' . $this->name . '%');
+            $query->where('mdata_barcode_prefix', 'like', '%' . $this->name . '%');
         }
 
         if (isset($this->orderValue) && isset($this->dirValue)) {
