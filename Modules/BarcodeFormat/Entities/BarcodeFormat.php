@@ -1,6 +1,10 @@
 <?php
 
 namespace Modules\BarcodeFormat\Entities;
+use Modules\BarcodeFormat\Entities\District;
+use Modules\BarcodeFormat\Entities\Upazila;
+use Modules\BarcodeFormat\Entities\Union;
+use Modules\BarcodeFormat\Entities\HealthCenter;
 
 use Modules\Base\Entities\BaseModel;
 
@@ -14,6 +18,22 @@ class BarcodeFormat extends BaseModel
     {
         $this->name = $name;
     }
+    public function district()
+    {
+        return $this->belongsTo(District::class,'barcode_district','Id');
+    }
+    public function upazila()
+    {
+        return $this->belongsTo(Upazila::class,'barcode_upazila','Id');
+    }
+    public function union()
+    {
+        return $this->belongsTo(Union::class,'barcode_union','Id');
+    }
+    public function healthCenter()
+    {
+        return $this->belongsTo(HealthCenter::class,'barcode_community_clinic','HealthCenterId');
+    }
 
     private function get_datatable_query()
     {
@@ -23,7 +43,9 @@ class BarcodeFormat extends BaseModel
             $this->column_order = ['id','barcode_district','barcode_upazila','barcode_union','barcode_community_clinic','barcode_prefix','barcode_number','status',null];
         }
 
-        $query = self::toBase();
+        
+
+        $query = self::with('district');
 
         /*****************
          * *Search Data **

@@ -40,7 +40,7 @@
                         <x-form.selectbox labelName="Community Clinic" name="cc_id" required="required" col="col-md-12"
                             class="selectpicker">
                             @foreach ($barcodes as $barcode)
-                            <option value="{{ $barcode->id }}">{{ $barcode->barcode_community_clinic }}</option>
+                            <option value="{{ $barcode->id }}">{{ $barcode->healthCenter->HealthCenterName }}</option>
                             @endforeach
                         </x-form.selectbox>
                         <x-form.selectbox labelName="Employee Name" name="EmployeeId" required="required" col="col-md-12"
