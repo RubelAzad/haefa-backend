@@ -1,36 +1,33 @@
 <?php
 
-namespace Modules\RefEducation\Http\Controllers;
+namespace Modules\RefGender\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Routing\Controller;
-use Modules\RefEducation\Entities\RefEducation;
-use Modules\RefEducation\Http\Requests\RefEducationFormRequest;
-use Illuminate\Foundation\Validation\ValidatesRequests;
+use Modules\RefGender\Entities\RefGender;
 use Modules\Base\Http\Controllers\BaseController;
+use Modules\RefGender\Http\Requests\RefGenderFormRequest;
 use Illuminate\Support\Str;
 use DB;
 
-class RefEducationController extends BaseController
+class RefGenderController extends BaseController
 {
-    
     protected $model;
-    public function __construct(RefEducation $model)
+    public function __construct(RefGender $model)
     {
         $this->model = $model;
     }
-    
+
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        if(permission('refeducation-access')){
-            $this->setPageData('Refeducation','Refeducation','fas fa-th-list');
-            return view('refeducation::index');
+        if(permission('refgender-access')){
+            $this->setPageData('Refgender','Refgender','fas fa-th-list');
+            return view('refgender::index');
         }else{
             return $this->unauthorized_access_blocked();
         }
@@ -41,7 +38,7 @@ class RefEducationController extends BaseController
      * @return $data
      */
     public function get_datatable_data(Request $request){
-        if(permission('refeducation-access')){
+        if(permission('refgender-access')){
             if($request->ajax()){
                 
                 if (!empty($request->name)) {
@@ -57,26 +54,26 @@ class RefEducationController extends BaseController
                     $no++;
                     $action = '';
 
-                    if(permission('refeducation-edit')){
-                        $action .= ' <a class="dropdown-item edit_data" data-id="' . $value->EducationId . '"><i class="fas fa-edit text-primary"></i> Edit</a>';
+                    if(permission('refgender-edit')){
+                        $action .= ' <a class="dropdown-item edit_data" data-id="' . $value->GenderId . '"><i class="fas fa-edit text-primary"></i> Edit</a>';
                     }
-                    if(permission('refeducation-view')){
-                        $action .= ' <a class="dropdown-item view_data" data-id="' . $value->EducationId . '"><i class="fas fa-eye text-success"></i> View</a>';
+                    if(permission('refgender-view')){
+                        $action .= ' <a class="dropdown-item view_data" data-id="' . $value->GenderId . '"><i class="fas fa-eye text-success"></i> View</a>';
                     }
-                    if(permission('refeducation-delete')){
-                        $action .= ' <a class="dropdown-item delete_data"  data-id="' . $value->EducationId . '" data-name="' . $value->EducationId . '"><i class="fas fa-trash text-danger"></i> Delete</a>';
+                    if(permission('refgender-delete')){
+                        $action .= ' <a class="dropdown-item delete_data"  data-id="' . $value->GenderId . '" data-name="' . $value->GenderId . '"><i class="fas fa-trash text-danger"></i> Delete</a>';
                     }
                     
                     $row = [];
 
-                    if(permission('refeducation-bulk-delete')){
-                        $row[] = table_checkbox($value->EducationId);
+                    if(permission('refgender-bulk-delete')){
+                        $row[] = table_checkbox($value->GenderId);
                     }
-                   
+                    
                     $row[] = $no;
-                    $row[] = $value->EducationCode;
+                    $row[] = $value->GenderCode;
                     $row[] = $value->Description;
-                    $row[] = permission('refeducation-edit') ? change_status($value->EducationId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
+                    $row[] = permission('refgender-edit') ? change_status($value->GenderId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
                     $row[] = action_button($action);
                     $data[] = $row;
                 }
@@ -90,35 +87,34 @@ class RefEducationController extends BaseController
         }
     }
 
-
     /**
      * Update the specified resource in storage.
      * @param Request $request
      * @param int $id
      * @return Renderable
      */
-    public function store_or_update_data(RefEducationFormRequest $request)
+    public function store_or_update_data(RefGenderFormRequest $request)
     {
         if($request->ajax()){
-            if(permission('refeducation-add') || permission('refeducation-edit')){
+            if(permission('refgender-add') || permission('refgender-edit')){
                 try{
                     $collection = collect($request->validated());
-                    if(isset($request->EducationId) && !empty($request->EducationId)){
+                    if(isset($request->GenderId) && !empty($request->GenderId)){
                     $collection = collect($request->all());
                     //track_data from base controller to merge created_by and created_at merge with request data
-                    $collection = $this->track_data_org($request->EducationId,$collection);
-                    $result = $this->model->where('EducationId', $request->EducationId)->update($collection->all());
-                    $output = $this->store_message($result,$request->EducationId);
+                    $collection = $this->track_data_org($request->GenderId,$collection);
+                    $result = $this->model->where('GenderId', $request->GenderId)->update($collection->all());
+                    $output = $this->store_message($result,$request->GenderId);
                     return response()->json($output);
                 }
                 else{
                     $collection = collect($request->all());
                     //track_data from base controller to merge created_by and created_at merge with request data
-                    $collection = $this->track_data_org($request->EducationId,$collection);
+                    $collection = $this->track_data_org($request->GenderId,$collection);
                     //update existing index value
-                    $collection['EducationId'] = Str::uuid();
+                    $collection['GenderId'] = Str::uuid();
                     $result = $this->model->create($collection->all());
-                    $output = $this->store_message($result,$request->EducationId);
+                    $output = $this->store_message($result,$request->GenderId);
                     return response()->json($output);
                 }
 
@@ -144,9 +140,9 @@ class RefEducationController extends BaseController
     public function delete(Request $request)
     {
         if($request->ajax()){
-            if (permission('refeducation-delete')) {
-                $result = $this->model->where('EducationId',$request->id)->delete();
-                $output = $this->store_message($result,$request->EducationId);
+            if (permission('refgender-delete')) {
+                $result = $this->model->where('GenderId',$request->id)->delete();
+                $output = $this->store_message($result,$request->GenderId);
                 return response()->json($output);
             }else{
                 return response()->json($this->access_blocked());
@@ -165,28 +161,29 @@ class RefEducationController extends BaseController
     {
         try{
             if($request->ajax()){
-            if (permission('refeducation-edit')) {
-                    $result = $this->update_change_status($request);
-            if($result){
-                return response()->json(['status'=>'success','message'=>'Status Changed Successfully']);
-            }else{
-                return response()->json(['status'=>'error','message'=>'Something went wrong!']);
-            }
-            }else{
-                $output = $this->access_blocked();
-                return response()->json($output);
-            }
+                if (permission('refgender-edit')) {
+                       $result = $this->update_change_status($request);
+                    if($result){
+                        return response()->json(['status'=>'success','message'=>'Status Changed Successfully']);
+                    }else{
+                        return response()->json(['status'=>'error','message'=>'Something went wrong!']);
+                    }
+                }else{
+                    $output = $this->access_blocked();
+                    return response()->json($output);
+                }
             }else{
                 return response()->json(['status'=>'error','message'=>'Something went wrong!']);
             }
         }catch(\Exception $e){
-            return response()->json(['status'=>'error','message'=>'Something went wrong!']);
+            // return response()->json(['status'=>'error','message'=>'Something went wrong!']);
+            return response()->json(['status'=>'error','message'=>$e->getMessage()]);
         }
     }
 
     public function update_change_status(Request $request)
     {
-        return $this->model->where('EducationId',$request->EducationId)->update(['Status'=>$request->Status]);
+        return $this->model->where('GenderId',$request->GenderId)->update(['Status'=>$request->Status]);
     }
 
     /**
@@ -196,13 +193,13 @@ class RefEducationController extends BaseController
      */
     public function show(Request $request)
     {
-        if(permission('refeducation-view')){
+        if(permission('refgender-view')){
             if($request->ajax()){
-                if (permission('refeducation-view')) {
-                    $RefEducations= RefEducation::where('EducationId','=',$request->id)->first(); 
+                if (permission('refgender-view')) {
+                    $RefGenders= RefGender::where('GenderId','=',$request->id)->first(); 
                 }
             }
-            return view('refeducation::details',compact('RefEducations'))->render();
+            return view('refgender::details',compact('RefGenders'))->render();
         
         }else{
             return $this->unauthorized_access_blocked();
@@ -216,15 +213,15 @@ class RefEducationController extends BaseController
      */
     public function edit(Request $request)
     {
-        return $data = DB::table('RefEducation')->where('EducationId',$request->id)->first();
+        return $data = RefGender::where('GenderId',$request->id)->first();
     }
 
     public function bulk_delete(Request $request)
     {
         if($request->ajax()){
             try{
-                if(permission('refeducation-bulk-delete')){
-                    $result = $this->model->whereIn('EducationId',$request->ids)->delete();
+                if(permission('refgender-bulk-delete')){
+                    $result = $this->model->whereIn('GenderId',$request->ids)->delete();
                     $output = $this->bulk_delete_message($result);
                 }else{
                     $output = $this->access_blocked();
@@ -238,5 +235,4 @@ class RefEducationController extends BaseController
             return response()->json($this->access_blocked());
         }
     }
-
 }

@@ -1,16 +1,16 @@
 <?php
 
-namespace Modules\RefEducation\Entities;
+namespace Modules\RefGender\Entities;
 
 use Modules\Base\Entities\BaseModel;
 
-class RefEducation extends BaseModel
+class RefGender extends BaseModel
 {
-    protected $table = 'RefEducation';
-    protected $primaryKey = 'EducationId';
+    protected $table = 'RefGender';
+    protected $primaryKey = 'GenderId';
     public $timestamps = false;
 
-    protected $fillable = ['EducationId','EducationCode','Description','SortOrder','Status',
+    protected $fillable = ['GenderId','GenderCode','Description','SortOrder','Status',
     'CreateDate','CreateUser','UpdateDate','UpdateUser','OrgId'];
 
     protected $order = ['CreateDate'=>'desc'];
@@ -24,11 +24,11 @@ class RefEducation extends BaseModel
     
     private function get_datatable_query()
     {
-        if(permission('refeducation-bulk-delete')){
+        if(permission('patient-bulk-delete')){
             //datatable display data from the below fields
-            $this->column_order = [null,'EducationCode','Description','Status',null];
+            $this->column_order = [null,'GenderCode','Description','Status',null];
         }else{
-            $this->column_order = ['EducationCode','Description','Status',null];
+            $this->column_order = ['GenderCode','Description','Status',null];
         }
 
         $query = self::toBase();
@@ -38,7 +38,7 @@ class RefEducation extends BaseModel
             ******************/
         //    
         if (!empty($this->name)) {
-            $query->where('EducationCode','like', '%'.$this->name.'%');
+            $query->where('GenderCode','like', '%'.$this->name.'%');
         }
 
         if (isset($this->orderValue) && isset($this->dirValue)) {
