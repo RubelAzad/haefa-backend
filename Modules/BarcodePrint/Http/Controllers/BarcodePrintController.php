@@ -30,22 +30,60 @@ class BarcodePrintController extends BaseController
         }
     }
 
+    public function get_barcodes($barcode_type){
+        $data = DB::table("mdatacc_barcodes")
+            ->where('mdata_barcode_generate',$barcode_type)
+            ->orderBy('mdata_barcode_prefix','ASC')
+            ->get('mdata_barcode_prefix_number');
+
+        return response()->json($data);
+
+    }
+
     public function store_or_update_data(Request $request)
     {
+
         if($request->ajax()){
             $this->setPageData('Print Barcode','Print Barcode','fas fa-barcode',[['name'=>'barcodeprint','link'=> route('barcodeprint')],['name' => 'Print Barcode']]);
-            $start=$request->filterValueStart;
-            $end=$request->filterValueEnd;
-            $barcode_type=$request->barcode_type;
-            $data = [
-                'barcodes' => BarcodeGenerate::whereBetween('mdata_barcode_prefix_number', [$start, $end])->get(),
-            ];
 
-            return response()->json($data);
+
+                $data = array();
+                $data['type'] = $request->barcode_type;
+                $data['start'] = $request->filterValueStart;
+                $data['end'] = $request->filterValueEnd;
+                if ($data['type'] == 'old') {
+                    $data['barcodes'] = DB::table("mdatacc_barcodes")
+                        ->where('mdata_barcode_generate', $data['type'])
+                        ->where('mdata_barcode_prefix_number', '>=', $data['start'])
+                        ->where('mdata_barcode_prefix_number', '<=', $data['end'])
+                        ->orderBy('mdata_barcode_prefix', 'ASC')
+                        ->get('mdata_barcode_prefix_number');
+                   $jsonObjects[] = $data;
+                } else {
+                    $results = DB::table("mdatacc_barcodes")
+                        ->where('mdata_barcode_generate', 'new')
+                        ->where('mdata_barcode_prefix_number', '>=', $data['start'])
+                        ->where('mdata_barcode_prefix_number', '<=', $data['end'])
+                        ->orderBy('mdata_barcode_prefix', 'ASC')
+                        ->get('mdata_barcode_prefix_number');
+                    foreach ($results as $result) {
+                        DB::table('mdatacc_barcodes')
+                            ->where('mdata_barcode_prefix_number', $result->mdata_barcode_prefix_number)
+                            ->update([
+                                'mdata_barcode_generate' => 'old'
+                            ]);
+                        $data['barcodes'] = DB::table('mdatacc_barcodes')
+                            ->where('mdata_barcode_prefix_number', $result->mdata_barcode_prefix_number)
+                            ->get('mdata_barcode_prefix_number');
+                        $jsonObjects[] = $data;
+                    }
+                }
+
+                return response()->json($jsonObjects);
         }else{
             return response()->json($this->access_blocked());
-         }
-        
+        }
+
     }
 
     public function latest_range($mdata_barcode_prefix_number_start){
@@ -73,16 +111,6 @@ class BarcodePrintController extends BaseController
 
     }
 
-
-    public function get_barcodes($barcode_type){
-        $data = DB::table("mdatacc_barcodes")
-            ->where('mdata_barcode_generate',$barcode_type)
-            ->orderBy('mdata_barcode_prefix','ASC')
-            ->get('mdata_barcode_prefix_number');
-
-        return response()->json($data);
-
-    }
     public function view_barcodes($startValue){
 
 

@@ -18,12 +18,37 @@
             <div class="modal-body">
                 <div class="row">
                     <input type="hidden" name="update_id" id="update_id"/>
-                    <x-form.textbox labelName="Barcode District Name" name="barcode_district" required="required" col="col-md-12" placeholder="Enter District Name"/>
-                    <x-form.textbox labelName="Barcode Upazila Name" name="barcode_upazila" required="required" col="col-md-12" placeholder="Enter Upazila Name"/>
-                    <x-form.textbox labelName="Barcode Union Name" name="barcode_union" required="required" col="col-md-12" placeholder="Enter Union Name"/>
-                    <x-form.textbox labelName="Barcode Community Clinic Name" name="barcode_community_clinic" required="required" col="col-md-12" placeholder="Enter Community Clinic Name"/>
-                    <x-form.textbox labelName="Barcode Prefix name" name="barcode_prefix" required="required" col="col-md-12" placeholder="Enter Barcode Prefix name"/>
-                    <x-form.textbox labelName="Barcode Number name" name="barcode_number" required="required" col="col-md-12" placeholder="Enter Barcode Number name"/>
+                    <x-form.selectbox labelName="Barcode District Name" name="barcode_district" required="required" col="col-md-12" class="selectpicker">
+                        @if (!$districts->isEmpty())
+                            @foreach ($districts as $district)
+                                <option value="{{ $district->Id }}">{{ $district->districtName }}</option>
+                            @endforeach
+                        @endif
+                    </x-form.selectbox>
+                    <x-form.selectbox labelName="Barcode Upazila Name" name="barcode_upazila" required="required" col="col-md-12" class="selectpicker">
+                        @if (!$upazilas->isEmpty())
+                            @foreach ($upazilas as $upazila)
+                                <option value="{{ $upazila->Id }}">{{ $upazila->UpazilaName }}</option>
+                            @endforeach
+                        @endif
+                    </x-form.selectbox>
+                    <x-form.selectbox labelName="Barcode Union Name" name="barcode_union" required="required" col="col-md-12" class="selectpicker">
+                        @if (!$unions->isEmpty())
+                            @foreach ($unions as $union)
+                                <option value="{{ $union->Id }}">{{ $union->UnionName }}</option>
+                            @endforeach
+                        @endif
+                    </x-form.selectbox>
+                    <x-form.selectbox labelName="Barcode Community Clinic Name" name="barcode_community_clinic" required="required" col="col-md-12" class="selectpicker">
+                        @if (!$HealthCenters->isEmpty())
+                            @foreach ($HealthCenters as $HealthCenter)
+                                <option value="{{ $HealthCenter->HealthCenterId }}">{{ $HealthCenter->HealthCenterName }}</option>
+                            @endforeach
+                        @endif
+                    </x-form.selectbox>
+                    <x-form.textbox labelName="Barcode Prefix" name="barcode_prefix" required="required" col="col-md-12" placeholder="Enter Barcode Prefix name"/>
+                    <x-form.textbox labelName="Barcode Number" type="number" name="barcode_number" required="required" col="col-md-12" placeholder="Barcode Numbers Must Be Greater Than 0"/>
+                    <p style="margin-left:20px; margin-top:0px; padding:0px;color:red;">Barcode Numbers Must Be Greater Than 0</p>
                 </div>
             </div>
             <!-- /modal body -->

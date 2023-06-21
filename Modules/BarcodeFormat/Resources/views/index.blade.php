@@ -31,7 +31,7 @@
                 </div>
                 <!-- /entry heading -->
                 @if (permission('bformat-add'))
-                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add New bformat','Save')">
+                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add New Barcode Format','Save')">
                     <i class="fas fa-plus-square"></i> Add New
                  </button>
                 @endif
@@ -50,7 +50,7 @@
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label for="name">Barcode Name</label>
-                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter Barcode name">
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter Barcode Format name">
                             </div>
                             <div class="form-group col-md-8 pt-24">
                                <button type="button" class="btn btn-danger btn-sm float-right" id="btn-reset"
@@ -269,13 +269,14 @@ $(document).ready(function(){
                     $('#store_or_update_form #barcode_community_clinic').val(data.barcode_community_clinic);
                     $('#store_or_update_form #barcode_prefix').val(data.barcode_prefix);
                     $('#store_or_update_form #barcode_number').val(data.barcode_number);
+                    $('#store_or_update_form .selectpicker').selectpicker('refresh');
 
                     $('#store_or_update_modal').modal({
                         keyboard: false,
                         backdrop: 'static',
                     });
                     $('#store_or_update_modal .modal-title').html(
-                        '<i class="fas fa-edit"></i> <span>Edit ' + data.name + '</span>');
+                        '<i class="fas fa-edit"></i> <span>Edit ' + data.barcode_prefix + '</span>');
                     $('#store_or_update_modal #save-btn').text('Update');
 
                 },

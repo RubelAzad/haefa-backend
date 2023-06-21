@@ -37,6 +37,8 @@ class PatientController extends BaseController
     {
         if(permission('patient-access')){
             if($request->ajax()){
+
+                set_time_limit(3600);
                 
                 if (!empty($request->name)) {
                     $this->model->setName($request->name);

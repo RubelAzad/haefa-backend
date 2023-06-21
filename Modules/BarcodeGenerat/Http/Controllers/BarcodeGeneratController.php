@@ -22,7 +22,7 @@ class BarcodeGeneratController extends BaseController
     public function index()
     {
         if(permission('bgenerate-access')){
-            $this->setPageData('Barcode Format','Barcode Format','fas fa-th-list');
+            $this->setPageData('Barcode Generate','Barcode Generate','fas fa-th-list');
             $data = [
                 'barcodeFormates' => BarcodeFormat::get(),
             ];

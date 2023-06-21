@@ -5,6 +5,10 @@ use Illuminate\Http\Request;
 use Modules\BarcodeFormat\Entities\BarcodeFormat;
 use Modules\Base\Http\Controllers\BaseController;
 use Modules\BarcodeFormat\Http\Requests\BarcodeFormRequest;
+use Modules\BarcodeFormat\Entities\District;
+use Modules\BarcodeFormat\Entities\Upazila;
+use Modules\BarcodeFormat\Entities\Union;
+use Modules\BarcodeFormat\Entities\HealthCenter;
 
 class BarcodeFormatController extends BaseController
 {
@@ -17,7 +21,13 @@ class BarcodeFormatController extends BaseController
     {
         if(permission('bformat-access')){
             $this->setPageData('Barcode Format','Barcode Format','fas fa-th-list');
-            return view('barcodeformat::index');
+            $data = [
+                'districts' => District::all(),
+                'upazilas' => Upazila::all(),
+                'unions' => Union::all(),
+                'HealthCenters' => HealthCenter::all(),
+            ];
+            return view('barcodeformat::index',$data);
         }else{
             return $this->unauthorized_access_blocked();
         }
@@ -55,10 +65,10 @@ class BarcodeFormatController extends BaseController
                     }
                     $row[] = $no;
                     $row[] = $value->barcode_prefix.''.$value->barcode_number;
-                    $row[] = $value->barcode_district;
-                    $row[] = $value->barcode_upazila;
-                    $row[] = $value->barcode_union;
-                    $row[] = $value->barcode_community_clinic;
+                    $row[] = $value->district->districtName;
+                    $row[] = $value->upazila->UpazilaName;
+                    $row[] = $value->union->UnionName;
+                    $row[] = $value->healthCenter->HealthCenterName;
                     $row[] = permission('bformat-edit') ? change_status($value->id,$value->status,$value->barcode_prefix) : STATUS_LABEL[$value->status];
                     $row[] = action_button($action);
                     $data[] = $row;
