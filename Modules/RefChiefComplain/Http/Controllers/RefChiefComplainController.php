@@ -42,7 +42,7 @@ class RefChiefComplainController extends BaseController
     public function get_datatable_data(Request $request){
         if(permission('refchiefcomplain-access')){
             if($request->ajax()){
-                
+               
                 if (!empty($request->name)) {
                     $this->model->setName($request->name);
                 }

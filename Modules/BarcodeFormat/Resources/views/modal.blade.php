@@ -47,7 +47,7 @@
                         @endif
                     </x-form.selectbox>
                     <x-form.textbox labelName="Barcode Prefix" name="barcode_prefix" required="required" col="col-md-12" placeholder="Enter Barcode Prefix name"/>
-                    <x-form.textbox labelName="Barcode Number" type="number" name="barcode_number" required="required" col="col-md-12" placeholder="Barcode Numbers Must Be Greater Than 0"/>
+                    <x-form.textbox labelName="Barcode Number" type="number" name="barcode_number" value="10000001" required="required" col="col-md-12" placeholder="Barcode Numbers Must Be Greater Than 0" readonly="readonly"/>
                     <p style="margin-left:20px; margin-top:0px; padding:0px;color:red;">Barcode Numbers Must Be Greater Than 0</p>
                 </div>
             </div>
