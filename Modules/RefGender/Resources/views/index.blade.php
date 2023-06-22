@@ -87,7 +87,7 @@
                 </div>
                 <!-- /entry heading -->
                 @if (permission('refgender-add'))
-                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add refgender','Save')">
+                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add refgender','Save');removeId()">
                     <i class="fas fa-plus-square"></i> Add New
                  </button>
                 @endif
@@ -412,6 +412,10 @@ $(document).on('click', '.edit_data', function () {
         });
     }
 });
+
+function removeId(){
+    $('#GenderId').val('');
+}
 
 </script>
 @endpush

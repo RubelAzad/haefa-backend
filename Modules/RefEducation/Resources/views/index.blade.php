@@ -87,7 +87,7 @@
                 </div>
                 <!-- /entry heading -->
                 @if (permission('refeducation-add'))
-                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add Refeducation','Save')">
+                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add Refeducation','Save');removeId()">
                     <i class="fas fa-plus-square"></i> Add New
                  </button>
                 @endif
@@ -412,6 +412,10 @@ $(document).on('click', '.edit_data', function () {
         });
     }
 });
+
+function removeId(){
+    $('#EducationId').val('');
+}
 
 </script>
 @endpush
