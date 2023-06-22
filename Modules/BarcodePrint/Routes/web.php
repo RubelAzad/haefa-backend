@@ -20,6 +20,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['prefix' => 'barcodeprint', 'as'=>'barcodeprint.'], function () {
         Route::post('barcode/product-autocomplete-search', 'barcodeprintController@autocomplete_search_product');
         Route::get('store-or-update', 'barcodeprintcontroller@store_or_update_data')->name('store.or.update');
+        Route::get('store-or-update-range', 'barcodeprintcontroller@store_or_update_data_range')->name('store.or.update.range');
         Route::post('barcode/search-product', 'barcodeprintcontroller@search_product')->name('barcode.search.product');
         Route::get('print-barcode', 'barcodeprintcontroller@index')->name('print.barcode');
         Route::post('generate-barcode', 'barcodecontroller@generatebarcode')->name('generate.barcode');

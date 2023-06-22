@@ -19,6 +19,7 @@ class BarcodeGenerateFormRequest extends FormRequest
         $rules['mdata_barcode_prefix_number'] = ['string'];
         $rules['mdata_barcode_generate'] = ['string'];
         $rules['mdata_barcode_status'] = ['string'];
+        $rules['address'] = ['required'];
         return $rules;
     }
 
