@@ -18,6 +18,13 @@
             <div class="modal-body">
                 <div class="row">
                     <input type="hidden" name="update_id" id="update_id"/>
+                    <x-form.selectbox labelName="Full Address" name="address" col="col-md-12" class="selectpicker">
+                        @if (!$addresses->isEmpty())
+                            @foreach ($addresses as $address)
+                                <option value="{{ $address->healthCenter->HealthCenterName }},{{ $address->union->UnionName }},{{ $address->upazila->UpazilaName }},{{ $address->district->districtName }}">{{ $address->healthCenter->HealthCenterName }},{{ $address->union->UnionName }},{{ $address->upazila->UpazilaName }},{{ $address->district->districtName }}</option>
+                            @endforeach
+                        @endif
+                    </x-form.selectbox>
                     <x-form.selectbox labelName="Barcode Prefix" name="mdata_barcode_prefix" onchange="getVariantOptionList(this.value)" col="col-md-12" class="selectpicker">
                         @if (!$barcodeFormates->isEmpty())
                             @foreach ($barcodeFormates as $barcodeFormate)

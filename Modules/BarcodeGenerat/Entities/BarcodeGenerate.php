@@ -3,6 +3,10 @@
 namespace Modules\BarcodeGenerat\Entities;
 
 use Modules\Base\Entities\BaseModel;
+use Modules\BarcodeFormat\Entities\District;
+use Modules\BarcodeFormat\Entities\Upazila;
+use Modules\BarcodeFormat\Entities\Union;
+use Modules\BarcodeFormat\Entities\HealthCenter;
 
 class BarcodeGenerate extends BaseModel
 {
@@ -10,6 +14,23 @@ class BarcodeGenerate extends BaseModel
     protected $fillable = ['mdata_barcode_prefix','mdata_barcode_number','mdata_barcode_prefix_number','mdata_barcode_generate','mdata_barcode_status','status','created_by','updated_by'];
 
     protected $table = 'mdatacc_barcodes';
+
+    public function district()
+    {
+        return $this->belongsTo(District::class,'barcode_district','Id');
+    }
+    public function upazila()
+    {
+        return $this->belongsTo(Upazila::class,'barcode_upazila','Id');
+    }
+    public function union()
+    {
+        return $this->belongsTo(Union::class,'barcode_union','Id');
+    }
+    public function healthCenter()
+    {
+        return $this->belongsTo(HealthCenter::class,'barcode_community_clinic','HealthCenterId');
+    }
     
     protected $name;
 

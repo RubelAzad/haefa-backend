@@ -24,6 +24,7 @@ class BarcodeGeneratController extends BaseController
         if(permission('bgenerate-access')){
             $this->setPageData('Barcode Generate','Barcode Generate','fas fa-th-list');
             $data = [
+                'addresses' => BarcodeFormat::with('district','upazila','union','healthCenter')->get(),
                 'barcodeFormates' => BarcodeFormat::get(),
             ];
             return view('barcodegenerat::index',$data);
@@ -81,15 +82,15 @@ class BarcodeGeneratController extends BaseController
 
     public function store_or_update_data(Request $request){
 
+        set_time_limit(3600);
         $data = array();
         $data['code_format'] = $request->mdata_barcode_prefix;
         $data['range'] = $request->mdata_barcode_number;
         $data['generate'] = $request->mdata_barcode_generate;
+        $data['address'] = $request->address;
         $check = BarcodeGenerate::where('mdata_barcode_prefix', $request->mdata_barcode_prefix)->latest('mdata_barcode_number')->first();
         if(empty($check)){
             foreach (range(0, $request->mdata_barcode_generate - 1) as $i) {
-
-
 
                 $data['range'] = $request->mdata_barcode_number + $i; // Increase the value of $data['range'] by 1
                 $data['create_date'] = Carbon::now()->toDateTimeString();
@@ -103,7 +104,8 @@ class BarcodeGeneratController extends BaseController
                     'mdata_barcode_prefix_number'=>$data['concat'],
                     'created_at' => Carbon::now()->toDateTimeString(),
                     'status' => $data['status'],
-                    'created_by' => auth()->user()->name
+                    'created_by' => auth()->user()->name,
+                    'address'=>$data['address']
                 ]);
                 $output = $this->store_message('ok',$request->update_id);
 
@@ -127,7 +129,8 @@ class BarcodeGeneratController extends BaseController
                     'mdata_barcode_prefix_number'=>$data['concat'],
                     'created_at' => Carbon::now()->toDateTimeString(),
                     'status' => $data['status'],
-                    'created_by' => auth()->user()->name
+                    'created_by' => auth()->user()->name,
+                    'address'=>$data['address']
                 ]);
 
                 $output = $this->store_message('ok',$request->update_id);
