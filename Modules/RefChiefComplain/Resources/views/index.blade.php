@@ -87,7 +87,7 @@
                 </div>
                 <!-- /entry heading -->
                 @if (permission('refchiefcomplain-add'))
-                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add Refchiefcomplain','Save')">
+                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add Refchiefcomplain','Save');removeId()">
                     <i class="fas fa-plus-square"></i> Add New
                  </button>
                 @endif
@@ -177,7 +177,7 @@ $(document).ready(function(){
             zeroRecords: '<strong class="text-danger">No Data Found</strong>'
         },
         "ajax": {
-            "url": "{{route('refchiefcomplain.datatable.data')}}",
+            "url": "{{route('chiefcomplain.datatable.data')}}",
             "type": "POST",
             "data": function (data) {
                 data.name = $("#form-filter #name").val();
@@ -260,7 +260,7 @@ $(document).ready(function(){
     $(document).on('click', '#save-btn', function () {
         let form = document.getElementById('store_or_update_form');
         let formData = new FormData(form);
-        let url = "{{route('refchiefcomplain.store.or.update')}}";
+        let url = "{{route('chiefcomplain.store.or.update')}}";
         let id = $('#CCId').val();
         let method;
         if (id) {
@@ -278,7 +278,7 @@ $(document).ready(function(){
        // let date = $(this).data('date');
         if (id) {
             $.ajax({
-                url: "{{route('refchiefcomplain.show')}}",
+                url: "{{route('chiefcomplain.show')}}",
                 type: "POST",
                 data: { id: id,_token: _token},
                 success: function (data) {
@@ -306,7 +306,7 @@ $(document).ready(function(){
         let name  = "Refchiefcomplain";
         console.log(name);
         let row   = table.row($(this).parent('tr'));
-        let url   = "{{ route('refchiefcomplain.delete') }}";
+        let url   = "{{ route('chiefcomplain.delete') }}";
         let response = delete_data(id, url, table, row, name);
         
     });
@@ -326,7 +326,7 @@ $(document).ready(function(){
                 icon: 'warning',
             });
         }else{
-            let url = "{{route('refchiefcomplain.bulk.delete')}}";
+            let url = "{{route('chiefcomplain.bulk.delete')}}";
             bulk_delete(ids,url,table,rows);
         }
     }
@@ -336,7 +336,7 @@ $(document).ready(function(){
         let Status    = $(this).data('status');
         let name  = $(this).data('name');
         let row   = table.row($(this).parent('tr'));
-        let url   = "{{ route('refchiefcomplain.change.status') }}";
+        let url   = "{{ route('chiefcomplain.change.status') }}";
         Swal.fire({
             title: 'Are you sure to change ' + name + ' status?',
             icon: 'warning',
@@ -378,7 +378,7 @@ $(document).on('click', '.edit_data', function () {
     
     if (id) {
         $.ajax({
-            url: "{{route('refchiefcomplain.edit')}}",
+            url: "{{route('chiefcomplain.edit')}}",
             type: "POST",
             data: { id: id,_token: _token},
             dataType: "JSON",
@@ -406,6 +406,10 @@ $(document).on('click', '.edit_data', function () {
         });
     }
 });
+
+function removeId(){
+    $('#IllnessId').val('');
+}
 
 </script>
 @endpush

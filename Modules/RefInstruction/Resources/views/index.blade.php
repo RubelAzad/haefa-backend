@@ -86,8 +86,8 @@
                     <h2 class="dt-page__title mb-0 text-primary"><i class="{{ $page_icon }}"></i> {{ $sub_title }}</h2>
                 </div>
                 <!-- /entry heading -->
-                @if (permission('refillness-add'))
-                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add refillness','Save');removeId()">
+                @if (permission('refinstruction-add'))
+                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add Refinstruction','Save');removeId()">
                     <i class="fas fa-plus-square"></i> Add New
                  </button>
                 @endif
@@ -104,8 +104,8 @@
                     <form id="form-filter">
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="name">IllnessCode</label>
-                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter IllnessCode">
+                                <label for="name">Instruction Code</label>
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter Instruction Code">
                             </div>
                             <div class="form-group col-md-8 pt-24">
                                <button type="button" class="btn btn-danger btn-sm float-right" id="btn-reset"
@@ -122,7 +122,7 @@
                     <table id="dataTable" class="table table-striped table-bordered table-hover">
                         <thead class="bg-primary">
                             <tr>
-                                @if (permission('refillness-bulk-delete'))
+                                @if (permission('refinstruction-bulk-delete'))
                                 <th>
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="select_all" onchange="select_all()">
@@ -131,7 +131,9 @@
                                 </th>
                                 @endif
                                 <th>Sl</th>
-                                <th>IllnessCode</th>
+                                <th>InstructionCode</th>
+                                <th>InstructionInEnglish</th>
+                                <th>InstructionInBangla</th>
                                 <th>Description</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -153,8 +155,8 @@
     <!-- /grid -->
 
 </div>
-@include('refillness::view-modal')
-@include('refillness::add-edit-modal')
+@include('refinstruction::view-modal')
+@include('refinstruction::add-edit-modal')
 @endsection
 
 @push('script')
@@ -177,7 +179,7 @@ $(document).ready(function(){
             zeroRecords: '<strong class="text-danger">No Data Found</strong>'
         },
         "ajax": {
-            "url": "{{route('refillness.datatable.data')}}",
+            "url": "{{route('refinstruction.datatable.data')}}",
             "type": "POST",
             "data": function (data) {
                 data.name = $("#form-filter #name").val();
@@ -185,7 +187,7 @@ $(document).ready(function(){
             }
         },
         "columnDefs": [{
-                @if (permission('refillness-bulk-delete'))
+                @if (permission('refinstruction-bulk-delete'))
                 "targets": [0,4],
                 @else 
                 "targets": [3],
@@ -194,7 +196,7 @@ $(document).ready(function(){
                 "className": "text-center"
             },
             {
-                @if (permission('refillness-bulk-delete'))
+                @if (permission('refinstruction-bulk-delete'))
                 "targets": [1,3],
                 @else 
                 "targets": [0,2],
@@ -207,7 +209,7 @@ $(document).ready(function(){
             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'<'float-right'p>>>",
 
         "buttons": [
-            @if (permission('refillness-report'))
+            @if (permission('refinstruction-report'))
             {
                 'extend':'colvis','className':'btn btn-secondary btn-sm text-white','text':'Column'
             },
@@ -216,7 +218,7 @@ $(document).ready(function(){
                 'text':'Excel',
                 'className':'btn btn-secondary btn-sm text-white',
                 "title": "Menu List",
-                "filename": "Ref-Illness",
+                "filename": "refinstruction",
                 "exportOptions": {
                     columns: function (index, data, node) {
                         return table.column(index).visible();
@@ -228,7 +230,7 @@ $(document).ready(function(){
                 'text':'PDF',
                 'className':'btn btn-secondary btn-sm text-white',
                 "title": "Menu List",
-                "filename": "Ref-Illness",
+                "filename": "refinstruction",
                 "orientation": "landscape", //portrait
                 "pageSize": "A4", //A3,A5,A6,legal,letter
                 "exportOptions": {
@@ -236,7 +238,7 @@ $(document).ready(function(){
                 },
             },
             @endif 
-            @if (permission('refillness-bulk-delete'))
+            @if (permission('refinstruction-bulk-delete'))
             {
                 'className':'btn btn-danger btn-sm delete_btn d-none text-white',
                 'text':'Delete',
@@ -260,14 +262,8 @@ $(document).ready(function(){
     $(document).on('click', '#save-btn', function () {
         let form = document.getElementById('store_or_update_form');
         let formData = new FormData(form);
-        let url = "{{route('refillness.store.or.update')}}";
-        let id = $('#CCId').val();
+        let url = "{{route('refinstruction.store.or.update')}}";
         let method;
-        if (id) {
-            method = 'update';
-        } else {
-            method = 'add';
-        }
         store_or_update_data(table, method, url, formData);
     });
 
@@ -278,7 +274,7 @@ $(document).ready(function(){
        // let date = $(this).data('date');
         if (id) {
             $.ajax({
-                url: "{{route('refillness.show')}}",
+                url: "{{route('refinstruction.show')}}",
                 type: "POST",
                 data: { id: id,_token: _token},
                 success: function (data) {
@@ -291,7 +287,7 @@ $(document).ready(function(){
                         backdrop: 'static',
                     });
                     $('#view_modal .modal-title').html(
-                        '<i class="fas fa-eye"></i> <span>refillness</span>');
+                        '<i class="fas fa-eye"></i> <span>refinstruction</span>');
                 },
                 error: function (xhr, ajaxOption, thrownError) {
                     console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
@@ -303,10 +299,10 @@ $(document).ready(function(){
     $(document).on('click', '.delete_data', function () {
         let id    = $(this).data('id');
         // let name  = $(this).data('name');
-        let name  = "refillness";
+        let name  = "refinstruction";
         console.log(name);
         let row   = table.row($(this).parent('tr'));
-        let url   = "{{ route('refillness.delete') }}";
+        let url   = "{{ route('refinstruction.delete') }}";
         let response = delete_data(id, url, table, row, name);
         
     });
@@ -326,46 +322,46 @@ $(document).ready(function(){
                 icon: 'warning',
             });
         }else{
-            let url = "{{route('refillness.bulk.delete')}}";
+            let url = "{{route('refinstruction.bulk.delete')}}";
             bulk_delete(ids,url,table,rows);
         }
     }
 
-});
+    $(document).on('click', '.change_status', function () {
+        let CCId    = $(this).data('id');
+        let Status    = $(this).data('status');
+        let name  = $(this).data('name');
+        let row   = table.row($(this).parent('tr'));
+        let url   = "{{ route('refinstruction.change.status') }}";
+        Swal.fire({
+            title: 'Are you sure to change ' + name + ' status?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes!'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    data: { CCId: CCId,Status:Status, _token: _token},
+                    dataType: "JSON",
+                }).done(function (response) {
+                    if (response.status == "success") {
+                        Swal.fire("Status Changed", response.message, "success").then(function () {
+                            table.ajax.reload(null, false);
+                        });
+                    }
+                    if (response.status == "error") {
+                        Swal.fire('Oops...', response.message, "error");
+                    }
+                }).fail(function () {
+                    Swal.fire('Oops...', "Somthing went wrong with ajax!", "error");
+                });
+            }
+        });
 
-$(document).on('click', '.change_status', function () {
-    let IllnessId    = $(this).data('id');
-    let Status    = $(this).data('status');
-    let name  = $(this).data('name');
-    let row   = table.row($(this).parent('tr'));
-    let url   = "{{ route('refillness.change.status') }}";
-    Swal.fire({
-        title: 'Are you sure to change ' + name + ' status?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes!'
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                url: url,
-                type: "POST",
-                data: { IllnessId: IllnessId,Status:Status, _token: _token},
-                dataType: "JSON",
-            }).done(function (response) {
-                if (response.status == "success") {
-                    Swal.fire("Status Changed", response.message, "success").then(function () {
-                        table.ajax.reload(null, false);
-                    });
-                }
-                if (response.status == "error") {
-                    Swal.fire('Oops...', response.message, "error");
-                }
-            }).fail(function () {
-                Swal.fire('Oops...', "Somthing went wrong with ajax!", "error");
-            });
-        }
     });
 
 });
@@ -378,24 +374,18 @@ $(document).on('click', '.edit_data', function () {
     
     if (id) {
         $.ajax({
-            url: "{{route('refillness.edit')}}",
+            url: "{{route('refinstruction.edit')}}",
             type: "POST",
             data: { id: id,_token: _token},
             dataType: "JSON",
             success: function (data) {
                 console.log(data);
                 //$('#store_or_update_form #update_id').val(data.AddressTypeId);
-                $('#IllnessCode').val(data.IllnessCode);
-                $('#HOIllness').val(data.HOIllness);
-                $('#FamilyHO').val(data.FamilyHO);
+                $('#InstructionCode').val(data.InstructionCode);
+                $('#InstructionInEnglish').val(data.InstructionInEnglish);
+                $('#InstructionInBangla').val(data.InstructionInBangla);
                 $('#Description').val(data.Description);
-                $('#IllnessId').val(data.IllnessId);
-                var status = data.Status;
-                if(status=='1'){
-                    $('#activeCheckbox').prop('checked',true);
-                }else{
-                    $('#inactiveCheckbox').prop('checked', true);
-                }
+                $('#RefInstructionId').val(data.RefInstructionId);
 
                 //$('#store_or_update_form #AddressTypeCode').val(data.AddressTypeCode);
 
@@ -404,7 +394,7 @@ $(document).on('click', '.edit_data', function () {
                     backdrop: 'static',
                 });
                 $('#store_or_update_modal .modal-title').html(
-                    '<i class="fas fa-edit"></i> <span>Edit refillness</span>');
+                    '<i class="fas fa-edit"></i> <span>Edit refinstruction</span>');
                 $('#store_or_update_modal #save-btn').text('Update');
 
             },
@@ -416,8 +406,7 @@ $(document).on('click', '.edit_data', function () {
 });
 
 function removeId(){
-    $('#IllnessId').val('');
+    $('#RefInstructionId').val('');
 }
-
 </script>
 @endpush

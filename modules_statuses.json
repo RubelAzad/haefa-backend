@@ -44,5 +44,6 @@
     "RefGender": true,
     "RefDepartment": true,
     "RefDesignation": true,
-    "RefIllness": true
+    "RefIllness": true,
+    "RefInstruction": true
 }

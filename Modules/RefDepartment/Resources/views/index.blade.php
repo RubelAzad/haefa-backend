@@ -88,7 +88,7 @@
                 <!-- /entry heading -->
 
                 @if (permission('refdepartment-add'))
-                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add RefDepartment','Save');optionData()">
+                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add RefDepartment','Save');optionData();removeId()">
                     <i class="fas fa-plus-square"></i> Add New
                  </button>
                 @endif
@@ -452,6 +452,10 @@ function optionData(){
             console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
         }
     });
+}
+
+function removeId(){
+    $('#RefDepartmentId').val('');
 }
 </script>
 @endpush

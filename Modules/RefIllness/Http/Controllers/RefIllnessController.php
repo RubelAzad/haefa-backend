@@ -123,8 +123,8 @@ class RefillnessController extends BaseController
                 }
 
                 }catch(\Exception $e){
-                    return response()->json(['status'=>'error','message'=>$e->getMessage()]);
-                    // return response()->json(['status'=>'error','message'=>'Something went wrong !']);
+                    // return response()->json(['status'=>'error','message'=>$e->getMessage()]);
+                    return response()->json(['status'=>'error','message'=>'Something went wrong !']);
                 }
                 
             }else{

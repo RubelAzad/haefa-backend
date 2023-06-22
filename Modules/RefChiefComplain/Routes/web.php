@@ -13,8 +13,8 @@
 
 //User Routes
 Route::group(['middleware' => ['auth']], function () {
-Route::get('refchiefcomplain','RefChiefComplainController@index')->name('menu');
-Route::group(['prefix' => 'refchiefcomplain', 'as'=>'refchiefcomplain.'], function () {
+Route::get('chiefcomplain','RefChiefComplainController@index')->name('menu');
+Route::group(['prefix' => 'chiefcomplain', 'as'=>'chiefcomplain.'], function () {
     Route::post('datatable-data', 'RefChiefComplainController@get_datatable_data')->name('datatable.data');
     Route::post('store-or-update', 'RefChiefComplainController@store_or_update_data')->name('store.or.update');
     Route::post('edit', 'RefChiefComplainController@edit')->name('edit');
