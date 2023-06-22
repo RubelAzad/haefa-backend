@@ -32,7 +32,7 @@
                             @endforeach
                         @endif
                     </x-form.selectbox>
-                    <x-form.textbox labelName="Barcode Number" name="mdata_barcode_number" col="col-md-12" placeholder="Enter Product BNCN" class="mdata_barcode_number"/>
+                    <x-form.textbox labelName="Barcode Number" name="mdata_barcode_number" col="col-md-12" placeholder="Enter Product BNCN" class="mdata_barcode_number" readonly="readonly"/>
                     <x-form.textbox labelName="Barcode Generate Range" name="mdata_barcode_generate" required="required" col="col-md-12" placeholder="Enter Union Name"/>
                 </div>
             </div>
