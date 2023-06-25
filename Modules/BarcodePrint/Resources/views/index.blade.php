@@ -72,6 +72,16 @@
 
                         </div>
 
+                        <div class="d-none" id="select-barcode-filter-range-old" >
+                            <x-form.selectbox labelName="Barcode Prefix" name="mdata_barcode_prefix" col="col-md-4" class="mdata_barcode_prefix selectpicker"/>
+                            <x-form.textbox labelName="Starting Range" name="starting_range" required="required" col="col-md-2" placeholder="Enter Starting Range" />
+                            <x-form.textbox labelName="Ending Range" name="ending_range" required="required" col="col-md-2" placeholder="Enter Ending Range" />
+                            <div class="form-group col-md-2" style="padding-top: 22px;">
+                                <button type="button" class="btn btn-primary btn-sm" style="width: 90px" id="save-old-range-btn"> Show</button>
+                            </div>
+
+                        </div>
+
                         <div class="d-none" id="select-barcode-range" >
                             <x-form.selectbox labelName="Barcode Start" name="mdata_barcode_prefix_number_start"
                                               col="col-md-4" class="mdata_barcode_prefix_number_start selectpicker"/>
@@ -95,12 +105,20 @@
                             margin-left: -1.6rem;
                         }
 
+                        #select-barcode-filter-range-old {
+                            display: flex;
+                            flex-wrap: wrap;
+                            margin-right: -1.6rem;
+                            margin-left: -1.6rem;
+                        }
+
                         #select-barcode-range {
                             display: flex;
                             flex-wrap: wrap;
                             margin-right: -1.6rem;
                             margin-left: -1.6rem;
                         }
+
                         .select-barcode-type{
                             display: flex;
                             flex-wrap: wrap;
@@ -487,53 +505,113 @@
         });
 
 
+        $('#save-old-range-btn').on('click', function (event) {
+
+
+            event.preventDefault();
+            var barcode_type1 = $('input[name="barcode_type"]:checked').val();
+
+
+
+            if(barcode_type1 == "old"){
+                var starting_range = $('input[name="starting_range"]').val();
+                var ending_range = $('input[name="ending_range"]').val();
+                var mdata_barcode_prefix = $('#select-barcode-filter-range-old select[name="mdata_barcode_prefix"]').val();
+
+                $.ajax({
+                    url: '{{ route('barcodeprint.store.or.update.range') }}',
+                    method: 'GET',
+                    data: {mdata_barcode_prefix: mdata_barcode_prefix, starting_range: starting_range,ending_range: ending_range, barcode_type1: barcode_type1},
+                    beforeSend: function(){
+                        $('#save-old-range-btn').addClass('kt-spinner kt-spinner--md kt-spinner--light','');
+                    },
+                    complete: function(){
+                        $('#save-old-range-btn').removeClass('kt-spinner kt-spinner--md kt-spinner--light','');
+                    },
+
+
+                    success: function (data) {
+                        $('#select-barcode-range').removeClass('d-none');
+
+                        $('#generate_barcode_form #mdata_barcode_prefix_number_start').empty();
+                        $('#generate_barcode_form #mdata_barcode_prefix_number_end').empty();
+                        $.each(data, function (key, value) {
+                            if (!$.trim(data)) {
+                                $('#generate_barcode_form .mdata_barcode_prefix_number_end').addClass('d-none');
+                            } else {
+                                $('#generate_barcode_form .mdata_barcode_prefix_number_end').removeClass('d-none');
+                                $('#generate_barcode_form .mdata_barcode_prefix_number_start').removeClass('d-none');
+                                $('#generate_barcode_form #mdata_barcode_prefix_number_start').append('<option value="' + value.mdata_barcode_prefix_number + '">' + value.mdata_barcode_prefix_number + '</option>');
+                                $('#generate_barcode_form #mdata_barcode_prefix_number_end').append('<option value="' + value.mdata_barcode_prefix_number + '">' + value.mdata_barcode_prefix_number + '</option>');
+                                $('#generate_barcode_form #mdata_barcode_prefix_number_start.selectpicker').selectpicker('refresh');
+                                $('#generate_barcode_form #mdata_barcode_prefix_number_end.selectpicker').selectpicker('refresh');
+                            }
+                        });
+                        $('#generate_barcode_form .selectpicker').selectpicker('refresh');
+
+
+                    },
+
+                });
+            }
+
+
+        });
+
         $('#save-range-btn').on('click', function (event) {
 
 
             event.preventDefault();
             var barcode_type1 = $('input[name="barcode_type"]:checked').val();
-            console.log(barcode_type1);
-            var mdata_barcode_prefix = $('select[name="mdata_barcode_prefix"]').val();
-            console.log(mdata_barcode_prefix);
-            var show_range = $('input[name="show_range"]').val();
 
 
-            $.ajax({
-                url: '{{ route('barcodeprint.store.or.update.range') }}',
-                method: 'GET',
-                data: {mdata_barcode_prefix: mdata_barcode_prefix, show_range: show_range,barcode_type1: barcode_type1},
-                beforeSend: function(){
-                    $('#save-range-btn').addClass('kt-spinner kt-spinner--md kt-spinner--light','');
-                },
-                complete: function(){
-                    $('#save-range-btn').removeClass('kt-spinner kt-spinner--md kt-spinner--light','');
-                },
+            if(barcode_type1 == "new"){
+
+                var show_range = $('input[name="show_range"]').val();
+
+                var mdata_barcode_prefix = $('#select-barcode-filter-range select[name="mdata_barcode_prefix"]').val();
+
+                $.ajax({
+                    url: '{{ route('barcodeprint.store.or.update.range') }}',
+                    method: 'GET',
+                    data: {mdata_barcode_prefix: mdata_barcode_prefix, show_range: show_range,barcode_type1: barcode_type1},
+                    beforeSend: function(){
+                        $('#save-range-btn').addClass('kt-spinner kt-spinner--md kt-spinner--light','');
+                    },
+                    complete: function(){
+                        $('#save-range-btn').removeClass('kt-spinner kt-spinner--md kt-spinner--light','');
+                    },
 
 
-                success: function (data) {
-                    $('#select-barcode-range').removeClass('d-none');
-                    console.log(data);
-                    $('#generate_barcode_form #mdata_barcode_prefix_number_start').empty();
-                    $('#generate_barcode_form #mdata_barcode_prefix_number_end').empty();
-                    $.each(data, function (key, value) {
-                        if (!$.trim(data)) {
-                            $('#generate_barcode_form .mdata_barcode_prefix_number_end').addClass('d-none');
-                        } else {
-                            $('#generate_barcode_form .mdata_barcode_prefix_number_end').removeClass('d-none');
-                            $('#generate_barcode_form .mdata_barcode_prefix_number_start').removeClass('d-none');
-                            $('#generate_barcode_form #mdata_barcode_prefix_number_start').append('<option value="' + value.mdata_barcode_prefix_number + '">' + value.mdata_barcode_prefix_number + '</option>');
-                            $('#generate_barcode_form #mdata_barcode_prefix_number_end').append('<option value="' + value.mdata_barcode_prefix_number + '">' + value.mdata_barcode_prefix_number + '</option>');
-                            $('#generate_barcode_form #mdata_barcode_prefix_number_start.selectpicker').selectpicker('refresh');
-                            $('#generate_barcode_form #mdata_barcode_prefix_number_end.selectpicker').selectpicker('refresh');
-                        }
-                    });
-                    $('#generate_barcode_form .selectpicker').selectpicker('refresh');
+                    success: function (data) {
+                        $('#select-barcode-range').removeClass('d-none');
+
+                        $('#generate_barcode_form #mdata_barcode_prefix_number_start').empty();
+                        $('#generate_barcode_form #mdata_barcode_prefix_number_end').empty();
+                        $.each(data, function (key, value) {
+                            if (!$.trim(data)) {
+                                $('#generate_barcode_form .mdata_barcode_prefix_number_end').addClass('d-none');
+                            } else {
+                                $('#generate_barcode_form .mdata_barcode_prefix_number_end').removeClass('d-none');
+                                $('#generate_barcode_form .mdata_barcode_prefix_number_start').removeClass('d-none');
+                                $('#generate_barcode_form #mdata_barcode_prefix_number_start').append('<option value="' + value.mdata_barcode_prefix_number + '">' + value.mdata_barcode_prefix_number + '</option>');
+                                $('#generate_barcode_form #mdata_barcode_prefix_number_end').append('<option value="' + value.mdata_barcode_prefix_number + '">' + value.mdata_barcode_prefix_number + '</option>');
+                                $('#generate_barcode_form #mdata_barcode_prefix_number_start.selectpicker').selectpicker('refresh');
+                                $('#generate_barcode_form #mdata_barcode_prefix_number_end.selectpicker').selectpicker('refresh');
+                            }
+                        });
+                        $('#generate_barcode_form .selectpicker').selectpicker('refresh');
 
 
-                },
+                    },
 
-            });
+                });
+            }
+
+
         });
+
+
 
 
         // Bind the printPDF function to the click event of your button
@@ -544,37 +622,77 @@
 
         //get Generated Barcode from radio button
         function getGeneratedBarcode(barcode_type) {
+            if(barcode_type == "old"){
 
-            $.ajax({
-                url: "{{url('/get-barcodes')}}/" + barcode_type,
-                type: "GET",
-                dataType: "json",
-                beforeSend: function(){
-                    $('#spinner').addClass('spinner-border text-dark');
-                },
-                complete: function(){
-                    $('#spinner').removeClass('spinner-border text-dark');
-                },
-                success: function (data) {
-                    $('#select-barcode-filter-range').removeClass('d-none');
-                    console.log(data);
-                    $('#generate_barcode_form #mdata_barcode_prefix').empty();
-                    $.each(data, function (key, value) {
+                $.ajax({
+                    url: "{{url('/get-barcodes')}}/" + barcode_type,
+                    type: "GET",
+                    dataType: "json",
+                    beforeSend: function(){
+                        $('#spinner').addClass('spinner-border text-dark');
+                    },
+                    complete: function(){
+                        $('#spinner').removeClass('spinner-border text-dark');
+                    },
+                    success: function (data) {
 
-                        if (!$.trim(data)) {
-                            $('#generate_barcode_form #mdata_barcode_prefix').addClass('d-none');
-                        } else {
-                            $('#generate_barcode_form #mdata_barcode_prefix').append('<option value="' + value.mdata_barcode_prefix + '">' + value.mdata_barcode_prefix +' ( '+ value.mdata_barcode_count + ' ) </option>');
-                            $('#generate_barcode_form #mdata_barcode_prefix.selectpicker').selectpicker('refresh');
-                        }
-                    });
-                    $('#generate_barcode_form .selectpicker').selectpicker('refresh');
+                        $('#select-barcode-filter-range').addClass('d-none');
+                        $('#select-barcode-filter-range-old').removeClass('d-none');
+
+                        $('#generate_barcode_form #mdata_barcode_prefix').empty();
+                        $.each(data, function (key, value) {
+
+                            if (!$.trim(data)) {
+                                $('#generate_barcode_form #mdata_barcode_prefix').addClass('d-none');
+                            } else {
+                                $('#generate_barcode_form #mdata_barcode_prefix').append('<option value="' + value.mdata_barcode_prefix + '">' + value.mdata_barcode_prefix +' ( '+ value.mdata_barcode_count + ' ) </option>');
+                                $('#generate_barcode_form #mdata_barcode_prefix.selectpicker').selectpicker('refresh');
+                            }
+                        });
+                        $('#generate_barcode_form .selectpicker').selectpicker('refresh');
 
 
-                },
+                    },
 
 
-            });
+                });
+            }else{
+
+                $.ajax({
+                    url: "{{url('/get-barcodes')}}/" + barcode_type,
+                    type: "GET",
+                    dataType: "json",
+                    beforeSend: function(){
+                        $('#spinner').addClass('spinner-border text-dark');
+                    },
+                    complete: function(){
+                        $('#spinner').removeClass('spinner-border text-dark');
+                    },
+                    success: function (data) {
+
+                        $('#select-barcode-filter-range-old').addClass('d-none');
+                        $('#select-barcode-filter-range').removeClass('d-none');
+
+                        $('#generate_barcode_form #mdata_barcode_prefix').empty();
+                        $.each(data, function (key, value) {
+
+                            if (!$.trim(data)) {
+                                $('#generate_barcode_form #mdata_barcode_prefix').addClass('d-none');
+                            } else {
+                                $('#generate_barcode_form #mdata_barcode_prefix').append('<option value="' + value.mdata_barcode_prefix + '">' + value.mdata_barcode_prefix +' ( '+ value.mdata_barcode_count + ' ) </option>');
+                                $('#generate_barcode_form #mdata_barcode_prefix.selectpicker').selectpicker('refresh');
+                            }
+                        });
+                        $('#generate_barcode_form .selectpicker').selectpicker('refresh');
+
+
+                    },
+
+
+                });
+            }
+
+
 
         }
 
@@ -586,7 +704,7 @@
                 dataType: "json",
                 success: function (data) {
                     $('#select-barcode-range').removeClass('d-none');
-                    console.log(data);
+
                     $('#generate_barcode_form #mdata_barcode_prefix_number_start').empty();
                     $('#generate_barcode_form #mdata_barcode_prefix_number_end').empty();
                     $.each(data, function (key, value) {
@@ -648,7 +766,7 @@
                             JsBarcode(cardBox.find('.barCode')[0], mdataBarcodePrefixNumber, {
                                 displayValue: false // Hide the barcode value text
                             });
-                            console.log(totalBarcodes);
+                            
 
 
 
