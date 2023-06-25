@@ -60,6 +60,10 @@
                             <div class="mt-2 spinner" id="spinner">
 
                             </div>
+
+                            <div class="error-max d-none" id="error-max">
+                                <span class="text-danger" id="error-message"> Range must be greater than 0 and not cross max range</span>
+                            </div>
                         </div>
 
                         <div class="d-none" id="select-barcode-filter-range" >
@@ -73,8 +77,8 @@
                         </div>
 
                         <div class="d-none" id="select-barcode-filter-range-old" >
-                            <x-form.selectbox labelName="Barcode Prefix" name="mdata_barcode_prefix" col="col-md-4" class="mdata_barcode_prefix selectpicker"/>
-                            <x-form.textbox labelName="Starting Range" name="starting_range" required="required" col="col-md-2" placeholder="Enter Starting Range" />
+                            <x-form.selectbox labelName="Barcode Prefix" name="mdata_barcode_prefix" col="col-md-4"  class="mdata_barcode_prefix selectpicker"/>
+                            <x-form.textbox labelName="Starting Range" name="starting_range"  max="" required="required" col="col-md-2" placeholder="Enter Starting Range" />
                             <x-form.textbox labelName="Ending Range" name="ending_range" required="required" col="col-md-2" placeholder="Enter Ending Range" />
                             <div class="form-group col-md-2" style="padding-top: 22px;">
                                 <button type="button" class="btn btn-primary btn-sm" style="width: 90px" id="save-old-range-btn"> Show</button>
@@ -232,6 +236,8 @@
     <script>
         var table;
         $(document).ready(function () {
+
+
 
 
             $('.summernote').summernote({
@@ -474,6 +480,10 @@
 
 
 
+
+        // $('#select-barcode-filter-range-old #').on('click', function (event) {
+        // });
+
         $('#save-btn').on('click', function (event) {
 
 
@@ -588,6 +598,7 @@
 
                         $('#generate_barcode_form #mdata_barcode_prefix_number_start').empty();
                         $('#generate_barcode_form #mdata_barcode_prefix_number_end').empty();
+
                         $.each(data, function (key, value) {
                             if (!$.trim(data)) {
                                 $('#generate_barcode_form .mdata_barcode_prefix_number_end').addClass('d-none');
@@ -606,10 +617,14 @@
                     },
 
                 });
+
+
             }
 
 
         });
+
+
 
 
 
@@ -640,15 +655,20 @@
                         $('#select-barcode-filter-range-old').removeClass('d-none');
 
                         $('#generate_barcode_form #mdata_barcode_prefix').empty();
+
+
                         $.each(data, function (key, value) {
 
                             if (!$.trim(data)) {
                                 $('#generate_barcode_form #mdata_barcode_prefix').addClass('d-none');
                             } else {
-                                $('#generate_barcode_form #mdata_barcode_prefix').append('<option value="' + value.mdata_barcode_prefix + '">' + value.mdata_barcode_prefix +' ( '+ value.mdata_barcode_count + ' ) </option>');
+                                $('#generate_barcode_form #mdata_barcode_prefix').append('<option value="' + value.mdata_barcode_prefix + '">' + value.mdata_barcode_prefix +'('+ value.mdata_barcode_count + ')</option>');
+
                                 $('#generate_barcode_form #mdata_barcode_prefix.selectpicker').selectpicker('refresh');
                             }
                         });
+
+
                         $('#generate_barcode_form .selectpicker').selectpicker('refresh');
 
 
@@ -656,7 +676,8 @@
 
 
                 });
-            }else{
+            }
+            else{
 
                 $.ajax({
                     url: "{{url('/get-barcodes')}}/" + barcode_type,
@@ -695,6 +716,52 @@
 
 
         }
+
+
+        $('#select-barcode-filter-range-old .mdata_barcode_prefix').on('change', function (event) {
+
+            var selectedOption = $(this).find('option:selected');
+            var text = selectedOption.text();
+            var count = parseInt(text.match(/\((\d+)\)/)[1]);
+            checkMaxValue(count);
+
+
+        });
+        function checkMaxValue(count) {
+
+            $('#select-barcode-filter-range-old [name="starting_range"]').on('keyup', function() {
+                var startingRange = $(this).val();
+                if (startingRange>count || startingRange<=0){
+                    $('#error-max').removeClass('d-none');
+                    $('#save-old-range-btn').addClass('d-none');
+
+                }else{
+                    $('#error-max').addClass('d-none');
+                    $('#save-old-range-btn').removeClass('d-none');
+                }
+
+            });
+
+            // Attach keyup event handler to the ending range input field
+            $('#select-barcode-filter-range-old [name="ending_range"]').on('keyup', function() {
+                var endingRange = $(this).val();
+                if (endingRange>count || endingRange<=0){
+                    $('#error-max').removeClass('d-none');
+                    $('#save-old-range-btn').addClass('d-none');
+
+                }else{
+                    $('#error-max').addClass('d-none');
+                    $('#save-old-range-btn').removeClass('d-none');
+                }
+
+            });
+
+
+        }
+
+
+
+
 
         function getBarcodePrefix(mdata_barcode_prefix) {
 
@@ -766,7 +833,7 @@
                             JsBarcode(cardBox.find('.barCode')[0], mdataBarcodePrefixNumber, {
                                 displayValue: false // Hide the barcode value text
                             });
-                            
+
 
 
 
