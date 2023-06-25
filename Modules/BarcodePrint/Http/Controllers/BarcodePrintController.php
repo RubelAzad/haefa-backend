@@ -101,10 +101,15 @@ class BarcodePrintController extends BaseController
                 $data['type'] = $request->barcode_type1;
 
                 if ($data['type'] == 'old') {
-                    $data['prefix'] = $request->mdata_barcode_prefix;
-                    $data['starting_range'] =  $request->starting_range;
-                    $data['ending_range'] =  $request->ending_range;
+                    $number = 10000000;
+                    $start=$request->starting_range;
+                    $end=$request->ending_range;
 
+                    $start_number = ($number + $start);
+                    $end_number = ($number + $end);
+                    $data['prefix'] = $request->mdata_barcode_prefix;
+                    $data['starting_range'] =  $start_number;
+                    $data['ending_range'] =  $end_number;
 
                     $data = DB::table("mdatacc_barcodes")
                         ->where('mdata_barcode_generate', $data['type'])
