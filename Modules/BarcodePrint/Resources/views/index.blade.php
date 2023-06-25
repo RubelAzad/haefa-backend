@@ -68,7 +68,7 @@
 
                         <div class="d-none" id="select-barcode-filter-range" >
                             <x-form.selectbox labelName="Barcode Prefix" name="mdata_barcode_prefix" col="col-md-4" class="mdata_barcode_prefix selectpicker"/>
-                            <x-form.textbox labelName="Show Range" name="show_range" required="required" col="col-md-4" placeholder="Enter Show Range" />
+                            <x-form.textbox labelName="Show Range" name="show_range" type="number" required="required" col="col-md-2" placeholder="Enter Show Range" />
 
                             <div class="form-group col-md-2" style="padding-top: 22px;">
                                 <button type="button" class="btn btn-primary btn-sm" style="width: 90px" id="save-range-btn"> Show</button>
@@ -78,8 +78,8 @@
 
                         <div class="d-none" id="select-barcode-filter-range-old" >
                             <x-form.selectbox labelName="Barcode Prefix" name="mdata_barcode_prefix" col="col-md-4"  class="mdata_barcode_prefix selectpicker"/>
-                            <x-form.textbox labelName="Starting Range" name="starting_range"  max="" required="required" col="col-md-2" placeholder="Enter Starting Range" />
-                            <x-form.textbox labelName="Ending Range" name="ending_range" required="required" col="col-md-2" placeholder="Enter Ending Range" />
+                            <x-form.textbox labelName="Starting Range" name="starting_range" type="number"  max="" required="required" col="col-md-2" placeholder="Enter Starting Range" />
+                            <x-form.textbox labelName="Ending Range" name="ending_range" type="number" required="required" col="col-md-2" placeholder="Enter Ending Range" />
                             <div class="form-group col-md-2" style="padding-top: 22px;">
                                 <button type="button" class="btn btn-primary btn-sm" style="width: 90px" id="save-old-range-btn"> Show</button>
                             </div>
@@ -489,7 +489,7 @@
 
             event.preventDefault();
             var barcode_type = $('input[name="barcode_type"]:checked').val();
-            console.log(barcode_type);
+
             var filterValueStart = $('#mdata_barcode_prefix_number_start').val();
             var filterValueEnd = $('#mdata_barcode_prefix_number_end').val();
 
@@ -506,7 +506,7 @@
                 },
                 success: function (data) {
                     $('#select-barcode-range').removeClass('d-none');
-                    console.log(JSON.stringify(data, null, 4));
+
                     generatePDF(data);
 
                 },
@@ -700,7 +700,7 @@
                             if (!$.trim(data)) {
                                 $('#generate_barcode_form #mdata_barcode_prefix').addClass('d-none');
                             } else {
-                                $('#generate_barcode_form #mdata_barcode_prefix').append('<option value="' + value.mdata_barcode_prefix + '">' + value.mdata_barcode_prefix +' ( '+ value.mdata_barcode_count + ' ) </option>');
+                                $('#generate_barcode_form #mdata_barcode_prefix').append('<option value="' + value.mdata_barcode_prefix + '">' + value.mdata_barcode_prefix +'('+ value.mdata_barcode_count + ')</option>');
                                 $('#generate_barcode_form #mdata_barcode_prefix.selectpicker').selectpicker('refresh');
                             }
                         });
@@ -719,6 +719,16 @@
 
 
         $('#select-barcode-filter-range-old .mdata_barcode_prefix').on('change', function (event) {
+
+            var selectedOption = $(this).find('option:selected');
+            var text = selectedOption.text();
+            var count = parseInt(text.match(/\((\d+)\)/)[1]);
+            checkMaxValue(count);
+
+
+        });
+
+        $('#select-barcode-filter-range .mdata_barcode_prefix').on('change', function (event) {
 
             var selectedOption = $(this).find('option:selected');
             var text = selectedOption.text();
@@ -755,9 +765,23 @@
                 }
 
             });
+            $('#select-barcode-filter-range [name="show_range"]').on('keyup', function() {
+                var showRange = $(this).val();
+
+                if (showRange>count || showRange<=0){
+                    $('#error-max').removeClass('d-none');
+                    $('#save-range-btn').addClass('d-none');
+
+                }else{
+                    $('#error-max').addClass('d-none');
+                    $('#save-range-btn').removeClass('d-none');
+                }
+
+            });
 
 
         }
+
 
 
 

@@ -33,7 +33,7 @@
                         @endif
                     </x-form.selectbox>
                     <x-form.textbox labelName="Barcode Number" name="mdata_barcode_number" col="col-md-12" placeholder="Enter Product Barcode" class="mdata_barcode_number" readonly="readonly"/>
-                    <x-form.textbox labelName="Barcode Generate Range" name="mdata_barcode_generate" required="required" col="col-md-12" placeholder="Enter Union Name"/>
+                    <x-form.textbox labelName="Barcode Generate Range" name="mdata_barcode_generate" required="required" col="col-md-12" type="number" placeholder="Enter Barcode Range"/>
                 </div>
             </div>
             <!-- /modal body -->
