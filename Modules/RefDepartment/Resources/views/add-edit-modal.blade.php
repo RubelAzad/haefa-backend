@@ -28,12 +28,11 @@
 
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="form-group col-md-12 required">
-                                <label for="WorkPlaceId" style="display: flex;">WorkPlace</label>
-                                <select class="form-select form-control" name="WorkPlaceId" id="WorkPlaceId"
-                                    aria-label="Floating label select example">
-                                </select>
-                            </div>
+                            <x-form.selectbox labelName="WorkPlace" name="WorkPlaceId" id="WorkPlaceId" col="col-md-12" class="selectpicker">
+                                @foreach($workplaces as $workplace)
+                                    <option value="{{$workplace->WorkPlaceId??''}}">{{$workplace->WorkPlaceName??""}}</option>
+                                @endforeach
+                            </x-form.selectbox>
                         </div>
                     </div>
 

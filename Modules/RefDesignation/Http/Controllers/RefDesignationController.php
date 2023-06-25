@@ -29,7 +29,7 @@ class RefDesignationController extends BaseController
         if(permission('refdesignation-access')){
             $this->setPageData('Refdesignation','Refdesignation','fas fa-th-list');
             $data['workplaces'] = DB::select("SELECT * FROM WorkPlace");  
-            $data['departments'] = RefDepartment::get();
+            $data['departments'] = DB::select("SELECT * FROM RefDepartment");
             return view('refdesignation::index',$data);
         }else{
             return $this->unauthorized_access_blocked();
