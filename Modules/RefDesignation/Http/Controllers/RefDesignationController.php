@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\RefDesignation\Entities\RefDesignation;
+use Modules\RefDepartment\Entities\RefDepartment;
 use Modules\Base\Http\Controllers\BaseController;
 use Modules\RefDesignation\Http\Requests\RefDesignationFormRequest;
 use Illuminate\Support\Str;
@@ -27,7 +28,9 @@ class RefDesignationController extends BaseController
     {
         if(permission('refdesignation-access')){
             $this->setPageData('Refdesignation','Refdesignation','fas fa-th-list');
-            return view('refdesignation::index');
+            $data['workplaces'] = DB::select("SELECT * FROM WorkPlace");  
+            $data['departments'] = RefDepartment::get();
+            return view('refdesignation::index',$data);
         }else{
             return $this->unauthorized_access_blocked();
         }
@@ -58,7 +61,7 @@ class RefDesignationController extends BaseController
                         $action .= ' <a class="dropdown-item edit_data" data-id="' . $value->RefDesignationId . '"><i class="fas fa-edit text-primary"></i> Edit</a>';
                     }
                     if(permission('refdesignation-view')){
-                        $action .= ' <a class="dropdown-item view_data" data-id="' . $value->RefDesignationId . '"><i class="fas fa-eye text-success"></i> View</a>';
+                       // $action .= ' <a class="dropdown-item view_data" data-id="' . $value->RefDesignationId . '"><i class="fas fa-eye text-success"></i> View</a>';
                     }
                     if(permission('refdesignation-delete')){
                         $action .= ' <a class="dropdown-item delete_data"  data-id="' . $value->RefDesignationId . '" data-name="' . $value->RefDesignationId . '"><i class="fas fa-trash text-danger"></i> Delete</a>';
@@ -159,18 +162,6 @@ class RefDesignationController extends BaseController
          
          return response()->json(['designation'=>$data1,'workplaces'=>$data2,'departments'=> $data3]);
 
-    }
-    
-    /**
-     * Show workplaces.
-     * @return Renderable
-     */
-    public function workplaces_departments(Request $request)
-    {
-        $data2 = DB::select("SELECT * FROM WorkPlace");  
-        $data3 = DB::select("SELECT * FROM RefDepartment");
-
-         return response()->json(['workplaces'=>$data2,'departments'=>$data3]);
     }
 
     /**
