@@ -45,5 +45,8 @@
     "RefDepartment": true,
     "RefDesignation": true,
     "RefIllness": true,
-    "RefInstruction": true
+    "RefInstruction": true,
+    "RefMenstruationProduct": true,
+    "RefMnstProductUsageTime": true,
+    "RefQuestion": true
 }

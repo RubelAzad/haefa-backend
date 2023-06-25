@@ -61,7 +61,7 @@ class RefillnessController extends BaseController
                         $action .= ' <a class="dropdown-item edit_data" data-id="' . $value->IllnessId . '"><i class="fas fa-edit text-primary"></i> Edit</a>';
                     }
                     if(permission('refillness-view')){
-                        $action .= ' <a class="dropdown-item view_data" data-id="' . $value->IllnessId . '"><i class="fas fa-eye text-success"></i> View</a>';
+                       // $action .= ' <a class="dropdown-item view_data" data-id="' . $value->IllnessId . '"><i class="fas fa-eye text-success"></i> View</a>';
                     }
                     if(permission('refillness-delete')){
                         $action .= ' <a class="dropdown-item delete_data"  data-id="' . $value->IllnessId . '" data-name="' . $value->IllnessId . '"><i class="fas fa-trash text-danger"></i> Delete</a>';

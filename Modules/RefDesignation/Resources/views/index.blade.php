@@ -88,7 +88,7 @@
                 <!-- /entry heading -->
 
                 @if (permission('refdesignation-add'))
-                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add Refdesignation','Save');optionData();removeId()">
+                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add Refdesignation','Save'); removeId()">
                     <i class="fas fa-plus-square"></i> Add New
                  </button>
                 @endif
@@ -392,40 +392,9 @@ $(document).on('click', '.edit_data', function () {
                 $('#DesignationTitle').val(data.designation[0].DesignationTitle);
                 $('#Description').val(data.designation[0].Description);
                 $('#RefDesignationId').val(data.designation[0].RefDesignationId);
-
-                //workplace code start
-                var op_select = '<option value="">' + 'Select' + '</option>';
-                var options = [];
-                options.push(op_select);
-                var selectedValue = data.designation[0].WorkPlaceId;
-                data.workplaces.map((dt, ind) => {
-                    var op = '<option value="' + dt.WorkPlaceId + '">' + dt.WorkPlaceName + '</option>';
-                    // Check if the option matches the selected value
-                    if (dt.WorkPlaceId === selectedValue) {
-                        op = '<option value="' + dt.WorkPlaceId + '" selected>' + dt.WorkPlaceName + '</option>';
-                    }
-                    options.push(op);
-                });
-
-                $('#WorkPlaceId').html(options.join(''));
-                //workplace code end
-
-                //department code start
-                var opt_select = '<option value="">' + 'Select' + '</option>';
-                var all_options = [];
-                all_options.push(opt_select);
-                var selectedValue2 = data.designation[0].RefDepartmentId;
-                data.departments.map((dpt, ind) => {
-                    var op = '<option value="' + dpt.RefDepartmentId + '">' + dpt.DepartmentCode + '</option>';
-                    // Check if the option matches the selected value
-                    if (dpt.RefDepartmentId === selectedValue2) {
-                        op = '<option value="' + dpt.RefDepartmentId + '" selected>' + dpt.DepartmentCode + '</option>';
-                    }
-                    all_options.push(op);
-                });
-
-                $('#RefDepartmentId').html(all_options.join(''));
-                //department code end
+                $('#RefDepartmentId').val(data.designation[0].RefDepartmentId);
+                $('#WorkPlaceId').val(data.designation[0].WorkPlaceId);
+                $('#store_or_update_form .selectpicker').selectpicker('refresh');
 
                 $('#store_or_update_modal').modal({
                     keyboard: false,
@@ -441,46 +410,7 @@ $(document).on('click', '.edit_data', function () {
         });
     }
 });
-function optionData(){
-    $.ajax({
-        url: "{{route('refdesignation.workplaces_departments')}}",
-        type: "get",
-        dataType: "JSON",
-        success: function (data) {
-            console.log(data);
 
-            $('#refdesignationId').val('');
-
-            //workplaces loop start
-            var op_select = '<option value="">' + 'Select' + '</option>';
-            var options = [];
-            options.push(op_select);
-
-            data.workplaces.map((dt, ind) => {
-                var op = '<option value="' + dt.WorkPlaceId + '">' + dt.WorkPlaceName + '</option>';
-                options.push(op);
-            });
-            $('#WorkPlaceId').html(options.join(''));
-            //workplaces loop end
-            
-            //dpeartment loop start
-            var op_select2 = '<option value="">' + 'Select' + '</option>';
-            var options_dpeartments = [];
-            options_dpeartments.push(op_select2);
-
-            data.departments.map((dpt, ind) => {
-                var op2 = '<option value="' + dpt.RefDepartmentId + '">' + dpt.DepartmentCode + '</option>';
-                options_dpeartments.push(op2);
-            });
-            $('#RefDepartmentId').html(options_dpeartments.join(''));
-            //dpeartment loop end
-
-        },
-        error: function (xhr, ajaxOption, thrownError) {
-            console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
-        }
-    });
-}
 
 function removeId(){
     $('#RefDesignationId').val('');
