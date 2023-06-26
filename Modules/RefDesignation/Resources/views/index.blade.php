@@ -386,14 +386,13 @@ $(document).on('click', '.edit_data', function () {
             data: { id: id,_token: _token},
             dataType: "JSON",
             success: function (data) {
-                // console.log(data);
-                // console.log(data[1][0]);
+                console.log(data);
                 $('#DepartmentCode').val(data.designation[0].DepartmentCode);
                 $('#DesignationTitle').val(data.designation[0].DesignationTitle);
                 $('#Description').val(data.designation[0].Description);
                 $('#RefDesignationId').val(data.designation[0].RefDesignationId);
-                $('#RefDepartmentId').val(data.designation[0].RefDepartmentId);
-                $('#WorkPlaceId').val(data.designation[0].WorkPlaceId);
+                $('#RefDepartmentId').val(data.departments[0].RefDepartmentId);
+                $('#WorkPlaceId').val(data.WorkPlaceId);
                 $('#store_or_update_form .selectpicker').selectpicker('refresh');
 
                 $('#store_or_update_modal').modal({

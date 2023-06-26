@@ -39,11 +39,9 @@
                     <div class="row">
                         <div class="col-md-12 required">
                             <x-form.selectbox labelName="Department" name="RefDepartmentId" id="RefDepartmentId" col="col-md-12" class="selectpicker">
-                                @if(!$departments->isEmpty())
-                                    @foreach($departments as $department)
-                                        <option value="{{$department->RefDepartmentId??''}}">{{$department->DepartmentCode??""}}</option>
-                                    @endforeach
-                                @endif
+                                @foreach($departments as $department)
+                                    <option value="{{$department->RefDepartmentId??''}}">{{$department->DepartmentCode??""}}</option>
+                                @endforeach
                             </x-form.selectbox>
                         </div>    
                     </div>
