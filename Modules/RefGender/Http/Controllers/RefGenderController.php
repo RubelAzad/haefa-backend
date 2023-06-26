@@ -213,7 +213,7 @@ class RefGenderController extends BaseController
      */
     public function edit(Request $request)
     {
-        return $data = RefGender::where('GenderId',$request->id)->first();
+        return $data = DB::table('RefGender')->where('GenderId',$request->id)->first();
     }
 
     public function bulk_delete(Request $request)

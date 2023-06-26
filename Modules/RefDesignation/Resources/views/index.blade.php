@@ -392,7 +392,7 @@ $(document).on('click', '.edit_data', function () {
                 $('#Description').val(data.designation[0].Description);
                 $('#RefDesignationId').val(data.designation[0].RefDesignationId);
                 $('#RefDepartmentId').val(data.departments[0].RefDepartmentId);
-                $('#WorkPlaceId').val(data.WorkPlaceId);
+                $('#WorkPlaceId').val(data.departments[0].WorkPlaceId);
                 $('#store_or_update_form .selectpicker').selectpicker('refresh');
 
                 $('#store_or_update_modal').modal({
