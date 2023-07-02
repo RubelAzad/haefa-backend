@@ -5,7 +5,7 @@
 @endsection
 
 @push('stylesheet')
-    
+
 @endpush
 
 @section('content')
@@ -30,12 +30,12 @@
                     <h2 class="dt-page__title mb-0 text-primary"><i class="{{ $page_icon }}"></i> {{ $sub_title }}</h2>
                 </div>
                 <!-- /entry heading -->
-                @if (permission('deviceregistration-add')) 
-                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add New deviceregistration','Save')">
+                @if (permission('deviceregistration-add'))
+                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add New Station','Save')">
                     <i class="fas fa-plus-square"></i> Add New
                  </button>
                 @endif
-                
+
 
             </div>
             <!-- /entry header -->
@@ -49,8 +49,8 @@
                     <form id="form-filter">
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="name">Deviceregistration Name</label>
-                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter category name">
+                                <label for="name">Station Name</label>
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter Station name">
                             </div>
                             <div class="form-group col-md-8 pt-24">
                                <button type="button" class="btn btn-danger btn-sm float-right" id="btn-reset"
@@ -76,8 +76,8 @@
                                 </th>
                                 @endif
                                 <th>Sl</th>
-                                <th>MacId</th>
-                                <th>DeviceId</th>
+                                <th>Station Name</th>
+                                <th>Station Prefix</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -118,7 +118,7 @@ $(document).ready(function(){
             [5, 10, 15, 25, 50, 100, 1000, 10000, "All"]
         ],
         "pageLength": 25, //number of data show per page
-        "language": { 
+        "language": {
             processing: `<i class="fas fa-spinner fa-spin fa-3x fa-fw text-primary"></i> `,
             emptyTable: '<strong class="text-danger">No Data Found</strong>',
             infoEmpty: '',
@@ -136,7 +136,7 @@ $(document).ready(function(){
         "columnDefs": [{
                 @if (permission('deviceregistration-bulk-delete'))
                 "targets": [0,4],
-                @else 
+                @else
                 "targets": [3],
                 @endif
                 "orderable": false,
@@ -145,7 +145,7 @@ $(document).ready(function(){
             {
                 @if (permission('deviceregistration-bulk-delete'))
                 "targets": [1,3],
-                @else 
+                @else
                 "targets": [0,2],
                 @endif
                 "className": "text-center"
@@ -212,7 +212,7 @@ $(document).ready(function(){
                     columns: [1, 2, 3]
                 },
             },
-            @endif 
+            @endif
             @if (permission('deviceregistration-bulk-delete'))
             {
                 'className':'btn btn-danger btn-sm delete_btn d-none text-white',
@@ -281,7 +281,7 @@ $(document).ready(function(){
             });
         }
     });
-  
+
 
     $(document).on('click', '.delete_data', function () {
         let id    = $(this).data('id');

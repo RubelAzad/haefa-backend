@@ -33,12 +33,13 @@ class UserFormRequest extends FormRequest
         $this->rules['OrgId'] = ['required'];
         $this->rules['cc_id'] = ['required'];
         $this->rules['EmployeeId'] = ['required'];
+        $this->rules['station'] = ['nullable'];
         $this->rules['password'] = ['required','string','min:8','confirmed'];
         $this->rules['password_confirmation'] = ['required','string','min:8'];
         if(request()->update_id)
         {
             $this->rules['email'][3] = 'unique:users,email,'.request()->update_id;
-            $this->rules['mobile_no'][3] = 'unique:users,mobile_no,'.request()->update_id;   
+            $this->rules['mobile_no'][3] = 'unique:users,mobile_no,'.request()->update_id;
             $this->rules['password'][0] = 'nullable';
             $this->rules['password_confirmation'][0] = 'nullable';
         }

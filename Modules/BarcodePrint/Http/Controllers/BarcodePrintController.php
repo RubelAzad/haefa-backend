@@ -13,6 +13,7 @@ class BarcodePrintController extends BaseController
     public function __construct(BarcodePrint $model)
     {
         $this->model = $model;
+
     }
 
     public function index()

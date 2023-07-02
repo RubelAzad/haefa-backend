@@ -9,6 +9,7 @@ use App\Http\Requests\UserFormRequest;
 use Modules\BarcodeFormat\Entities\BarcodeFormat;
 use Modules\Employee\Entities\Employee;
 use App\Http\Controllers\BaseController;
+use Modules\Deviceregistration\Entities\Deviceregistration;
 
 
 class UserController extends BaseController
@@ -27,12 +28,13 @@ class UserController extends BaseController
             $roles = $this->role->index();
             $barcodes=BarcodeFormat::all();
             $employees=Employee::all();
-            return view('user.index',compact('roles','barcodes','employees'));
+            $stations=Deviceregistration::all();
+            return view('user.index',compact('roles','barcodes','employees','stations'));
         } else {
             return $this->unauthorized_access_blocked();
         }
-        
-        
+
+
     }
 
     public function get_datatable_data(Request $request)
@@ -51,7 +53,7 @@ class UserController extends BaseController
     public function store_or_update_data(UserFormRequest $request)
     {
         if($request->ajax()){
-            
+
             if (permission('user-access') || permission('user-edit')) {
                 $result = $this->service->store_or_update_data($request);
                 if($result){
