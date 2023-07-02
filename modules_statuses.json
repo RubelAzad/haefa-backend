@@ -10,7 +10,7 @@
     "Expense": false,
     "Sale": false,
     "HRM": false,
-    "Report": false,
+    "Report": true,
     "Stock": false,
     "Test": true,
     "Brand": true,
