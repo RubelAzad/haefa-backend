@@ -13,6 +13,7 @@ class BarcodePrintController extends BaseController
     public function __construct(BarcodePrint $model)
     {
         $this->model = $model;
+
     }
 
     public function index()
@@ -163,8 +164,6 @@ class BarcodePrintController extends BaseController
     }
 
     public function view_barcodes($startValue){
-
-
         $data=$startValue;
         return response()->json($data);
     }

@@ -17,10 +17,19 @@
             <!-- Modal Body -->
             <div class="modal-body">
                 <div class="row">
-                    <input type="hidden" name="update_id" id="update_id"/>
-                    <x-form.textbox labelName="Station Name" name="name" required="required" col="col-md-12" placeholder="Enter Station Name"/>
-                    <x-form.textbox labelName="Station Prefix" name="deviceId" required="required" col="col-md-12" placeholder="Enter deviceId"/>
+                    <div class="col-md-12">
+                        <input type="hidden" name="QuestionTypeId" value="" id="QuestionTypeId"/>
+                        <input type="hidden" name="SortOrder" value="8" />
+                        <x-form.textbox labelName="QuestionTypeCode" name="QuestionTypeCode" id="QuestionTypeCode" required="required" col="col-md-12" placeholder="Enter QuestionTypeCode"/>
+                    </div>
                 </div>
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <x-form.textbox labelName="QuestionTypeTitle" name="QuestionTypeTitle" id="QuestionTypeTitle" col="col-md-12" placeholder="Enter QuestionTypeTitle"/>
+                    </div>
+                </div>
+
             </div>
             <!-- /modal body -->
 
