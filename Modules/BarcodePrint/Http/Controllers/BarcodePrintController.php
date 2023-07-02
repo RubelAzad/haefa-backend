@@ -17,7 +17,7 @@ class BarcodePrintController extends BaseController
 
     public function index()
     {
-        
+
         if(permission('barcode-print-access')){
             $this->setPageData('Print Barcode','Print Barcode','fas fa-barcode',[['name'=>'barcodeprint','link'=> route('barcodeprint')],['name' => 'Print Barcode']]);
 
@@ -133,9 +133,9 @@ class BarcodePrintController extends BaseController
         }
 
     }
-    
+
     public function latest_range($mdata_barcode_prefix_number_start){
-        
+
         // Extract the string portion (letters)
 
         preg_match('/^[A-Za-z]+/', $mdata_barcode_prefix_number_start, $stringPortion);
@@ -146,22 +146,20 @@ class BarcodePrintController extends BaseController
         $search_start_id= $stringPortion[0]; // Array element at index 0
         $search_start_code= $numberPortion[0]; // Array element at index 0
 
-       $search_start_id = substr($mdata_barcode_prefix_number_start,0,9); 
-       $search_start_code = substr($mdata_barcode_prefix_number_start,9,8); 
+       $search_start_id = substr($mdata_barcode_prefix_number_start,0,9);
+       $search_start_code = substr($mdata_barcode_prefix_number_start,9,8);
        $data = DB::table("mdatacc_barcodes")
                         ->where('mdata_barcode_prefix',$search_start_id)
                         ->where('mdata_barcode_number','>=',$search_start_code)
                         ->where('status',2)
                         ->orderBy('mdata_barcode_prefix','ASC')
-                        ->get('mdata_barcode_prefix_number'); 
+                        ->get('mdata_barcode_prefix_number');
 
         return response()->json($data);
 
     }
 
     public function view_barcodes($startValue){
-
-
         $data=$startValue;
         return response()->json($data);
     }
