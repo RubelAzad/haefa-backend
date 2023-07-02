@@ -64,6 +64,10 @@
                             <div class="error-max d-none" id="error-max">
                                 <span class="text-danger" id="error-message"> Range must be greater than 0 and not cross max range</span>
                             </div>
+                            <div class="warning-downloading d-none" id="warning-downloading">
+                                <span class="text-danger" id="warning-message">Downloading PDF...Please Wait</span>
+                                <span class="spinner-border text-danger"></span>
+                            </div>
                         </div>
 
                         <div class="d-none" id="select-barcode-filter-range" >
@@ -869,6 +873,7 @@
             });
             let start = $('#mdata_barcode_prefix_number_start').val();
             let end = $('#mdata_barcode_prefix_number_end').val();
+            $('#warning-downloading').removeClass('d-none');
 
             html2pdf().set({
                 margin: [0.5, 0.5, 0.5, 0.5],
@@ -877,6 +882,7 @@
                 html2canvas: { scale: 2 },
                 jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
             }).from($('#barcode-section')[0]).save().then(function() {
+                $('#warning-downloading').addClass('d-none');
                 window.location.reload();
             })
 

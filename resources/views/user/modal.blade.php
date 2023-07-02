@@ -49,7 +49,31 @@
                             <option value="{{ $employee->EmployeeId }}">{{ $employee->FirstName }} {{ $employee->LastName }} </option>
                             @endforeach
                         </x-form.selectbox>
-                        
+
+                        <div class="col-md-12 riMenuInputs">
+                            <div class="ant-card ant-card-bordered gx-card">
+                                <div class="ant-card-head">
+                                    <div class="ant-card-head-wrapper">
+                                        <div class="ant-card-head-title">Station Name</div>
+                                    </div>
+                                </div><br>
+                                <div class="ant-card-body">
+                                    <div class="ant-checkbox-group" id="StationName">
+                                        @foreach ($stations as $station)
+                                        <label class="ant-checkbox-wrapper ant-checkbox-group-item">
+                                                <span class="ant-checkbox">
+                                                    <input type="checkbox" name="station[]" class="ant-checkbox-input" value="{{ $station->deviceId }}">
+                                                    <span class="ant-checkbox-inner"></span>
+                                                </span>
+                                            <span>{{ $station->name }}</span>
+                                        </label>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
                         <div class="form-group col-md-12">
                             <label for="password">Password</label>
                             <div class="input-group">

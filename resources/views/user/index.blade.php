@@ -13,7 +13,7 @@
             <ol class="breadcrumb bg-white">
                 <li class="breadcrumb-item"><a href="{{ url('/') }}">Dashboard</a></li>
                 <li class="active breadcrumb-item">{{ $sub_title }}</li>
-                
+
             </ol>
         </div>
         <!-- Grid Item -->
@@ -56,7 +56,7 @@
                                     <option value="0">Inactive</option>
                             </x-form.selectbox>
 
-                            
+
                             <div class="form-group col-md-9 pt-24">
                                <button type="button" class="btn btn-danger btn-sm float-right" id="btn-reset"
                                data-toggle="tooltip" data-placement="top" data-original-title="Reset Data">
@@ -128,7 +128,7 @@ $(document).ready(function(){
             [5, 10, 15, 25, 50, 100, 1000, 10000, "All"]
         ],
         "pageLength": 25, //number of data show per page
-        "language": { 
+        "language": {
             processing: `<i class="fas fa-spinner fa-spin fa-3x fa-fw text-primary"></i> `,
             emptyTable: '<strong class="text-danger">No Data Found</strong>',
             infoEmpty: '',
@@ -149,7 +149,7 @@ $(document).ready(function(){
         "columnDefs": [{
                 @if (permission('user-bulk-delete'))
                 "targets": [0,9],
-                @else 
+                @else
                 "targets": [8],
                 @endif
                 "orderable": false,
@@ -158,10 +158,10 @@ $(document).ready(function(){
             {
                 @if (permission('user-bulk-delete'))
                 "targets": [1,2,3,4,6,7,8],
-                @else 
+                @else
                 "targets": [0,1,2,3,6,7,8],
                 @endif
-                
+
                 "className": "text-center"
             }
         ],
@@ -228,7 +228,7 @@ $(document).ready(function(){
                     }
                 },
             },
-            @endif 
+            @endif
             @if (permission('user-bulk-delete'))
             {
                 'className':'btn btn-danger btn-sm delete_btn d-none text-white',
@@ -290,7 +290,7 @@ $(document).ready(function(){
                         $('#store_or_update_form #' + key).parent().append(
                         '<small class="error text-danger">' + value + '</small>');
                     }
-                    
+
                 });
             } else {
                 notification(data.status, data.message);
@@ -332,6 +332,17 @@ $(document).ready(function(){
                     $('#store_or_update_form #role_id').val(data.data.role_id);
                     $('#store_or_update_form #cc_id').val(data.data.cc_id);
                     $('#store_or_update_form #EmployeeId').val(data.data.EmployeeId);
+
+                    if ($.trim(data.data.station)) {
+                        let riMenuArray = data.data.station.split(',');
+                        console.log(riMenuArray);
+                        let riMenuInputs = $('.riMenuInputs input[type="checkbox"]');
+                        riMenuInputs.each(function(){
+                            if(riMenuArray.includes($(this).val())){
+                                $(this).prop('checked', true);
+                            }
+                        });
+                    }
                     $('#store_or_update_form .selectpicker').selectpicker('refresh');
                     $('#password, #password_confirmation').parents('.form-group').removeClass('required');
                     $('#store_or_update_modal').modal({

@@ -18,10 +18,8 @@
             <div class="modal-body">
                 <div class="row">
                     <input type="hidden" name="update_id" id="update_id"/>
-                    <x-form.textbox labelName="Deviceregistration MacId" name="name" required="required" col="col-md-12" placeholder="Enter MacId"/>
-                    <x-form.textbox labelName="Deviceregistration deviceId" name="deviceId" required="required" col="col-md-12" placeholder="Enter deviceId"/>
-                    <x-form.textbox labelName="Deviceregistration DeviceName" name="DeviceName" required="required" col="col-md-12" placeholder="Enter DeviceName"/>
-                  
+                    <x-form.textbox labelName="Station Name" name="name" required="required" col="col-md-12" placeholder="Enter Station Name"/>
+                    <x-form.textbox labelName="Station Prefix" name="deviceId" required="required" col="col-md-12" placeholder="Enter deviceId"/>
                 </div>
             </div>
             <!-- /modal body -->

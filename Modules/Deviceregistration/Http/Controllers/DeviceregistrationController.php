@@ -9,7 +9,7 @@ use Modules\Deviceregistration\Http\Requests\DeviceregistrationFormRequest;
 
 class DeviceregistrationController extends BaseController
 {
-    public function __construct(Deviceregistration $model)  
+    public function __construct(Deviceregistration $model)
     {
         $this->model = $model;
     }
@@ -17,7 +17,7 @@ class DeviceregistrationController extends BaseController
     public function index()
     {
         if(permission('deviceregistration-access')){
-            $this->setPageData('Deviceregistration','Deviceregistration','fas fa-th-list');
+            $this->setPageData('Station','Station','fas fa-th-list');
             return view('deviceregistration::index');
         }else{
             return $this->unauthorized_access_blocked();
@@ -76,7 +76,7 @@ class DeviceregistrationController extends BaseController
 
     public function store_or_update_data(DeviceregistrationFormRequest $request)
     {
-      
+
         if($request->ajax()){
             if(permission('deviceregistration-add') || permission('deviceregistration-edit')){
                 $collection = collect($request->validated());
