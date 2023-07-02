@@ -29,7 +29,8 @@ class RefDepartmentController extends BaseController
     {
         if(permission('refdepartment-access')){
             $this->setPageData('RefDepartment','RefDepartment','fas fa-th-list');
-            return view('refdepartment::index');
+            $data['workplaces'] = DB::select("SELECT * FROM WorkPlace");  
+            return view('refdepartment::index',$data);
         }else{
             return $this->unauthorized_access_blocked();
         }
@@ -60,7 +61,7 @@ class RefDepartmentController extends BaseController
                         $action .= ' <a class="dropdown-item edit_data" data-id="' . $value->RefDepartmentId . '"><i class="fas fa-edit text-primary"></i> Edit</a>';
                     }
                     if(permission('refdepartment-view')){
-                        $action .= ' <a class="dropdown-item view_data" data-id="' . $value->RefDepartmentId . '"><i class="fas fa-eye text-success"></i> View</a>';
+                       // $action .= ' <a class="dropdown-item view_data" data-id="' . $value->RefDepartmentId . '"><i class="fas fa-eye text-success"></i> View</a>';
                     }
                     if(permission('refdepartment-delete')){
                         $action .= ' <a class="dropdown-item delete_data"  data-id="' . $value->RefDepartmentId . '" data-name="' . $value->RefDepartmentId . '"><i class="fas fa-trash text-danger"></i> Delete</a>';
@@ -150,21 +151,10 @@ class RefDepartmentController extends BaseController
          $data1 = DB::select("SELECT wp.WorkPlaceName,rd.DepartmentCode,rd.Description ,rd.WorkPlaceId,
                     rd.RefDepartmentId FROM RefDepartment AS rd
                     INNER JOIN WorkPlace AS wp ON rd.WorkPlaceId = wp.WorkPlaceId 
-                    WHERE rd.RefDepartmentId='$request->id'");
-         $data2 = DB::select("SELECT * FROM WorkPlace");  
+                    WHERE rd.RefDepartmentId='$request->id'"); 
          
-         return response()->json(['department'=>$data1,'workplaces'=>$data2]);
+         return response()->json(['department'=>$data1]);
 
-    }
-    
-    /**
-     * Show workplaces.
-     * @return Renderable
-     */
-    public function workplaces(Request $request)
-    {
-         $data2 = DB::select("SELECT * FROM WorkPlace");  
-         return response()->json(['workplaces'=>$data2]);
     }
 
     /**

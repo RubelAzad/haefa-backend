@@ -88,7 +88,7 @@
                 <!-- /entry heading -->
 
                 @if (permission('refdepartment-add'))
-                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add RefDepartment','Save');optionData();removeId()">
+                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add RefDepartment','Save');removeId()">
                     <i class="fas fa-plus-square"></i> Add New
                  </button>
                 @endif
@@ -387,29 +387,12 @@ $(document).on('click', '.edit_data', function () {
             dataType: "JSON",
             success: function (data) {
                 console.log(data.department);
-                console.log(data);
                 // console.log(data[1][0]);
-                //$('#store_or_update_form #update_id').val(data.AddressTypeId);
                 $('#DepartmentCode').val(data.department[0].DepartmentCode);
                 $('#Description').val(data.department[0].Description);
                 $('#RefDepartmentId').val(data.department[0].RefDepartmentId);
-
-                var op_select = '<option value="">' + 'Select' + '</option>';
-                var options = [];
-                options.push(op_select);
-                var selectedValue = data.department[0].WorkPlaceId;
-                data.workplaces.map((dt, ind) => {
-                    var op = '<option value="' + dt.WorkPlaceId + '">' + dt.WorkPlaceName + '</option>';
-                    // Check if the option matches the selected value
-                    if (dt.WorkPlaceId === selectedValue) {
-                        op = '<option value="' + dt.WorkPlaceId + '" selected>' + dt.WorkPlaceName + '</option>';
-                    }
-
-                    options.push(op);
-                });
-
-                $('#WorkPlaceId').html(options.join(''));
-                
+                $('#WorkPlaceId').val(data.department[0].WorkPlaceId);
+                $('#store_or_update_form .selectpicker').selectpicker('refresh');
 
                 $('#store_or_update_modal').modal({
                     keyboard: false,
@@ -426,33 +409,6 @@ $(document).on('click', '.edit_data', function () {
         });
     }
 });
-function optionData(){
-    $.ajax({
-        url: "{{route('refdepartment.workplaces')}}",
-        type: "get",
-        dataType: "JSON",
-        success: function (data) {
-            console.log(data);
-
-            $('#RefDepartmentId').val('');
-
-            var op_select = '<option value="">' + 'Select' + '</option>';
-            var options = [];
-            options.push(op_select);
-
-            data.workplaces.map((dt, ind) => {
-                var op = '<option value="' + dt.WorkPlaceId + '">' + dt.WorkPlaceName + '</option>';
-                options.push(op);
-            });
-
-            $('#WorkPlaceId').html(options.join(''));
-
-        },
-        error: function (xhr, ajaxOption, thrownError) {
-            console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
-        }
-    });
-}
 
 function removeId(){
     $('#RefDepartmentId').val('');

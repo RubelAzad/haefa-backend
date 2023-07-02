@@ -58,7 +58,7 @@ class RefGenderController extends BaseController
                         $action .= ' <a class="dropdown-item edit_data" data-id="' . $value->GenderId . '"><i class="fas fa-edit text-primary"></i> Edit</a>';
                     }
                     if(permission('refgender-view')){
-                        $action .= ' <a class="dropdown-item view_data" data-id="' . $value->GenderId . '"><i class="fas fa-eye text-success"></i> View</a>';
+                       // $action .= ' <a class="dropdown-item view_data" data-id="' . $value->GenderId . '"><i class="fas fa-eye text-success"></i> View</a>';
                     }
                     if(permission('refgender-delete')){
                         $action .= ' <a class="dropdown-item delete_data"  data-id="' . $value->GenderId . '" data-name="' . $value->GenderId . '"><i class="fas fa-trash text-danger"></i> Delete</a>';
@@ -213,7 +213,7 @@ class RefGenderController extends BaseController
      */
     public function edit(Request $request)
     {
-        return $data = RefGender::where('GenderId',$request->id)->first();
+        return $data = DB::table('RefGender')->where('GenderId',$request->id)->first();
     }
 
     public function bulk_delete(Request $request)

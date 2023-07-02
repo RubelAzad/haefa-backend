@@ -18,7 +18,7 @@
             <div class="modal-body">
                 <div class="row">
                     <input type="hidden" name="update_id" id="update_id"/>
-                    <x-form.selectbox labelName="Full Address" name="address" col="col-md-12" class="selectpicker">
+                    <x-form.selectbox labelName="Community Clinic Name" name="address" col="col-md-12" class="selectpicker">
                         @if (!$addresses->isEmpty())
                             @foreach ($addresses as $address)
                                 <option value="{{ $address->healthCenter->HealthCenterName }},{{ $address->union->UnionName }},{{ $address->upazila->UpazilaName }},{{ $address->district->districtName }}">{{ $address->healthCenter->HealthCenterName }},{{ $address->union->UnionName }},{{ $address->upazila->UpazilaName }},{{ $address->district->districtName }}</option>
@@ -32,8 +32,8 @@
                             @endforeach
                         @endif
                     </x-form.selectbox>
-                    <x-form.textbox labelName="Barcode Number" name="mdata_barcode_number" col="col-md-12" placeholder="Enter Product BNCN" class="mdata_barcode_number" readonly="readonly"/>
-                    <x-form.textbox labelName="Barcode Generate Range" name="mdata_barcode_generate" required="required" col="col-md-12" placeholder="Enter Union Name"/>
+                    <x-form.textbox labelName="Barcode Number" name="mdata_barcode_number" col="col-md-12" placeholder="Enter Product Barcode" class="mdata_barcode_number" readonly="readonly"/>
+                    <x-form.textbox labelName="Barcode Generate Range" name="mdata_barcode_generate" required="required" col="col-md-12" type="number" placeholder="Enter Barcode Range"/>
                 </div>
             </div>
             <!-- /modal body -->

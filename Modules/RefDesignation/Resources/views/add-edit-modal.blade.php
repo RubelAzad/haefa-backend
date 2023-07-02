@@ -27,32 +27,30 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group col-md-12 required">
-                                <label for="WorkPlaceId" style="display: flex;">WorkPlace</label>
-                                <select class="form-select form-control" name="WorkPlaceId" id="WorkPlaceId"
-                                    aria-label="Floating label select example">
-                                </select>
-                            </div>
+                        <div class="col-md-12 required">
+                            <x-form.selectbox labelName="WorkPlace" name="WorkPlaceId" id="WorkPlaceId" col="col-md-12" class="selectpicker">
+                                @foreach($workplaces as $workplace)
+                                    <option value="{{$workplace->WorkPlaceId??''}}">{{$workplace->WorkPlaceName??""}}</option>
+                                @endforeach
+                            </x-form.selectbox>  
                         </div>
                     </div>
                     
                     <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group col-md-12 required">
-                                <label for="WorkPlaceId" style="display: flex;">Department</label>
-                                <select class="form-select form-control" name="RefDepartmentId" id="RefDepartmentId"
-                                    aria-label="Floating label select example">
-                                </select>
-                            </div>
-                        </div>
+                        <div class="col-md-12 required">
+                            <x-form.selectbox labelName="Department" name="RefDepartmentId" id="RefDepartmentId" col="col-md-12" class="selectpicker">
+                                @foreach($departments as $department)
+                                    <option value="{{$department->RefDepartmentId??''}}">{{$department->DepartmentCode??""}}</option>
+                                @endforeach
+                            </x-form.selectbox>
+                        </div>    
                     </div>
 
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-12 required">
                             <x-form.textbox labelName="Description" name="Description" id="Description" col="col-md-12"
                                 placeholder="Enter description" />
-                        </div>
+                        </div>        
                     </div>
 
                 </div>

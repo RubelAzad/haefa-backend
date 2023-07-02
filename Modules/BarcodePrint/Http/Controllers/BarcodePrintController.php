@@ -99,32 +99,35 @@ class BarcodePrintController extends BaseController
 
                 $data = array();
                 $data['type'] = $request->barcode_type1;
-                $data['range'] = $request->show_range;
-                $data['prefix'] = $request->mdata_barcode_prefix;
+
                 if ($data['type'] == 'old') {
+                    $number = 10000000;
+                    $start=$request->starting_range;
+                    $end=$request->ending_range;
+
+                    $start_number = ($number + $start);
+                    $end_number = ($number + $end);
+                    $data['prefix'] = $request->mdata_barcode_prefix;
+                    $data['starting_range'] =  $start_number;
+                    $data['ending_range'] =  $end_number;
+
                     $data = DB::table("mdatacc_barcodes")
                         ->where('mdata_barcode_generate', $data['type'])
+                        ->where('mdata_barcode_prefix', $data['prefix'])
+                        ->where('mdata_barcode_number', '>=', $data['starting_range'])
+                        ->where('mdata_barcode_number', '<=', $data['ending_range'])
+                        ->orderBy('mdata_barcode_prefix_number', 'ASC')
+                        ->get(['mdata_barcode_prefix_number']);
+                } else {
+
+                    $data['prefix'] = $request->mdata_barcode_prefix;
+                    $data['range'] = $request->show_range;
+                    $data = DB::table("mdatacc_barcodes")
+                        ->where('mdata_barcode_generate', 'new')
                         ->where('mdata_barcode_prefix', '>=', $data['prefix'])
                         ->orderBy('mdata_barcode_prefix_number', 'ASC')
                         ->limit($data['range'])
-                        ->get(['mdata_barcode_prefix_number','address']);
-                } else {
-                    $results = DB::table("mdatacc_barcodes")
-                        ->where('mdata_barcode_generate', 'new')
-                        ->where('mdata_barcode_prefix_number', '>=', $data['start'])
-                        ->where('mdata_barcode_prefix_number', '<=', $data['end'])
-                        ->orderBy('mdata_barcode_prefix_number', 'ASC')
-                        ->get(['mdata_barcode_prefix_number','address']);
-                    foreach ($results as $result) {
-                        DB::table('mdatacc_barcodes')
-                            ->where('mdata_barcode_prefix_number', $result->mdata_barcode_prefix_number)
-                            ->update([
-                                'mdata_barcode_generate' => 'old'
-                            ]);
-                        $data = DB::table('mdatacc_barcodes')
-                            ->where('mdata_barcode_prefix_number', $result->mdata_barcode_prefix_number)
-                            ->get(['mdata_barcode_prefix_number','address']);
-                    }
+                        ->get(['mdata_barcode_prefix_number']);
                 }
 
                 return response()->json($data);
