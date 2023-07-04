@@ -191,11 +191,11 @@
                             @csrf
                             <div class="row">
                                 <div class="form-group col-md-3">
-                                    <label for="name">Starting date</label>
+                                    <label for="name">Date From</label>
                                     <input type="date" class="form-control" name="starting_date" id="starting_date" placeholder="Date From">
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label for="name">Ending Age</label>
+                                    <label for="name">Date To </label>
                                     <input type="date" class="form-control" name="ending_date" id="ending_date" placeholder="Date To">
                                 </div>
                                 <div class="col-md-2 warning-searching invisible" id="warning-searching">
@@ -204,7 +204,7 @@
                                 </div>
                                 <div class="form-group col-md-4 pt-24">
 
-                                    <button type="submit"  class="btn btn-primary btn-sm float-right mr-2" id="btn-filter"
+                                    <button type="submit"  class="btn btn-primary d-none btn-sm float-right mr-2" id="btn-filter"
                                             data-toggle="tooltip" data-placement="top" data-original-title="Filter Data">
                                         <i class="fas fa-search"></i>
                                     </button>
@@ -230,11 +230,11 @@
                                 @foreach($results as $result)
                                     <tr>
 
-                                        <td>{{$result->GivenName}}{{$result->FamilyName}}</td>
-                                        <td>{{$result->Age}}</td>
-                                        <td>{{$result->GenderCode}}</td>
+                                        <td>{{$loop->iteration}}</td>
+                                        <td>{{$result->CreateDate}}</td>
                                         <td>{{$result->ProvisionalDiagnosis}}</td>
-                                        <td>{{$result->OtherProvisionalDiagnosis}}</td>
+                                        <td>{{$result->Total}}</td>
+
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -266,52 +266,52 @@
 
 
         $(document).ready(function () {
-            // $('#dataTable').DataTable({
-            //     pagingType: 'full_numbers',
-            //     dom: 'Bfrtip',
-            //     orderCellsTop: true,
-            //     buttons: [
-            //         {
-            //             extend: 'excel',
-            //             text: 'Export to Excel',
-            //
-            //         },
-            //     ],
-            //     // initComplete: function () {
-            //     //     var api = this.api();
-            //     //     $('.filterhead', api.table().header()).each(function (i) {
-            //     //         var column = api.column(i);
-            //     //         var select = $('<select><option value=""></option></select>')
-            //     //             .appendTo($(this).empty())
-            //     //             .on('change', function () {
-            //     //                 var val = $.fn.dataTable.util.escapeRegex($(this).val());
-            //     //                 column.search(val ? '^' + val + '$' : '', true, false).draw();
-            //     //             });
-            //     //
-            //     //         column.data().unique().sort().each(function (d, j) {
-            //     //             select.append('<option value="' + d + '">' + d + '</option>');
-            //     //         });
-            //     //     });
-            //     // },
-            // });
+            $('#dataTable').DataTable({
+                pagingType: 'full_numbers',
+                dom: 'Bfrtip',
+                orderCellsTop: true,
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: 'Export to Excel',
+
+                    },
+                ],
+                // initComplete: function () {
+                //     var api = this.api();
+                //     $('.filterhead', api.table().header()).each(function (i) {
+                //         var column = api.column(i);
+                //         var select = $('<select><option value=""></option></select>')
+                //             .appendTo($(this).empty())
+                //             .on('change', function () {
+                //                 var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                //                 column.search(val ? '^' + val + '$' : '', true, false).draw();
+                //             });
+                //
+                //         column.data().unique().sort().each(function (d, j) {
+                //             select.append('<option value="' + d + '">' + d + '</option>');
+                //         });
+                //     });
+                // },
+            });
 
 
 
         });
-        // $('#btn-filter').on('click', function (event) {
-        //     $('#warning-searching').removeClass('invisible');
-        // });
-        //
-        // $(function () {
-        //
-        //     $('#starting_age, #ending_age').on('input', function () {
-        //         if ($('#starting_age').val() != '' && $('#ending_age').val() != '') {
-        //             $('#btn-filter').removeClass('d-none');
-        //         } else {
-        //             $('#btn-filter').addClass('d-none');
-        //         }
-        //     });
-        // });
+        $('#btn-filter').on('click', function (event) {
+            $('#warning-searching').removeClass('invisible');
+        });
+
+        $(function () {
+
+            $('#starting_date, #ending_date').on('input', function () {
+                if ($('#starting_date').val() != '' && $('#ending_date').val() != '') {
+                    $('#btn-filter').removeClass('d-none');
+                } else {
+                    $('#btn-filter').addClass('d-none');
+                }
+            });
+        });
 
     </script>
 @endpush
