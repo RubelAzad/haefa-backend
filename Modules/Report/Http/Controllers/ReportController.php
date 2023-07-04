@@ -21,10 +21,31 @@ class ReportController extends BaseController
         $this->setPageData('Patient Age Count Report','Patient Age Count Report','fas fa-th-list');
         return view('report::index');
     }
+    public function datewisedxindex(){
+        $this->setPageData('Datewise Provisional DX','Datewise Provisional DX','fas fa-th-list');
+        return view('report::datewisedx');
+    }
+
+    public function SearchByDate(Request $request){
+        $starting_date = $request->starting_date;
+        $ending_date = $request->ending_date;
+        $male=$female=$maleBelowFive=$maleAboveFive=$femaleBelowFive=$femaleAboveFive=0;
+
+        $results = DB::table("MDataProvisionalDiagnosis")
+            ->where('CreateDate', '>=', $starting_date)
+            ->where('CreateDate', '<=', $ending_date)
+            ->get(['ProvisionalDiagnosis','OtherProvisionalDiagnosis','CreateDate']);
+
+
+            return response()->json($results);
+//        $this->setPageData('Datewise Provisional DX','Datewise Provisional DX','fas fa-th-list');
+//        return view('report::datewisedx');
+
+    }
     public function SearchByAge(Request $request){
         $starting_age = $request->starting_age;
         $ending_age = $request->ending_age;
-        $male=$female=$maleBelowFive=$maleAboveFive=$femaleBelowFive=$femaleAboveFive=0;
+        $male=$female=$maleBelowFive=$maleAboveFive=$femaleBelowFive=$femaleAboveFive=$Total=0;
 
         $results = DB::table("Patient")
             ->where('Age', '>=', $starting_age)
@@ -53,10 +74,13 @@ class ReportController extends BaseController
             }
 
         }
+        $Total=$male+$female;
 
 
         $this->setPageData(
-            'Report-'. str_repeat(' ', 2).'Male: '. $male .','.  str_repeat(' ', 2)  .
+            'Report-'. str_repeat(' ', 2).
+            'Total: '. $Total .','.  str_repeat(' ', 2).
+            'Male: '. $male .','.  str_repeat(' ', 2)  .
             'Female: '.$female.','. str_repeat(' ', 2) .
             'Male 0-5: '. $maleBelowFive .','. str_repeat(' ', 2) .
             'Male above 5: '. $maleAboveFive .','. str_repeat(' ', 2) .
@@ -66,7 +90,7 @@ class ReportController extends BaseController
             'fas fa-th-list'
         );
 
-        return view('report::index',compact('results','male','female','maleAboveFive','maleBelowFive','femaleAboveFive','femaleBelowFive'));
+        return view('report::index',compact('results','male','Total','female','maleAboveFive','maleBelowFive','femaleAboveFive','femaleBelowFive'));
 
     }
 

@@ -213,13 +213,16 @@
                     </form>
 
                     <div class="row mb-3">
-                        <div class="col-md-4">
-                            <span>Total Male:<span style="color:darkred">{{$male ?? ''}}</span> </span>
+                        <div class="col-md-3">
+                            <span>Total :<span style="color:darkred">{{$Total ?? ''}}</span> </span>
                         </div>
-                        <div class="col-md-4">
-                            <span>Total Female:<span style="color:darkred">{{$female ?? ''}}</span> </span>
+                        <div class="col-md-3">
+                            <span>Male:<span style="color:darkred">{{$male ?? ''}}</span> </span>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <span>Female:<span style="color:darkred">{{$female ?? ''}}</span> </span>
+                        </div>
+                        <div class="col-md-3">
                             <span>Male 0-5 years:<span style="color:darkred">{{$maleBelowFive ?? ''}}</span> </span>
                         </div>
 
@@ -227,21 +230,22 @@
                     </div>
                     <div class="row mb-3">
 
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <span>Male above 5 years:<span style="color:darkred">{{$maleAboveFive ?? ''}}</span> </span>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <span>Female 0-5 years:<span style="color:darkred">{{$femaleBelowFive ?? ''}}</span> </span>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <span>Female above 5 years:<span style="color:darkred">{{$femaleAboveFive ?? ''}}</span> </span>
                         </div>
+
 
                     </div>
                     <table id="dataTable" class="table table-striped table-bordered table-hover">
                         <thead class="bg-primary">
                             <tr>
-
+                                <th>No</th>
                                 <th>Name</th>
                                 <th>Age</th>
                                 <th>Gender</th>
@@ -254,7 +258,7 @@
                         <tbody>
                         @foreach($results as $result)
                             <tr>
-
+                                <td>{{$loop->iteration}}</td>
                                 <td>{{$result->GivenName}}{{$result->FamilyName}}</td>
                                 <td>{{$result->Age}}</td>
                                 <td>{{$result->GenderCode}}</td>
@@ -328,7 +332,7 @@ $('#btn-filter').on('click', function (event) {
 });
 
 $(function () {
-    
+
     $('#starting_age, #ending_age').on('input', function () {
         if ($('#starting_age').val() != '' && $('#ending_age').val() != '') {
             $('#btn-filter').removeClass('d-none');
