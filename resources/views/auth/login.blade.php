@@ -10,7 +10,7 @@
     <title>{{ config('settings.title') ? config('settings.title') : env('APP_NAME') }} - Login</title>
 
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('storage/'.LOGO_PATH.config('settings.favicon')) }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/Logo.png">
 
     <!-- Custom Stylesheet -->
     <link type="text/css" rel="stylesheet" href="css/login.css">
@@ -33,7 +33,7 @@
         <div class="col-md-6 bg-white">
             <div class="login_box">
                      <a href="{{ url('/') }}" class="logo_text">
-                        <img class="d-none d-lg-inline-block" src="{{ asset('storage/'.LOGO_PATH.config('settings.logo')) }}" alt="Logo" style="max-width: 250px;"/>
+                        <img class="d-none d-lg-inline-block" src="images/Logo.png" alt="Logo" style="max-width: 250px;"/>
                         </a>
                     <div class="login_form">
                         <div class="login_form_inner">
