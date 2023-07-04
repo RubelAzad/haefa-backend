@@ -29,17 +29,17 @@ class ReportController extends BaseController
     public function SearchByDate(Request $request){
         $starting_date = $request->starting_date;
         $ending_date = $request->ending_date;
-        $male=$female=$maleBelowFive=$maleAboveFive=$femaleBelowFive=$femaleAboveFive=0;
 
         $results = DB::table("MDataProvisionalDiagnosis")
-            ->where('CreateDate', '>=', $starting_date)
-            ->where('CreateDate', '<=', $ending_date)
-            ->get(['ProvisionalDiagnosis','OtherProvisionalDiagnosis','CreateDate']);
+            ->select(DB::raw("CAST(CreateDate AS DATE) as CreateDate"), 'ProvisionalDiagnosis', DB::raw('COUNT(*) as Total'))
+            ->whereDate('CreateDate', '>=', $starting_date)
+            ->whereDate('CreateDate', '<=', $ending_date)
+            ->groupBy(DB::raw("CAST(CreateDate AS DATE)"), 'ProvisionalDiagnosis')
+            ->get();
 
 
-            return response()->json($results);
-//        $this->setPageData('Datewise Provisional DX','Datewise Provisional DX','fas fa-th-list');
-//        return view('report::datewisedx');
+        $this->setPageData('Datewise Provisional DX','Datewise Provisional DX','fas fa-th-list');
+        return view('report::datewisedx',compact('results'));
 
     }
     public function SearchByAge(Request $request){
