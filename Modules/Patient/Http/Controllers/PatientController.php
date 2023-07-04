@@ -255,7 +255,7 @@ class PatientController extends BaseController
                 FROM PrescriptionCreation WHERE PatientId = '$request->id'
                 GROUP BY CAST(CreateDate AS date)
                 ORDER BY MaxCreateDate DESC)
-                AS date) GROUP BY PPC.CreateDate ORDER BY PPC.CreateDate");
+                AS date) GROUP BY PPC.CreateDate ORDER BY PPC.CreateDate DESC");
 
         $Complaints= DB::select("SELECT PC.ChiefComplain AS ChiefComplain, PC.CCDurationValue AS CCDurationValue, PC.OtherCC AS OtherCC, RD.DurationInEnglish AS DurationInEnglish, PC.CreateDate AS CreateDate
             FROM MDataPatientCCDetails as PC
