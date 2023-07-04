@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('patientage', 'ReportController@index')->name('patientage');
+    Route::any('search-by-age', 'ReportController@SearchByAge')->name('search-by-age');
     Route::group(['prefix' => 'patientage', 'as'=>'patientage.'], function () {
         Route::post('show', 'ReportController@show')->name('show');
     });

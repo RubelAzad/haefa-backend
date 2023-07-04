@@ -6,6 +6,41 @@
 
 @push('stylesheet')
     <style>
+{{--        pagination style--}}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.pagination .active {
+    font-weight: bold;
+    color: #000;
+}
+
+.pagination a {
+    color: #007bff;
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+}
+
+.pagination a:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+
+{{--pagination style ends--}}
+
 #prescription .container {
   background-color: #f2f2f2 !important;
 }
@@ -130,7 +165,7 @@
 
             <!-- Entry Header -->
             <div class="dt-entry__header">
-            
+
                 <!-- Entry Heading -->
                 <div class="dt-entry__heading">
                     <h2 class="dt-page__title mb-0 text-primary"><i class="{{ $page_icon }}"></i> {{ $sub_title }}</h2>
@@ -141,7 +176,7 @@
                     <i class="fas fa-plus-square"></i> Add New
                  </button>
                 @endif
-                
+
 
             </div>
             <!-- /entry header -->
@@ -152,47 +187,86 @@
                 <!-- Card Body -->
                 <div class="dt-card__body">
 
-                    <form id="form-filter">
+                    <form id="form-filter" method="POST" action="{{route('search-by-age')}}" >
+                        @csrf
                         <div class="row">
-                            <div class="form-group col-md-4">
-                                <label for="name">Registration Id</label>
-                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter patientage Registration Id">
+                            <div class="form-group col-md-3">
+                                <label for="name">Starting Age</label>
+                                <input type="text" class="form-control" name="starting_age" id="starting_age" placeholder="Enter starting range">
                             </div>
-                            <div class="form-group col-md-8 pt-24">
-                               <button type="button" class="btn btn-danger btn-sm float-right" id="btn-reset"
-                               data-toggle="tooltip" data-placement="top" data-original-title="Reset Data">
-                                   <i class="fas fa-redo-alt"></i>
-                                </button>
-                               <button type="button" class="btn btn-primary btn-sm float-right mr-2" id="btn-filter"
+                            <div class="form-group col-md-3">
+                                <label for="name">Ending Age</label>
+                                <input type="text" class="form-control" name="ending_age" id="ending_age" placeholder="Enter ending range">
+                            </div>
+                            <div class="col-md-2 warning-searching invisible" id="warning-searching">
+                                <span class="text-danger" id="warning-message">Searching...Please Wait</span>
+                                <span class="spinner-border text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-4 pt-24">
+
+                               <button type="submit"  class="btn btn-primary d-none btn-sm float-right mr-2" id="btn-filter"
                                data-toggle="tooltip" data-placement="top" data-original-title="Filter Data">
                                    <i class="fas fa-search"></i>
                                 </button>
                             </div>
                         </div>
                     </form>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <span>Total Male:<span style="color:darkred">{{$male ?? ''}}</span> </span>
+                        </div>
+                        <div class="col-md-4">
+                            <span>Total Female:<span style="color:darkred">{{$female ?? ''}}</span> </span>
+                        </div>
+                        <div class="col-md-4">
+                            <span>Male 0-5 years:<span style="color:darkred">{{$maleBelowFive ?? ''}}</span> </span>
+                        </div>
+
+
+                    </div>
+                    <div class="row mb-3">
+
+                        <div class="col-md-4">
+                            <span>Male above 5 years:<span style="color:darkred">{{$maleAboveFive ?? ''}}</span> </span>
+                        </div>
+                        <div class="col-md-4">
+                            <span>Female 0-5 years:<span style="color:darkred">{{$femaleBelowFive ?? ''}}</span> </span>
+                        </div>
+                        <div class="col-md-4">
+                            <span>Female above 5 years:<span style="color:darkred">{{$femaleAboveFive ?? ''}}</span> </span>
+                        </div>
+
+                    </div>
                     <table id="dataTable" class="table table-striped table-bordered table-hover">
                         <thead class="bg-primary">
                             <tr>
-                                @if (permission('patientage-bulk-delete'))
-                                <th>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="select_all" onchange="select_all()">
-                                        <label class="custom-control-label" for="select_all"></label>
-                                    </div>
-                                </th>
-                                @endif
-                                <th>Sl</th>
-                                <th>Registration Id</th>
-                                <th>patientage Name</th>
-                                <th>NID Number</th>
-                                <th>Mobile Number</th>
-                                <th>Action</th>
+
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Gender</th>
+                                <th>Provisional Dx</th>
+                                <th>Other Provisional Dx</th>
                             </tr>
+
                         </thead>
+                        @if($results ?? '')
                         <tbody>
-                            
+                        @foreach($results as $result)
+                            <tr>
+
+                                <td>{{$result->GivenName}}{{$result->FamilyName}}</td>
+                                <td>{{$result->Age}}</td>
+                                <td>{{$result->GenderCode}}</td>
+                                <td>{{$result->ProvisionalDiagnosis}}</td>
+                                <td>{{$result->OtherProvisionalDiagnosis}}</td>
+                            </tr>
+                        @endforeach
                         </tbody>
+                        @endif
                     </table>
+
+
 
                 </div>
                 <!-- /card body -->
@@ -210,17 +284,59 @@
 @endsection
 
 @push('script')
+    <script src="https://cdn.datatables.net/buttons/2.1.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.1.1/js/buttons.html5.min.js"></script>
 <script>
 var table;
-$(document).ready(function(){
 
-    
 
-    
+$(document).ready(function () {
+    $('#dataTable').DataTable({
+        pagingType: 'full_numbers',
+        dom: 'Bfrtip',
+        orderCellsTop: true,
+        buttons: [
+            {
+                extend: 'excel',
+                text: 'Export to Excel',
 
-    
+            },
+        ],
+        // initComplete: function () {
+        //     var api = this.api();
+        //     $('.filterhead', api.table().header()).each(function (i) {
+        //         var column = api.column(i);
+        //         var select = $('<select><option value=""></option></select>')
+        //             .appendTo($(this).empty())
+        //             .on('change', function () {
+        //                 var val = $.fn.dataTable.util.escapeRegex($(this).val());
+        //                 column.search(val ? '^' + val + '$' : '', true, false).draw();
+        //             });
+        //
+        //         column.data().unique().sort().each(function (d, j) {
+        //             select.append('<option value="' + d + '">' + d + '</option>');
+        //         });
+        //     });
+        // },
+    });
+
 
 
 });
+$('#btn-filter').on('click', function (event) {
+    $('#warning-searching').removeClass('invisible');
+});
+
+$(function () {
+    
+    $('#starting_age, #ending_age').on('input', function () {
+        if ($('#starting_age').val() != '' && $('#ending_age').val() != '') {
+            $('#btn-filter').removeClass('d-none');
+        } else {
+            $('#btn-filter').addClass('d-none');
+        }
+    });
+});
+
 </script>
 @endpush
