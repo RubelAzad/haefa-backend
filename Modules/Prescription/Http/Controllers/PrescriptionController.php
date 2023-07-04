@@ -123,7 +123,7 @@ class PrescriptionController extends BaseController
             $prescriptionCreation= DB::select("SELECT PPC.PrescriptionId AS PrescriptionId,E.FirstName AS FirstName,E.LastName AS LastName,E.Designation AS Designation,E.EmployeeSignature AS EmployeeSignature, PPC.CreateDate
             FROM PrescriptionCreation as PPC 
             INNER JOIN Employee as E on E.EmployeeId = PPC.EmployeeId
-            WHERE PPC.PatientId = '$patient_id' ");
+            WHERE PPC.PatientId = '$patient_id' AND PPC.CreateDate ='$create_date_time'");
 
             
                 
