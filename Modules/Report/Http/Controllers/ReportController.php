@@ -4,6 +4,7 @@ namespace Modules\Report\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Modules\Report\Entities\Report;
 use Illuminate\Routing\Controller;
 use Modules\Base\Http\Controllers\BaseController;
@@ -19,6 +20,54 @@ class ReportController extends BaseController
     {
         $this->setPageData('Patient Age Count Report','Patient Age Count Report','fas fa-th-list');
         return view('report::index');
+    }
+    public function SearchByAge(Request $request){
+        $starting_age = $request->starting_age;
+        $ending_age = $request->ending_age;
+        $male=$female=$maleBelowFive=$maleAboveFive=$femaleBelowFive=$femaleAboveFive=0;
+
+        $results = DB::table("Patient")
+            ->where('Age', '>=', $starting_age)
+            ->where('Age', '<=', $ending_age)
+            ->join('MDataProvisionalDiagnosis','Patient.PatientId', '=', 'MDataProvisionalDiagnosis.PatientId')
+            ->join('RefGender','Patient.GenderId', '=', 'RefGender.GenderId')
+            ->get(['ProvisionalDiagnosis','OtherProvisionalDiagnosis','GivenName','FamilyName','Age','GenderCode']);
+        foreach ($results as $result){
+            if ($result->Age < 6 && $result->GenderCode == 'Male'){
+                $maleBelowFive++;
+            }
+            if ($result->Age > 5 && $result->GenderCode == 'Male'){
+                $maleAboveFive++;
+            }
+            if ($result->Age < 6 && $result->GenderCode == 'Female'){
+                $femaleBelowFive++;
+            }
+            if ($result->Age > 5 && $result->GenderCode == 'Female'){
+                $femaleAboveFive++;
+            }
+            if ($result->GenderCode == 'Male'){
+                $male++;
+            }
+            if ($result->GenderCode == 'Female'){
+                $female++;
+            }
+
+        }
+
+
+        $this->setPageData(
+            'Report-'. str_repeat(' ', 2).'Male: '. $male .','.  str_repeat(' ', 2)  .
+            'Female: '.$female.','. str_repeat(' ', 2) .
+            'Male 0-5: '. $maleBelowFive .','. str_repeat(' ', 2) .
+            'Male above 5: '. $maleAboveFive .','. str_repeat(' ', 2) .
+            'Female 0-5: '. $femaleBelowFive .','. str_repeat(' ', 2) .
+            'Female above 5: '. $femaleAboveFive,
+            'Patient Age Count Report',
+            'fas fa-th-list'
+        );
+
+        return view('report::index',compact('results','male','female','maleAboveFive','maleBelowFive','femaleAboveFive','femaleBelowFive'));
+
     }
 
     /**
