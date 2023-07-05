@@ -19,7 +19,18 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('glucose-graph', 'ReportController@GlucoseGraph')->name('glucose-graph');
     Route::any('date-wise-dx', 'ReportController@SearchByDate')->name('date-wise-dx');
     Route::get('patient-blood-pressure-graph', 'ReportController@PatientBloodPressureGraph')->name('patientbloodpressuregraph');
+<<<<<<< HEAD
 
+=======
+    Route::get('ajax-patient-blood-pressure', 'ReportController@AjaxPatientBloodPressure')->name('ajaxpatientbloodpressure');
+    
+    Route::get('heart-rate-graph','ReportController@HeartRateGraph')->name('heartrategraph');
+    Route::get('ajax-heart-rate-graph','ReportController@AjaxHeartRateGraph')->name('ajaxheartrategraph');
+    
+    Route::get('temperature-graph','ReportController@TemperatureGraph')->name('temperaturegraph');
+    Route::get('ajax-temperature-graph','ReportController@AjaxTemperatureGraph')->name('ajaxtemperaturegraph');
+    
+>>>>>>> 92ea96b7c342b076f0925a7bccf1a62aa6e039bb
     Route::group(['prefix' => 'patientage', 'as'=>'patientage.'], function () {
         Route::post('show', 'ReportController@show')->name('show');
     });

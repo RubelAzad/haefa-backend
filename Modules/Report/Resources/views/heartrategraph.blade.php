@@ -205,11 +205,6 @@
                     <h2 class="dt-page__title mb-0 text-primary"><i class="{{ $page_icon }}"></i> {{ $sub_title }}</h2>
                 </div>
                 <!-- /entry heading -->
-                @if (permission('patientage-add'))
-                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add New patientage','Save')">
-                    <i class="fas fa-plus-square"></i> Add New
-                </button>
-                @endif
 
 
             </div>
@@ -294,7 +289,7 @@ $('#search').click(function() {
     var registration_id = $('#registration_id').val();
 
     $.ajax({
-        url: "{{ url('ajax-patient-blood-pressure') }}",
+        url: "{{ url('ajax-heart-rate-graph') }}",
         type: "get",
         data: { starting_date: starting_date, ending_date: ending_date, registration_id: registration_id },
         dataType: "html",
