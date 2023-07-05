@@ -136,19 +136,16 @@ class PrescriptionController extends BaseController
             
 
 
-            $HeightWeight= DB::select("SELECT TOP 1 Height, Weight, BMI, BMIStatus, CreateDate FROM MDataHeightWeight WHERE PatientId ='$patient_id' AND CAST(CreateDate AS date)='$create_date' ORDER BY CAST(CreateDate AS date) DESC");
+            $HeightWeight= DB::select("SELECT TOP 1 Height, Weight, BMI, BMIStatus, CreateDate FROM MDataHeightWeight WHERE PatientId ='$patient_id' AND CAST(CreateDate AS date)='$create_date' ORDER BY CreateDate DESC");
 
-
-
-            
 
             $BP= DB::select("SELECT TOP 1 BPSystolic1, BPDiastolic1, BPSystolic2,BPDiastolic2,HeartRate,CurrentTemparature,CreateDate
             FROM MDataBP
-            WHERE PatientId ='$patient_id' AND  CAST(CreateDate AS date) = '$create_date' ORDER BY CAST(CreateDate AS date) DESC");
+            WHERE PatientId ='$patient_id' AND  CAST(CreateDate AS date) = '$create_date' ORDER BY CreateDate DESC");
 
             $GlucoseHb= DB::select("SELECT TOP 1 RBG, FBG, Hemoglobin, HrsFromLastEat, CreateDate
             FROM MDataGlucoseHb
-            WHERE PatientId ='$patient_id' AND  CAST(CreateDate AS date)='$create_date' ORDER BY CAST(CreateDate AS date) DESC");
+            WHERE PatientId ='$patient_id' AND  CAST(CreateDate AS date)='$create_date' ORDER BY CreateDate DESC");
 
             $ProvisionalDx= DB::select("SELECT TOP 1 ProvisionalDiagnosis, DiagnosisStatus, OtherProvisionalDiagnosis, CreateDate
             FROM MDataProvisionalDiagnosis
@@ -178,7 +175,7 @@ class PrescriptionController extends BaseController
 
             $FollowUpDate= DB::select("SELECT TOP 1 FollowUpDate, Comment, CreateDate
             FROM MDataFollowUpDate
-            WHERE PatientId ='$patient_id' AND  CAST(CreateDate AS date)='$create_date' ORDER BY CAST(CreateDate AS date) DESC");
+            WHERE PatientId ='$patient_id' AND  CAST(CreateDate AS date)='$create_date' ORDER BY CreateDate DESC");
 
            }
         }
