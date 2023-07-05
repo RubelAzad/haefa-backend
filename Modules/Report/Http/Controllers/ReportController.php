@@ -94,6 +94,48 @@ class ReportController extends BaseController
 
     }
 
+    public function PatientBloodPressureGraph(){
+        $this->setPageData('Patient Blood Pressure Graph','Patient wise Blood Pressure Graph','fas fa-th-list');
+        $startDate = $_GET['starting_date']??''; 
+        $endDate = $_GET['ending_date']??''; 
+        $RegistrationId = $_GET['registration_id']??'';
+
+        $datas = DB::select("
+            SELECT TOP 7 CONVERT(date, MDataBP.CreateDate) AS DistinctDate, BPSystolic1, BPDiastolic1, BPSystolic2, BPDiastolic2
+            FROM MDataBP
+            INNER JOIN Patient ON Patient.PatientId=MDataBP.PatientId AND Patient.RegistrationId='{$RegistrationId}'
+            WHERE CONVERT(date, MDataBP.CreateDate) BETWEEN ? AND ? AND BPSystolic1 !='' AND BPSystolic2 !=''
+            AND BPSystolic2 !='' AND BPDiastolic2 !=''
+            GROUP BY CONVERT(date, MDataBP.CreateDate), BPSystolic1, BPDiastolic1, BPSystolic2, BPDiastolic2
+            ORDER BY DistinctDate DESC
+        ", [$startDate, $endDate]);
+
+        $BPSystolic1 = array();
+        $BPDiastolic1 = array();
+        $BPSystolic2 = array();
+        $BPDiastolic2 = array();
+        $DistinctDate = array();
+
+        foreach ($datas as $row) {
+            array_push($BPSystolic1, $row->BPSystolic1);
+            array_push($BPDiastolic1, $row->BPDiastolic1);
+
+            array_push($BPSystolic2, $row->BPSystolic2);
+            array_push($BPDiastolic2, $row->BPDiastolic2);
+
+            array_push($DistinctDate, $row->DistinctDate);
+        }   
+
+        $BPSystolic1Numeric = json_encode($BPSystolic1,JSON_NUMERIC_CHECK);
+        $BPDiastolic1Numeric = json_encode($BPDiastolic1, JSON_NUMERIC_CHECK);
+        $BPSystolic2Numeric = json_encode($BPSystolic2, JSON_NUMERIC_CHECK);
+        $BPDiastolic2Numeric = json_encode($BPDiastolic2, JSON_NUMERIC_CHECK);
+
+        return view('report::patientbloodpressuregraph',compact('BPSystolic1Numeric','BPDiastolic1Numeric',
+        'BPSystolic2Numeric','BPDiastolic2Numeric','DistinctDate','BPSystolic1','BPDiastolic1',
+        'BPSystolic2','BPDiastolic2'));
+    }
+
     /**
      * Show the form for creating a new resource.
      * @return Renderable
