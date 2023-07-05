@@ -17,6 +17,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::any('search-by-age', 'ReportController@SearchByAge')->name('search-by-age');
     Route::any('date-wise-dx', 'ReportController@SearchByDate')->name('date-wise-dx');
     Route::get('patient-blood-pressure-graph', 'ReportController@PatientBloodPressureGraph')->name('patientbloodpressuregraph');
+    Route::get('ajax-patient-blood-pressure', 'ReportController@AjaxPatientBloodPressure')->name('ajaxpatientbloodpressure');
     Route::group(['prefix' => 'patientage', 'as'=>'patientage.'], function () {
         Route::post('show', 'ReportController@show')->name('show');
     });

@@ -222,7 +222,7 @@
                 <div class="dt-card__body">
 
                     <form id="form-filter" method="GET" action="{{url('patient-blood-pressure-graph')}}">
-                        @csrf
+                        
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label for="name">Date From</label>
@@ -243,12 +243,12 @@
 
                             <div class="form-group col-md-2 pt-24">
 
-                                <button type="submit" class="btn btn-primary btn-sm float-right mr-2">
+                                <button type="button" id="search" class="btn btn-primary btn-sm float-right mr-2">
                                     <i class="fas fa-search"></i>
                                 </button>
                                 
-                                <a href="{{url('patient-blood-pressure-graph')}}" class="btn btn-primary btn-sm float-right mr-2 refresh">
-                                <i class="fas fa-sync-alt"></i></a>
+                                <button type="button" id="refresh" class="btn btn-primary btn-sm float-right mr-2 refresh">
+                                <i class="fas fa-sync-alt"></i></button>
                             </div>
                         </div>
 
@@ -279,135 +279,34 @@
 @endsection
 
 @push('script')
-<script src="https://cdn.datatables.net/buttons/2.1.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.1.1/js/buttons.html5.min.js"></script>
+
 <script>
+$('#refresh').click(function(){
+    $('#starting_date').val('');
+    $('#ending_date').val('');
+    $('#registration_id').val('');
+    $('#container').html('');
+});   
 
-var BPSystolic1Numeric = {!! json_encode($BPSystolic1Numeric) !!};
+$('#search').click(function() {
+    var starting_date = $('#starting_date').val();
+    var ending_date = $('#ending_date').val();
+    var registration_id = $('#registration_id').val();
 
-var BPDiastolic1Numeric = {!! json_encode($BPDiastolic1Numeric) !!};
-
-var BPSystolic2Numeric = {!! json_encode($BPSystolic2Numeric) !!};
-
-var BPDiastolic2Numeric = {!! json_encode($BPDiastolic2Numeric) !!};
-
-var BPSystolic1 = {!! json_encode($BPSystolic1) !!};
-
-var BPDiastolic1 = {!! json_encode($BPDiastolic1) !!};
-
-var BPSystolic2 = {!! json_encode($BPSystolic2) !!};
-
-var BPDiastolic2 = {!! json_encode($BPDiastolic2) !!};
-
-
-Highcharts.chart('container', {
-    chart: {
-        type: 'spline'
-    },
-    title: {
-        text: 'Patient Blood Pressure'
-    },
-    xAxis: {
-
-        categories: {!! json_encode($DistinctDate) !!},
-
-        // categories: ['Jan 2003', 'Feb 2003', 'Mar', 'Apr', 'May', 'Jun',
-        //     'Jul'
-        // ],
-
-        accessibility: {
-            description: 'Months of the year'
+    $.ajax({
+        url: "{{ url('ajax-patient-blood-pressure') }}",
+        type: "get",
+        data: { starting_date: starting_date, ending_date: ending_date, registration_id: registration_id },
+        dataType: "html",
+        success: function(data) {
+            $('#container').html(data);
         },
-        labels: {
-            style: {
-                fontSize: '12px'
-            }
+        error: function(xhr, ajaxOption, thrownError) {
+            console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
         }
-    },
-    yAxis: {
-        title: {
-            text: 'Blood ressure '
-        },
-        labels: {
-            style: {
-                fontSize: '12px'
-            }
-        }
-    },
-    tooltip: {
-        crosshairs: true,
-        shared: false
-    },
-
-    plotOptions: {
-        spline: {
-            marker: {
-                radius: 4,
-                lineColor: '#666666',
-                lineWidth: 1
-            },
-            dataLabels: {
-                enabled: true,
-                formatter: function() {
-                    var index = this.point.index;
-                    var bpsData1 = BPSystolic1[index];
-                    var bpdData1 = BPDiastolic1[index];
-                    var bpsData2 = BPSystolic2[index];
-                    var bpdData2 = BPDiastolic2[index];
-
-                    var label1 =  bpsData1;
-                    var label2 = bpdData1;
-                    var label3 = bpsData2;
-                    var label4 = bpdData2;
-
-                    if (this.series.index ===0) {
-                        return label1;
-                    }else if (this.series.index ===1) {
-                        return label2;
-                    }
-                    else if (this.series.index ===2) {
-                        return label3;
-                    }else if (this.series.index ===3) {
-                        return label4;
-                    }
-                },
-                style: {
-                    fontSize: '12px'
-                }
-            }
-        }
-    },
-    series: [{
-            name: 'BPSystolic1',
-            marker: {
-                symbol: 'square'
-            },
-            // data: [5.22, 5.7, 8.7, 13.9, 18.2, 21.4, 1.0]
-            data: <?php echo $BPSystolic1Numeric; ?>
-        },
-        {
-            name: 'BPDiastolic1',
-            marker: {
-                symbol: 'square'
-            },
-            data: <?php echo $BPDiastolic1Numeric; ?>
-        },
-        {
-            name: 'BPSystolic2',
-            marker: {
-                symbol: 'square'
-            },
-             data: <?php echo $BPSystolic2Numeric; ?>
-        },
-        {
-            name: 'BPDiastolic2',
-            marker: {
-                symbol: 'square'
-            },
-             data: <?php echo $BPDiastolic2Numeric; ?>
-        }
-    ]
-
+    });
 });
+
+
 </script>
 @endpush
