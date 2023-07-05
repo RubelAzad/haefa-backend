@@ -104,26 +104,29 @@ class ReportController extends BaseController
         $RegistrationId = $request->reg_id;
 
         $results = DB::select("
-            SELECT TOP 7 CONVERT(date, MDataGlucoseHb.CreateDate) AS DistinctDate, RBG, FBG
+            SELECT TOP 7 CONVERT(date, MDataGlucoseHb.CreateDate) AS DistinctDate, RBG, FBG,Hemoglobin
             FROM MDataGlucoseHb
             INNER JOIN Patient ON Patient.PatientId=MDataGlucoseHb.PatientId AND Patient.RegistrationId='{$RegistrationId}'
             WHERE CONVERT(date, MDataGlucoseHb.CreateDate) BETWEEN ? AND ? AND RBG !='' AND FBG !=''
-            GROUP BY CONVERT(date, MDataGlucoseHb.CreateDate), RBG, FBG
+            GROUP BY CONVERT(date, MDataGlucoseHb.CreateDate), RBG, FBG,Hemoglobin
             ORDER BY DistinctDate DESC
         ", [$starting_date, $ending_date]);
 
         $rbg = array();
         $fbg = array();
+        $hemoglobin = array();
         $DistinctDate = array();
 
         foreach ($results as $result) {
             array_push($rbg, $result->RBG);
             array_push($fbg, $result->FBG);
+            array_push($hemoglobin, $result->Hemoglobin);
             array_push($DistinctDate, $result->DistinctDate);
         }
 
         $rbgNumeric = json_encode($rbg,JSON_NUMERIC_CHECK);
         $fbgNumeric = json_encode($fbg, JSON_NUMERIC_CHECK);
+        $hemoglobinNumeric = json_encode($hemoglobin, JSON_NUMERIC_CHECK);
 
 
 //        return response()->json([
@@ -133,7 +136,7 @@ class ReportController extends BaseController
 //            'results'=>$DistinctDate,
 //        ]);
         $this->setPageData('Glucose Graph Report','Glucose Graph Report','fas fa-th-list');
-        return view('report::glucosegraph',compact('DistinctDate','rbg','rbgNumeric','fbg','fbgNumeric'));
+        return view('report::glucosegraph',compact('DistinctDate','rbg','rbgNumeric','fbg','fbgNumeric','hemoglobin','hemoglobinNumeric'));
     }
 
 

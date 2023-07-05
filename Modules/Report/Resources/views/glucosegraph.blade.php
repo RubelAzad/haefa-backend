@@ -295,10 +295,12 @@
         var fbgNumeric = {!! json_encode($fbgNumeric ?? '') !!};
 
         var rbgNumeric = {!! json_encode($rbgNumeric ?? '') !!};
+        var hemoglobinNumeric = {!! json_encode($hemoglobinNumeric ?? '') !!};
 
         var rbg = {!! json_encode($rbg ?? '') !!};
 
         var fbg = {!! json_encode($fbg ?? '') !!};
+        var hemoglobin = {!! json_encode($hemoglobin ?? '') !!};
 
         if(fbgNumeric != ''){
             $('#highcharts').removeClass('d-none');
@@ -362,16 +364,20 @@
                             var index = this.point.index;
                             var rbgData = rbg[index];
                             var fbgData = fbg[index];
+                            var hemoglobinData = hemoglobin[index];
 
 
                             var label1 =  rbgData;
                             var label2 = fbgData;
+                            var label3 = hemoglobinData;
 
 
                             if (this.series.index ===0) {
                                 return label1;
                             }else if (this.series.index ===1) {
                                 return label2;
+                            }else if (this.series.index ===2) {
+                                return label3;
                             }
 
                         },
@@ -383,18 +389,25 @@
             },
             series: [
                 {
-                name: 'RBG',
+                name: 'RBG (mmol/L)',
                 marker: {
                     symbol: 'square'
                 },
                 // data: [5.22, 5.7, 8.7, 13.9, 18.2, 21.4, 1.0]
                 data: <?php echo $rbgNumeric ?? '0' ; ?>
             },
-                {name: 'FBG',
+                {name: 'FBG (mmol/L)',
                     marker: {
                         symbol: 'square'
                     },
                     data: <?php echo $fbgNumeric ?? '0' ; ?>
+                },
+
+                {name: 'Hemoglobin (m/dL)',
+                    marker: {
+                        symbol: 'square'
+                    },
+                    data: <?php echo $hemoglobinNumeric ?? '0' ; ?>
                 },
 
             ]
