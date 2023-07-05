@@ -25,6 +25,11 @@ class ReportController extends BaseController
         $this->setPageData('Datewise Provisional DX','Datewise Provisional DX','fas fa-th-list');
         return view('report::datewisedx');
     }
+    public function glucosegraphindex(){
+        $this->setPageData('Glucose Graph Report','Glucose Graph Report','fas fa-th-list');
+        return view('report::glucosegraph');
+
+    }
 
     public function SearchByDate(Request $request){
         $starting_date = $request->starting_date;
@@ -93,11 +98,50 @@ class ReportController extends BaseController
         return view('report::index',compact('results','male','Total','female','maleAboveFive','maleBelowFive','femaleAboveFive','femaleBelowFive'));
 
     }
+    public function GlucoseGraph(Request $request){
+        $starting_date = $request->starting_date;
+        $ending_date = $request->ending_date;
+        $RegistrationId = $request->reg_id;
+
+        $results = DB::select("
+            SELECT TOP 7 CONVERT(date, MDataGlucoseHb.CreateDate) AS DistinctDate, RBG, FBG
+            FROM MDataGlucoseHb
+            INNER JOIN Patient ON Patient.PatientId=MDataGlucoseHb.PatientId AND Patient.RegistrationId='{$RegistrationId}'
+            WHERE CONVERT(date, MDataGlucoseHb.CreateDate) BETWEEN ? AND ? AND RBG !='' AND FBG !=''
+            GROUP BY CONVERT(date, MDataGlucoseHb.CreateDate), RBG, FBG
+            ORDER BY DistinctDate DESC
+        ", [$starting_date, $ending_date]);
+
+        $rbg = array();
+        $fbg = array();
+        $DistinctDate = array();
+
+        foreach ($results as $result) {
+            array_push($rbg, $result->RBG);
+            array_push($fbg, $result->FBG);
+            array_push($DistinctDate, $result->DistinctDate);
+        }
+
+        $rbgNumeric = json_encode($rbg,JSON_NUMERIC_CHECK);
+        $fbgNumeric = json_encode($fbg, JSON_NUMERIC_CHECK);
+
+
+//        return response()->json([
+//            's_date'=>$rbgNumeric,
+//            'e_date'=>$fbgNumeric,
+//            'reg_id'=>$rbg,
+//            'results'=>$DistinctDate,
+//        ]);
+        $this->setPageData('Glucose Graph Report','Glucose Graph Report','fas fa-th-list');
+        return view('report::glucosegraph',compact('DistinctDate','rbg','rbgNumeric','fbg','fbgNumeric'));
+    }
+
+
 
     public function PatientBloodPressureGraph(){
         $this->setPageData('Patient Blood Pressure Graph','Patient wise Blood Pressure Graph','fas fa-th-list');
-        $startDate = $_GET['starting_date']??''; 
-        $endDate = $_GET['ending_date']??''; 
+        $startDate = $_GET['starting_date']??'';
+        $endDate = $_GET['ending_date']??'';
         $RegistrationId = $_GET['registration_id']??'';
 
         $datas = DB::select("
@@ -124,7 +168,7 @@ class ReportController extends BaseController
             array_push($BPDiastolic2, $row->BPDiastolic2);
 
             array_push($DistinctDate, $row->DistinctDate);
-        }   
+        }
 
         $BPSystolic1Numeric = json_encode($BPSystolic1,JSON_NUMERIC_CHECK);
         $BPDiastolic1Numeric = json_encode($BPDiastolic1, JSON_NUMERIC_CHECK);
