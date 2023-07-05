@@ -96,9 +96,14 @@ class ReportController extends BaseController
 
     public function PatientBloodPressureGraph(){
         $this->setPageData('Patient Blood Pressure Graph','Patient wise Blood Pressure Graph','fas fa-th-list');
-        $startDate = $_GET['starting_date']??''; 
-        $endDate = $_GET['ending_date']??''; 
-        $RegistrationId = $_GET['registration_id']??'';
+
+        return view('report::patientbloodpressuregraph');
+    }
+
+    public function AjaxPatientBloodPressure(Request $request){
+        $startDate = $request->starting_date; 
+        $endDate = $request->ending_date; 
+        $RegistrationId = $request->registration_id;
 
         $datas = DB::select("
             SELECT TOP 7 CONVERT(date, MDataBP.CreateDate) AS DistinctDate, BPSystolic1, BPDiastolic1, BPSystolic2, BPDiastolic2
@@ -119,10 +124,8 @@ class ReportController extends BaseController
         foreach ($datas as $row) {
             array_push($BPSystolic1, $row->BPSystolic1);
             array_push($BPDiastolic1, $row->BPDiastolic1);
-
             array_push($BPSystolic2, $row->BPSystolic2);
             array_push($BPDiastolic2, $row->BPDiastolic2);
-
             array_push($DistinctDate, $row->DistinctDate);
         }   
 
@@ -130,8 +133,7 @@ class ReportController extends BaseController
         $BPDiastolic1Numeric = json_encode($BPDiastolic1, JSON_NUMERIC_CHECK);
         $BPSystolic2Numeric = json_encode($BPSystolic2, JSON_NUMERIC_CHECK);
         $BPDiastolic2Numeric = json_encode($BPDiastolic2, JSON_NUMERIC_CHECK);
-
-        return view('report::patientbloodpressuregraph',compact('BPSystolic1Numeric','BPDiastolic1Numeric',
+        return view('report::bloodpressure_ajax',compact('BPSystolic1Numeric','BPDiastolic1Numeric',
         'BPSystolic2Numeric','BPDiastolic2Numeric','DistinctDate','BPSystolic1','BPDiastolic1',
         'BPSystolic2','BPDiastolic2'));
     }
