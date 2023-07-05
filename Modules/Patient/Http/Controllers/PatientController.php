@@ -59,9 +59,9 @@ class PatientController extends BaseController
                     if(permission('patient-viewid')){
                         $action .= ' <a class="dropdown-item viewid_data" data-id="' . $value->PatientId . '"><i class="fas fa-eye text-success"></i> View</a>';
                     }
-                    if(permission('patient-view')){
+                    /* if(permission('patient-view')){
                         $action .= ' <a class="dropdown-item view_data" data-id="' . $value->PatientId . '"><i class="fas fa-eye text-success"></i> Last Prescription</a>';
-                    }
+                    } */
                     if(permission('patient-edit')){
                         $action .= ' <a class="dropdown-item" href="'.route("patient.edit",$value->PatientId).'"><i class="fas fa-eye text-success"></i> Edit</a>';
                     }
