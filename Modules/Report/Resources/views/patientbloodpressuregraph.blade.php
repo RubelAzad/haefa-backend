@@ -282,7 +282,7 @@
 <script src="https://cdn.datatables.net/buttons/2.1.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.1.1/js/buttons.html5.min.js"></script>
 <script>
-$(document).ready(function() {});
+
 var BPSystolic1Numeric = {!! json_encode($BPSystolic1Numeric) !!};
 
 var BPDiastolic1Numeric = {!! json_encode($BPDiastolic1Numeric) !!};
@@ -336,7 +336,7 @@ Highcharts.chart('container', {
     },
     tooltip: {
         crosshairs: true,
-        shared: true
+        shared: false
     },
 
     plotOptions: {
@@ -355,13 +355,20 @@ Highcharts.chart('container', {
                     var bpsData2 = BPSystolic2[index];
                     var bpdData2 = BPDiastolic2[index];
 
-                    var label1 = '(' + bpsData1 + ', ' + bpdData1 + ')';
-                    var label2 = '(' + bpsData2 + ', ' + bpdData2 + ')';
+                    var label1 =  bpsData1;
+                    var label2 = bpdData1;
+                    var label3 = bpsData2;
+                    var label4 = bpdData2;
 
-                    if (this.series.index === 0 || this.series.index === 1) {
+                    if (this.series.index ===0) {
                         return label1;
-                    } else if (this.series.index === 2 || this.series.index === 3) {
+                    }else if (this.series.index ===1) {
                         return label2;
+                    }
+                    else if (this.series.index ===2) {
+                        return label3;
+                    }else if (this.series.index ===3) {
+                        return label4;
                     }
                 },
                 style: {
