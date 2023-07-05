@@ -25,6 +25,11 @@ class ReportController extends BaseController
         $this->setPageData('Datewise Provisional DX','Datewise Provisional DX','fas fa-th-list');
         return view('report::datewisedx');
     }
+    public function glucosegraphindex(){
+        $this->setPageData('Glucose Graph Report','Glucose Graph Report','fas fa-th-list');
+        return view('report::glucosegraph');
+
+    }
 
     public function SearchByDate(Request $request){
         $starting_date = $request->starting_date;
@@ -93,6 +98,46 @@ class ReportController extends BaseController
         return view('report::index',compact('results','male','Total','female','maleAboveFive','maleBelowFive','femaleAboveFive','femaleBelowFive'));
 
     }
+    public function GlucoseGraph(Request $request){
+        $starting_date = $request->starting_date;
+        $ending_date = $request->ending_date;
+        $RegistrationId = $request->reg_id;
+
+        $results = DB::select("
+            SELECT TOP 7 CONVERT(date, MDataGlucoseHb.CreateDate) AS DistinctDate, RBG, FBG,Hemoglobin
+            FROM MDataGlucoseHb
+            INNER JOIN Patient ON Patient.PatientId=MDataGlucoseHb.PatientId AND Patient.RegistrationId='{$RegistrationId}'
+            WHERE CONVERT(date, MDataGlucoseHb.CreateDate) BETWEEN ? AND ? AND RBG !='' AND FBG !=''
+            GROUP BY CONVERT(date, MDataGlucoseHb.CreateDate), RBG, FBG,Hemoglobin
+            ORDER BY DistinctDate DESC
+        ", [$starting_date, $ending_date]);
+
+        $rbg = array();
+        $fbg = array();
+        $hemoglobin = array();
+        $DistinctDate = array();
+
+        foreach ($results as $result) {
+            array_push($rbg, $result->RBG);
+            array_push($fbg, $result->FBG);
+            array_push($hemoglobin, $result->Hemoglobin);
+            array_push($DistinctDate, $result->DistinctDate);
+        }
+
+        $rbgNumeric = json_encode($rbg,JSON_NUMERIC_CHECK);
+        $fbgNumeric = json_encode($fbg, JSON_NUMERIC_CHECK);
+        $hemoglobinNumeric = json_encode($hemoglobin, JSON_NUMERIC_CHECK);
+
+
+//        return response()->json([
+//            's_date'=>$rbgNumeric,
+//            'e_date'=>$fbgNumeric,
+//            'reg_id'=>$rbg,
+//            'results'=>$DistinctDate,
+//        ]);
+        $this->setPageData('Glucose Graph Report','Glucose Graph Report','fas fa-th-list');
+        return view('report::glucosegraph',compact('DistinctDate','rbg','rbgNumeric','fbg','fbgNumeric','hemoglobin','hemoglobinNumeric'));
+    }
 
      /**
      * Patient blood pressure Search form load.
@@ -111,8 +156,8 @@ class ReportController extends BaseController
      */
 
     public function AjaxPatientBloodPressure(Request $request){
-        $startDate = $request->starting_date; 
-        $endDate = $request->ending_date; 
+        $startDate = $request->starting_date;
+        $endDate = $request->ending_date;
         $RegistrationId = $request->registration_id;
 
         $datas = DB::select("
@@ -137,7 +182,7 @@ class ReportController extends BaseController
             array_push($BPSystolic2, $row->BPSystolic2);
             array_push($BPDiastolic2, $row->BPDiastolic2);
             array_push($DistinctDate, $row->DistinctDate);
-        }   
+        }
 
         $BPSystolic1Numeric = json_encode($BPSystolic1,JSON_NUMERIC_CHECK);
         $BPDiastolic1Numeric = json_encode($BPDiastolic1, JSON_NUMERIC_CHECK);
@@ -164,14 +209,14 @@ class ReportController extends BaseController
      */
 
      public function AjaxHeartRateGraph(Request $request){
-        $startDate = $request->starting_date; 
-        $endDate = $request->ending_date; 
+        $startDate = $request->starting_date;
+        $endDate = $request->ending_date;
         $RegistrationId = $request->registration_id;
 
         $datas = DB::select("SELECT TOP 7 CONVERT(DATE, MDataBP.CreateDate) AS DistinctDate, MDataBP.HeartRate
         FROM MDataBP
         INNER JOIN Patient ON Patient.PatientId=MDataBP.PatientId AND Patient.RegistrationId='{$RegistrationId}'
-        WHERE CONVERT(DATE, MDataBP.CreateDate) BETWEEN ? AND ? AND MDataBP.HeartRate !='' 
+        WHERE CONVERT(DATE, MDataBP.CreateDate) BETWEEN ? AND ? AND MDataBP.HeartRate !=''
         GROUP BY CONVERT(DATE, MDataBP.CreateDate), MDataBP.HeartRate
         ORDER BY DistinctDate DESC", [$startDate, $endDate]);
 
@@ -181,7 +226,7 @@ class ReportController extends BaseController
         foreach ($datas as $row) {
             array_push($HeartRate1, $row->HeartRate);
             array_push($DistinctDate, $row->DistinctDate);
-        }   
+        }
 
         $HeartRate1Numeric = json_encode($HeartRate1,JSON_NUMERIC_CHECK);
         return view('report::heartrategraph_ajax',compact('HeartRate1Numeric','DistinctDate','HeartRate1'));
@@ -202,14 +247,14 @@ class ReportController extends BaseController
      */
 
      public function AjaxTemperatureGraph(Request $request){
-        $startDate = $request->starting_date; 
-        $endDate = $request->ending_date; 
+        $startDate = $request->starting_date;
+        $endDate = $request->ending_date;
         $RegistrationId = $request->registration_id;
 
         $datas = DB::select("SELECT TOP 7 CONVERT(DATE, MDataBP.CreateDate) AS DistinctDate, MDataBP.CurrentTemparature
         FROM MDataBP
         INNER JOIN Patient ON Patient.PatientId=MDataBP.PatientId AND Patient.RegistrationId='{$RegistrationId}'
-        WHERE CONVERT(DATE, MDataBP.CreateDate) BETWEEN ? AND ? AND MDataBP.CurrentTemparature !='' 
+        WHERE CONVERT(DATE, MDataBP.CreateDate) BETWEEN ? AND ? AND MDataBP.CurrentTemparature !=''
         GROUP BY CONVERT(DATE, MDataBP.CreateDate), MDataBP.CurrentTemparature
         ORDER BY DistinctDate DESC", [$startDate, $endDate]);
 
@@ -219,7 +264,7 @@ class ReportController extends BaseController
         foreach ($datas as $row) {
             array_push($CurrentTemparature1, $row->CurrentTemparature);
             array_push($DistinctDate, $row->DistinctDate);
-        }   
+        }
 
         $CurrentTemparature1Numeric = json_encode($CurrentTemparature1,JSON_NUMERIC_CHECK);
         return view('report::temperaturegraph_ajax',compact('CurrentTemparature1Numeric','DistinctDate','CurrentTemparature1'));
