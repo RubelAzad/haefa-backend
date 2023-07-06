@@ -6,7 +6,9 @@
 
 @push('stylesheet')
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+
 @endpush
+
 
 @section('content')
 <div class="d-flex flex-column-fluid">
@@ -81,15 +83,28 @@
                                         @endforeach
                                     @endif
                                 </x-form.selectbox>
-                                <x-form.selectbox labelName="Gender" name="MaritalStatusId" required="required" col="col-md-6" class="selectpicker">
+                                <x-form.selectbox labelName="Marital Status" name="MaritalStatusId" required="required" col="col-md-6" class="selectpicker">
                                     @if (!$maritals->isEmpty())
                                         @foreach ($maritals as $marital)
                                         <option value="{{ $marital->MaritalStatusId }}"  {{ $patient->MaritalStatusId == $marital->MaritalStatusId ? 'selected' : '' }}>{{ $marital->MaritalStatusCode }}</option>
                                         @endforeach
                                     @endif
                                 </x-form.selectbox>
-                           
-                            
+                                <div class="form-group col-md-2 pt-5">
+                                    <button type="button" class="btn btn-primary btn-sm" id="camera-btn" >Take Photo</button>
+                                    <button type="button" class="btn btn-primary btn-sm d-none" id="capture-btn" >Capture Photo</button>
+                                    <input type="hidden" id="profile_photo" name="profile_photo" class="image-tag">
+                                </div>
+                                <div class="col-md-2">
+                                    <div id="my_camera"></div>
+                                </div>
+                                <div class="col-md-2 mt-4 pt-1">
+                                    <div id="captured-image"></div>
+                                </div>
+
+
+
+
                             </div>
                         </div>
                         <h3>Present Address</h3><br>
@@ -99,7 +114,7 @@
                                 <x-form.textbox type="text" labelName="Village" name="Village" col="col-md-6" value="{{ $address->Village }}" placeholder="Enter Village" />
                                 <x-form.textbox type="text" labelName="Union" name="Thana" col="col-md-6" value="{{ $address->Thana }}" placeholder="Enter Union" />
                                 <x-form.textbox type="text" labelName="Post Code" name="PostCode" col="col-md-6" value="{{ $address->PostCode }}" placeholder="Enter Post Code" />
-                                
+
                                 <x-form.selectbox labelName="District" name="District" required="required" col="col-md-6" class="selectpicker">
                                     @if (!$districts->isEmpty())
                                         @foreach ($districts as $district)
@@ -108,8 +123,8 @@
                                     @endif
                                 </x-form.selectbox>
                                 <x-form.textbox type="text" labelName="Country" name="Country" col="col-md-6" value="{{ $address->Country }}" placeholder="Enter Country" />
-                           
-                            
+
+
                             </div>
                         </div>
                         <h3>Permanent Address</h3><br>
@@ -119,7 +134,7 @@
                                 <x-form.textbox type="text" labelName="Village" name="VillageParmanent" col="col-md-6" value="{{ $address->VillageParmanent }}" placeholder="Enter Village" />
                                 <x-form.textbox type="text" labelName="Union" name="ThanaParmanent" col="col-md-6" value="{{ $address->ThanaParmanent }}" placeholder="Enter Union" />
                                 <x-form.textbox type="text" labelName="Post Code" name="PostCodeParmanent" col="col-md-6" value="{{ $address->PostCodeParmanent }}" placeholder="Enter Post Code" />
-                                
+
                                 <x-form.selectbox labelName="District" name="DistrictParmanent" required="required" col="col-md-6" class="selectpicker">
                                     @if (!$districts->isEmpty())
                                         @foreach ($districts as $district)
@@ -128,10 +143,10 @@
                                     @endif
                                 </x-form.selectbox>
                                 <x-form.textbox type="text" labelName="Country" name="CountryParmanent" col="col-md-6" value="{{ $address->CountryParmanent }}" placeholder="Enter Country" />
-                           
-                            
+
+
                             </div>
-                            
+
                         </div>
                         <h3>FDMN Camp</h3><br>
                         <div class="col-md-12">
@@ -141,12 +156,12 @@
                                 <x-form.textbox type="text" labelName="Majhi" name="Majhi" col="col-md-6" value="{{ $address->Majhi }}" placeholder="Enter Union" />
                                 <x-form.textbox type="text" labelName="Tent Number" name="TentNumber" col="col-md-6" value="{{ $address->TentNumber }}" placeholder="Enter Post Code" />
                                 <x-form.textbox type="text" labelName="FCN Number" name="FCN" col="col-md-6" value="{{ $address->FCN }}" placeholder="Enter Country" />
-                           
-                            
+
+
                             </div>
-                            
+
                         </div>
-                        
+
 
                     </div>
                 </div>
@@ -168,8 +183,22 @@
 @push('script')
 <script src="js/spartan-multi-image-picker-min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
 <script>
 $(document).ready(function () {
+    $(document).on('click','#camera-btn',function(){
+        Webcam.attach( '#my_camera' );
+        $('#capture-btn').removeClass('d-none');
+        $('#camera-btn').addClass('d-none');
+    })
+    $(document).on('click','#capture-btn',function(){
+        Webcam.snap( function(data_uri) {
+            $(".image-tag").val(data_uri);
+            document.getElementById('captured-image').innerHTML = '<img style="height: 112px; width: 150px" src="'+data_uri+'"/>';
+        } );
+    })
+
+
     $('.summernote').summernote({
         tabsize: 2,
         height: 120,
@@ -201,6 +230,8 @@ $(document).ready(function () {
     $('.remove-files').on('click', function(){
         $(this).parents(".col-md-12").remove();
     });
+
+
 
     @if(!empty($patient->image))
     $('#image img').css('display','none');
@@ -305,7 +336,18 @@ $('input[name="patient_brochure"]').prop(true);
             }
         });
     });
+
+
+
+
 });
+Webcam.set({
+    width: 150,
+    height: 150,
+    image_format: 'jpeg',
+    jpeg_quality: 90
+});
+
 
 
 </script>

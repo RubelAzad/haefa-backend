@@ -24,7 +24,7 @@ class PatientController extends BaseController
     }
 
     public function index()
-    {  
+    {
         if(permission('patient-access')){
             $this->setPageData('Patient','patient','fas fa-th-list');
             return view('patient::index');
@@ -39,7 +39,7 @@ class PatientController extends BaseController
             if($request->ajax()){
 
                 set_time_limit(3600);
-                
+
                 if (!empty($request->name)) {
                     $this->model->setName($request->name);
                 }
@@ -65,7 +65,7 @@ class PatientController extends BaseController
                     if(permission('patient-edit')){
                         $action .= ' <a class="dropdown-item" href="'.route("patient.edit",$value->PatientId).'"><i class="fas fa-eye text-success"></i> Edit</a>';
                     }
-                    
+
 
                     $row = [];
 
@@ -128,6 +128,7 @@ class PatientController extends BaseController
                         'CellNumber' => $request->CellNumber,
                         'GenderId' => $request->GenderId,
                         'IdType' => $request->IdType,
+                        'PatientImage' => $request->profile_photo,
                         'IdNumber' => $request->IdNumber,
                         'IdOwner' => $request->IdOwner,
                         'MaritalStatusId' => $request->MaritalStatusId,
@@ -172,9 +173,9 @@ class PatientController extends BaseController
             $this->setPageData('Edit Patient','Edit Patient','fab fa-pencil',[['name'=>'Patient','link'=> route('patient')],['name' => 'Edit Patient']]);
 
             if(permission('patient-edit')){
-                
+
                 $data =  Patient::where('PatientId','=',$request->id);
-                
+
                 $output = $this->data_message($data);
                 $data = [
                     'patient' => Patient::where('PatientId','=',$request->id)->first(),
@@ -184,8 +185,8 @@ class PatientController extends BaseController
                     'address' => Address::where('PatientId','=',$request->id)->first(),
                     'districts' => District::all(),
                 ];
-             
-                
+
+
                 return view('patient::edit',$data);
             }else{
                 return $this->access_blocked();
@@ -247,9 +248,9 @@ class PatientController extends BaseController
             $patientDetails=Patient::with('Gender')->where('PatientId','=',$request->id)->get();
 
             $prescriptionCreation= DB::select("SELECT TOP 1 MAX(PPC.PrescriptionId) AS PrescriptionId,MAX(E.FirstName) AS FirstName,MAX(E.LastName) AS LastName,MAX(E.Designation) AS Designation,MAX(E.EmployeeSignature) AS EmployeeSignature, CAST(PPC.CreateDate AS date) as CreateDate
-            FROM PrescriptionCreation as PPC 
+            FROM PrescriptionCreation as PPC
             INNER JOIN Employee as E on E.EmployeeId = PPC.EmployeeId
-            WHERE PatientId = '$request->id' AND CAST(PPC.CreateDate AS date) 
+            WHERE PatientId = '$request->id' AND CAST(PPC.CreateDate AS date)
             = CAST(
                 (SELECT TOP 1 MAX(CreateDate) AS MaxCreateDate
                 FROM PrescriptionCreation WHERE PatientId = '$request->id'
@@ -260,7 +261,7 @@ class PatientController extends BaseController
         $Complaints= DB::select("SELECT PC.ChiefComplain AS ChiefComplain, PC.CCDurationValue AS CCDurationValue, PC.OtherCC AS OtherCC, RD.DurationInEnglish AS DurationInEnglish, PC.CreateDate AS CreateDate
             FROM MDataPatientCCDetails as PC
             INNER JOIN RefDuration as RD on RD.DurationId = PC.DurationId
-            WHERE PatientId = '$request->id' AND CAST(PC.CreateDate AS date) 
+            WHERE PatientId = '$request->id' AND CAST(PC.CreateDate AS date)
             = CAST(
                 (SELECT TOP 1 MAX(CreateDate) AS MaxCreateDate
                 FROM MDataPatientCCDetails WHERE PatientId = '$request->id'
@@ -269,25 +270,25 @@ class PatientController extends BaseController
                 AS date) ORDER BY PC.CreateDate");
 
         $HeightWeight= DB::select("SELECT TOP 1 MAX(Height) AS Height, MAX(Weight) AS Weight, MAX(BMI) AS BMI, MAX(BMIStatus) AS BMIStatus, CAST(CreateDate AS date) as CreateDate
-            FROM MDataHeightWeight WHERE PatientId = '$request->id' AND CAST(CreateDate AS date) 
+            FROM MDataHeightWeight WHERE PatientId = '$request->id' AND CAST(CreateDate AS date)
             = CAST(
                 (SELECT TOP 1 MAX(CreateDate) AS MaxCreateDate
                 FROM MDataHeightWeight WHERE PatientId = '$request->id'
                 GROUP BY CAST(CreateDate AS date)
                 ORDER BY MaxCreateDate DESC)
                 AS date) GROUP BY CreateDate ORDER BY CreateDate");
-        
+
         $BP= DB::select("SELECT TOP 1 MAX(BPSystolic1) AS BPSystolic1, MAX(BPDiastolic1) AS BPDiastolic1, MAX(BPSystolic2) AS BPSystolic2, MAX(BPDiastolic2) AS BPDiastolic2, MAX(HeartRate) AS HeartRate, MAX(CurrentTemparature) AS CurrentTemparature, CAST(CreateDate AS date) as CreateDate
-            FROM MDataBP WHERE PatientId = '$request->id' AND CAST(CreateDate AS date) 
+            FROM MDataBP WHERE PatientId = '$request->id' AND CAST(CreateDate AS date)
             = CAST(
                 (SELECT TOP 1 MAX(CreateDate) AS MaxCreateDate
                 FROM MDataBP WHERE PatientId = '$request->id'
                 GROUP BY CAST(CreateDate AS date)
                 ORDER BY MaxCreateDate DESC)
                 AS date) GROUP BY CreateDate ORDER BY CreateDate");
-        
+
         $GlucoseHb = DB::select("SELECT TOP 1 MAX(RBG) AS RBG, MAX(FBG) AS FBG, MAX(Hemoglobin) AS Hemoglobin, MAX(HrsFromLastEat) AS HrsFromLastEat, CAST(CreateDate AS date) as CreateDate
-            FROM MDataGlucoseHb WHERE PatientId = '$request->id' AND CAST(CreateDate AS date) 
+            FROM MDataGlucoseHb WHERE PatientId = '$request->id' AND CAST(CreateDate AS date)
             = CAST(
                 (SELECT TOP 1 MAX(CreateDate) AS MaxCreateDate
                 FROM MDataGlucoseHb WHERE PatientId = '$request->id'
@@ -296,7 +297,7 @@ class PatientController extends BaseController
                 AS date) GROUP BY CreateDate ORDER BY CreateDate");
 
         $ProvisionalDx = DB::select("SELECT ProvisionalDiagnosis, DiagnosisStatus, OtherProvisionalDiagnosis, CreateDate
-        FROM MDataProvisionalDiagnosis WHERE PatientId = '$request->id' AND CAST(CreateDate AS date) 
+        FROM MDataProvisionalDiagnosis WHERE PatientId = '$request->id' AND CAST(CreateDate AS date)
         = CAST(
             (SELECT TOP 1 MAX(CreateDate) AS MaxCreateDate
             FROM MDataProvisionalDiagnosis WHERE PatientId = '$request->id'
@@ -308,7 +309,7 @@ class PatientController extends BaseController
        $Investigation= DB::select("SELECT  RI.Investigation AS Investigation, I.OtherInvestigation AS OtherInvestigation, I.CreateDate
             FROM MDataInvestigation as I
             INNER JOIN RefLabInvestigation as RI on RI.RefLabInvestigationId = I.InvestigationId
-            WHERE PatientId = '$request->id' AND CAST(I.CreateDate AS date) 
+            WHERE PatientId = '$request->id' AND CAST(I.CreateDate AS date)
             = CAST(
                 (SELECT TOP 1 MAX(CreateDate) AS MaxCreateDate
                 FROM MDataInvestigation WHERE PatientId = '$request->id'
@@ -321,7 +322,7 @@ class PatientController extends BaseController
         FROM MDataTreatmentSuggestion as T
         INNER JOIN RefDrug as Dr on Dr.DrugId = T.DrugId
         INNER JOIN RefInstruction as Ins on Ins.RefInstructionId = T.RefInstructionId
-        WHERE PatientId = '$request->id' AND CAST(T.CreateDate AS date) 
+        WHERE PatientId = '$request->id' AND CAST(T.CreateDate AS date)
         = CAST(
             (SELECT TOP 1 MAX(CreateDate) AS MaxCreateDate
             FROM MDataTreatmentSuggestion WHERE PatientId = '$request->id'
@@ -333,7 +334,7 @@ class PatientController extends BaseController
         $Advice= DB::select("SELECT RA.AdviceInBangla AS AdviceInBangla, RA.AdviceInEnglish AS AdviceInEnglish, A.CreateDate
             FROM MDataAdvice as A
             INNER JOIN RefAdvice as RA on RA.AdviceId = A.AdviceId
-            WHERE PatientId = '$request->id' AND CAST(A.CreateDate AS date) 
+            WHERE PatientId = '$request->id' AND CAST(A.CreateDate AS date)
             = CAST(
                 (SELECT TOP 1 MAX(CreateDate) AS MaxCreateDate
                 FROM MDataAdvice WHERE PatientId = '$request->id'
@@ -346,7 +347,7 @@ class PatientController extends BaseController
             FROM MDataPatientReferral as PR
             INNER JOIN RefReferral as RR on RR.RId = PR.RId
             INNER JOIN HealthCenter as HC on HC.HealthCenterId = PR.HealthCenterId
-            WHERE PatientId = '$request->id' AND CAST(PR.CreateDate AS date) 
+            WHERE PatientId = '$request->id' AND CAST(PR.CreateDate AS date)
             = CAST(
                 (SELECT TOP 1 MAX(CreateDate) AS MaxCreateDate
                 FROM MDataPatientReferral WHERE PatientId = '$request->id'
@@ -354,11 +355,11 @@ class PatientController extends BaseController
                 ORDER BY MaxCreateDate DESC)
                 AS date) ORDER BY PR.CreateDate");
 
-        
+
 
         $FollowUpDate= DB::select("SELECT TOP 1 MAX(FD. FollowUpDate) AS FollowUpDate, MAX(FD.Comment) AS Comment, CAST(FD.CreateDate AS date) as CreateDate
             FROM MDataFollowUpDate as FD
-            WHERE PatientId = '$request->id' AND CAST(FD.CreateDate AS date) 
+            WHERE PatientId = '$request->id' AND CAST(FD.CreateDate AS date)
             = CAST(
                 (SELECT TOP 1 MAX(CreateDate) AS MaxCreateDate
                 FROM MDataPatientReferral WHERE PatientId = '$request->id'
@@ -366,7 +367,7 @@ class PatientController extends BaseController
                 ORDER BY MaxCreateDate DESC)
                 AS date) GROUP BY FD.CreateDate ORDER BY FD.CreateDate");
 
-                
+
             }
         }
 
