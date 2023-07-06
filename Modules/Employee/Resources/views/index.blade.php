@@ -175,35 +175,6 @@ $(document).ready(function (){
     $('#EmployeeSignature').dropify();
 });
 
-
-$(document).ready(function(){
-    $('#EmployeeImage').spartanMultiImagePicker({
-        fieldName: 'EmployeeImage',
-        maxCount: 1,
-        rowHeight: '200px',
-        groupClassName: 'col-md-12 com-sm-12 com-xs-12',
-        maxFileSize: '',
-        dropFileLabel: 'Drop Here',
-        allowExt: 'png|jpg|jpeg',
-        onExtensionErr: function(index, file){
-            Swal.fire({icon:'error',title:'Oops...',text: 'Only png, jpg and jpeg file format allowed!'});
-        }
-    });
-    
-    $('#EmployeeSignature').spartanMultiImagePicker({
-        fieldName: 'EmployeeSignature',
-        maxCount: 1,
-        rowHeight: '200px',
-        groupClassName: 'col-md-12 com-sm-12 com-xs-12',
-        maxFileSize: '',
-        dropFileLabel: 'Drop Here',
-        allowExt: 'png|jpg|jpeg',
-        onExtensionErr: function(index, file){
-            Swal.fire({icon:'error',title:'Oops...',text: 'Only png, jpg and jpeg file format allowed!'});
-        }
-    });
-});
-
 var table;
 $(document).ready(function(){
 
@@ -319,16 +290,46 @@ $(document).ready(function(){
 
     $(document).on('click', '#save-btn', function () {
 
-    // var EmployeeImage = $('#EmployeeImage').prop('files')[0];
-    // var EmployeeSignature = $('#EmployeeSignature').prop('files')[0];
-    // console.log(image);
+    var EmployeeCode = $('#EmployeeCode').val();
+    var RegistrationNumber = $('#RegistrationNumber').val();
+    var FirstName = $('#FirstName').val();
+    var LastName = $('#LastName').val();
+    var BirthDate = $('#BirthDate').val();
+    var JoiningDate = $('#JoiningDate').val();
+    var GenderId = $('#GenderId').val();
+    var MaritalStatusId = $('#MaritalStatusId').val();
+    var EducationId = $('#EducationId').val();
+    var Designation = $('#Designation').val();
+    var ReligionId = $('#ReligionId').val();
+    var RoleId = $('#RoleId').val();
+    var Email = $('#Email').val();
+    var Phone = $('#Phone').val();
+    var NationalIdNumber = $('#NationalIdNumber').val();
 
-    let form = document.getElementById('store_or_update_form');
-    let formData = new FormData(form);
+    var EmployeeImage = $('#EmployeeImage').prop('files')[0];
+    var EmployeeSignature = $('#EmployeeSignature').prop('files')[0];
+    console.log(EmployeeImage);
+
+    var data = new FormData();
+    data.append('EmployeeImage', EmployeeImage);
+    data.append('EmployeeSignature', EmployeeSignature);
+
+    data.append('EmployeeCode', EmployeeCode);
+    data.append('RegistrationNumber', RegistrationNumber);
+    data.append('FirstName', FirstName);
+    data.append('LastName', LastName);
+    data.append('BirthDate', BirthDate);
+
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
     $.ajax({
         url: "{{route('employee.store.or.update')}}",
         type: "POST",
-        data: formData,
+        data: data,
         dataType: "JSON",
         contentType: false,
         processData: false,
