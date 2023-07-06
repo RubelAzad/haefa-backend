@@ -53,13 +53,12 @@ class ReportController extends BaseController
         $starting_age = $request->starting_age;
         $ending_age = $request->ending_age;
         $male=$female=$maleBelowFive=$maleAboveFive=$femaleBelowFive=$femaleAboveFive=$Total=0;
-
         $results = DB::table("Patient")
-            ->where('Age', '>=', $starting_age)
-            ->where('Age', '<=', $ending_age)
-            ->join('MDataProvisionalDiagnosis','Patient.PatientId', '=', 'MDataProvisionalDiagnosis.PatientId')
-            ->join('RefGender','Patient.GenderId', '=', 'RefGender.GenderId')
-            ->get(['ProvisionalDiagnosis','OtherProvisionalDiagnosis','GivenName','FamilyName','Age','GenderCode']);
+            ->whereRaw('CONVERT(float, Age) >= ?', [$starting_age])
+            ->whereRaw('CONVERT(float, Age) <= ?', [$ending_age])
+            ->join('MDataProvisionalDiagnosis', 'Patient.PatientId', '=', 'MDataProvisionalDiagnosis.PatientId')
+            ->join('RefGender', 'Patient.GenderId', '=', 'RefGender.GenderId')
+            ->get(['ProvisionalDiagnosis', 'OtherProvisionalDiagnosis', 'GivenName', 'FamilyName', 'Age', 'GenderCode']);
         foreach ($results as $result){
             if ($result->Age < 6 && $result->GenderCode == 'Male'){
                 $maleBelowFive++;
