@@ -13,6 +13,9 @@ Highcharts.chart('container', {
     chart: {
         type: 'spline'
     },
+    credits: {
+        enabled: false
+    },
     title: {
         text: 'Patient Blood Pressure'
     },
@@ -27,6 +30,7 @@ Highcharts.chart('container', {
         accessibility: {
             description: 'Months of the year'
         },
+
         labels: {
             style: {
                 fontSize: '12px'
@@ -35,7 +39,7 @@ Highcharts.chart('container', {
     },
     yAxis: {
         title: {
-            text: 'Blood ressure '
+            text: 'Blood Pressure '
         },
         labels: {
             style: {

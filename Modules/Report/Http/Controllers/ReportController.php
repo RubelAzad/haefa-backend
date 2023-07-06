@@ -5,6 +5,7 @@ namespace Modules\Report\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Modules\Patient\Entities\Patient;
 use Modules\Report\Entities\Report;
 use Illuminate\Routing\Controller;
 use Modules\Base\Http\Controllers\BaseController;
@@ -26,8 +27,9 @@ class ReportController extends BaseController
         return view('report::datewisedx');
     }
     public function glucosegraphindex(){
+        $registrationId=Patient::select('RegistrationId')->get();
         $this->setPageData('Glucose Graph Report','Glucose Graph Report','fas fa-th-list');
-        return view('report::glucosegraph');
+        return view('report::glucosegraph',compact('registrationId'));
 
     }
 
@@ -99,6 +101,7 @@ class ReportController extends BaseController
 
     }
     public function GlucoseGraph(Request $request){
+        $registrationId=Patient::select('RegistrationId')->get();
         $starting_date = $request->starting_date;
         $ending_date = $request->ending_date;
         $RegistrationId = $request->reg_id;
@@ -136,7 +139,7 @@ class ReportController extends BaseController
 //            'results'=>$DistinctDate,
 //        ]);
         $this->setPageData('Glucose Graph Report','Glucose Graph Report','fas fa-th-list');
-        return view('report::glucosegraph',compact('DistinctDate','rbg','rbgNumeric','fbg','fbgNumeric','hemoglobin','hemoglobinNumeric'));
+        return view('report::glucosegraph',compact('DistinctDate','registrationId','rbg','rbgNumeric','fbg','fbgNumeric','hemoglobin','hemoglobinNumeric'));
     }
 
      /**
@@ -145,9 +148,10 @@ class ReportController extends BaseController
      */
 
     public function PatientBloodPressureGraph(){
+        $registrationId=Patient::select('RegistrationId')->get();
         $this->setPageData('Patient Blood Pressure Graph','Patient wise Blood Pressure Graph','fas fa-th-list');
 
-        return view('report::patientbloodpressuregraph');
+        return view('report::patientbloodpressuregraph',compact('registrationId'));
     }
 
      /**
@@ -198,9 +202,10 @@ class ReportController extends BaseController
      * @return Renderable
      */
     public function HeartRateGraph(){
+        $registrationId=Patient::select('RegistrationId')->get();
         $this->setPageData('Hear Rate Graph','Hear Rate Graph','fas fa-th-list');
 
-        return view('report::heartrategraph');
+        return view('report::heartrategraph',compact('registrationId'));
     }
 
     /**
@@ -237,8 +242,9 @@ class ReportController extends BaseController
      * @return Renderable
      */
     public function TemperatureGraph(){
+        $registrationId=Patient::select('RegistrationId')->get();
         $this->setPageData('Temperature Graph','Temperature Graph','fas fa-th-list');
-        return view('report::temperaturegraph');
+        return view('report::temperaturegraph',compact('registrationId'));
     }
 
     /**

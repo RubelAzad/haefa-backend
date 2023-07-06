@@ -200,7 +200,16 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="name">Patient Registration ID </label>
-                                    <input type="text" class="form-control" name="reg_id" id="reg_id" placeholder="Enter Registration ID">
+                                    <select class="selectpicker" data-live-search="true" name="reg_id" id="reg_id">
+                                        <option value="">Select Registration ID</option> <!-- Empty option added -->
+
+                                        @foreach($registrationId as $reg)
+                                            <option value="{{$reg->RegistrationId}}">{{$reg->RegistrationId}}</option>
+
+                                        @endforeach
+
+                                    </select>
+
                                 </div>
                                 <div class="col-md-2 warning-searching invisible" id="warning-searching">
                                     <span class="text-danger" id="warning-message">Searching...Please Wait</span>
@@ -255,6 +264,7 @@
 
 
         $(document).ready(function () {
+
             $('#dataTable').DataTable({
                 pagingType: 'full_numbers',
                 dom: 'Bfrtip',
@@ -290,7 +300,6 @@
         $('#btn-filter').on('click', function (event) {
             $('#warning-searching').removeClass('invisible');
         });
-
 
         var fbgNumeric = {!! json_encode($fbgNumeric ?? '') !!};
 
@@ -416,9 +425,8 @@
 
 
         $(function () {
-
-            $('#starting_date, #ending_date, #reg_id').on('input', function () {
-                if ($('#starting_date').val() != '' && $('#ending_date').val() != '' && $('#reg_id').val() != '') {
+            $('#starting_date, #ending_date, #reg_id').on('change', function () {
+                if ($('#starting_date').val() !== '' && $('#ending_date').val() !== '' && $('#reg_id').val() !== '') {
                     $('#btn-filter').removeClass('d-none');
                 } else {
                     $('#btn-filter').addClass('d-none');
