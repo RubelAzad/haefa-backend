@@ -7,6 +7,9 @@ Highcharts.chart('container', {
     chart: {
         type: 'spline'
     },
+    credits: {
+        enabled: false
+    },
     title: {
         text: 'Heart Rate Graph'
     },
@@ -57,7 +60,7 @@ Highcharts.chart('container', {
 
                     var label =  HeartRate;
                     return label;
-                    
+
                 },
                 style: {
                     fontSize: '12px'

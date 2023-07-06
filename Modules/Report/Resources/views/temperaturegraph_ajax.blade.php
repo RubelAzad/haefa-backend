@@ -10,6 +10,9 @@ Highcharts.chart('container', {
     title: {
         text: 'Temperature Graph'
     },
+    credits: {
+        enabled: false
+    },
     xAxis: {
 
         categories: {!! json_encode($DistinctDate) !!},
@@ -57,7 +60,7 @@ Highcharts.chart('container', {
 
                     var label =  CurrentTemparature;
                     return label;
-                    
+
                 },
                 style: {
                     fontSize: '12px'
