@@ -158,17 +158,26 @@ class EmployeeController extends BaseController
      */
     public function edit(Request $request)
     {
-         $data1 = DB::select("SELECT  rd.DesignationTitle,rd.Description,rd.RefDepartmentId,
-                    wp.WorkPlaceName,rfd.DepartmentCode,rd.EmployeeId,rd.WorkPlaceId
-                    FROM Employee AS rd
-                    INNER JOIN WorkPlace AS wp ON rd.WorkPlaceId = wp.WorkPlaceId 
-                    INNER JOIN RefDepartment AS rfd ON rd.RefDepartmentId = rfd.RefDepartmentId
-                    WHERE rd.EmployeeId='$request->id'");
+         $data1 = DB::select("SELECT em.EmployeeId,em.OrgId,em.EmployeeCode,em.RegistrationNumber,em.FirstName,em.FirstName,em.LastName,em.LastName,em.GenderId,em.BirthDate,
+         em.JoiningDate,em.MaritalStatusId,em.EducationId,em.Designation,em.ReligionId,em.RoleId,em.Email,em.Phone,em.NationalIdNumber,em.EmployeeImage,em.EmployeeSignature,
+         em.Status,gnd.GenderCode,mar.MaritalStatusCode,edu.EducationCode,reli.ReligionCode,rl.RoleCode 
+         FROM Employee AS em
+         LEFT JOIN RefGender AS gnd ON em.GenderId = gnd.GenderId 
+         LEFT JOIN RefMaritalStatus AS mar ON mar.MaritalStatusId = em.MaritalStatusId 
+         LEFT JOIN RefEducation as edu ON edu.EducationId = em.EducationId 
+         LEFT JOIN RefReligion as reli ON reli.ReligionId = em.ReligionId 
+         LEFT JOIN Role rl ON rl.RoleId = em.RoleId 
+         WHERE em.EmployeeId='$request->id'");
 
-         $data2 = DB::select("SELECT * FROM WorkPlace");  
-         $data3 = DB::select("SELECT * FROM RefDepartment");  
+         $data2 = DB::select("SELECT * FROM RefGender");  
+         $data3 = DB::select("SELECT * FROM RefMaritalStatus");  
+         $data4 = DB::select("SELECT * FROM RefEducation");  
+         $data5 = DB::select("SELECT * FROM RefReligion");  
+         $data6 = DB::select("SELECT * FROM Role");  
          
-         return response()->json(['designation'=>$data1,'workplaces'=>$data2,'departments'=> $data3]);
+         return response()->json(['employee'=>$data1,'genders'=>$data2,
+         'maritalStatus'=> $data3,'educations'=>$data4,'religions'=>$data5,
+         'roles'=>$data6]);
 
     }
 
@@ -185,54 +194,99 @@ class EmployeeController extends BaseController
                 try{
                     $collection = collect($request->validated());
                     if(isset($request->EmployeeId) && !empty($request->EmployeeId)){
-                        $collection = collect($request->all());
-                        //track_data from base controller to merge created_by and created_at merge with request data
-                        $collection = $this->track_data_org($request->EmployeeId,$collection);
-                        $result = $this->model->where('EmployeeId', $request->EmployeeId)
-                            ->update($collection->all());
-                        $output = $this->store_message($result,$request->EmployeeId);
+                        $employee = DB::table('Employee')->where('EmployeeId',$request->EmployeeId)->first();
+
+                        $file = $request->EmployeeImage;
+
+                        if(!empty($file) && $file !=='undefined'){
+                            $mimeType = $file->getMimeType();
+                            $EmployeeImage = base64_encode(file_get_contents($file)); 
+                            $EmployeeImageBase64Link = 'data:' . $mimeType . ';base64,' . $EmployeeImage;
+                        }else{
+                            $EmployeeImageBase64Link = $employee->EmployeeImage??'';
+                        }
+                        
+                        $file2 = $request->EmployeeSignature;
+                        if(!empty($file2) && $file2 !=='undefined'){
+                            $mimeType = $file2->getMimeType();
+                            $EmployeeSignature = base64_encode(file_get_contents($file2)); 
+                            $EmployeeSignatureBase64Link = 'data:' . $mimeType . ';base64,' . $EmployeeSignature;
+                        }else{
+                            $EmployeeSignatureBase64Link = $employee->EmployeeSignature??'';
+                        }
+
+                        DB::table('Employee')->where('EmployeeId',$request->EmployeeId)->update([
+                            'EmployeeId'=>Str::uuid(),
+                            'OrgId'=>$OrgId = auth()->user()->OrgId,
+                            'EmployeeCode'=>$request->EmployeeCode,
+                            'RegistrationNumber'=>$request->RegistrationNumber,
+                            'FirstName'=>$request->FirstName,
+                            'LastName'=>$request->LastName,
+                            'GenderId'=>$request->GenderId,
+                            'BirthDate'=>$request->BirthDate,
+                            'JoiningDate'=>$request->JoiningDate,
+                            'MaritalStatusId'=>$request->MaritalStatusId,
+                            'Designation'=>$request->Designation,
+                            'ReligionId'=>$request->ReligionId,
+                            'RoleId'=>$request->RoleId,
+                            'Email'=>$request->Email,
+                            'Phone'=>$request->Phone,
+                            'NationalIdNumber'=>$request->NationalIdNumber,
+                            'EmployeeImage'=>$EmployeeImageBase64Link,
+                            'EmployeeSignature'=>$EmployeeSignatureBase64Link,
+                            'Status'=>1,
+                            'UpdateUser'=>Auth::user()->id??'',
+                            'UpdateDate'=>Carbon::now()
+                        ]);
+                        $output = ['status'=>'success','message'=>'Data has been updated successfully!'];
                         return response()->json($output);
                     }
                     else{
-                        // $collection = collect($request->all());
-                        //track_data from base controller to merge created_by and created_at merge with request data
-                        // $collection = $this->track_data_org($request->EmployeeId,$collection);
-                        //update existing index value
-                        // $collection['EmployeeId'] = Str::uuid();
-                        // $result = $this->model->create($collection->all());
-                        // $output = $this->store_message($result,$request->EmployeeId);
-                        // return response()->json($output);
-                        return $request->all();
+                        
                         $file = $request->EmployeeImage;
-                        $EmployeeImage = base64_encode($file); 
+
+                        if($file){
+                            $mimeType = $file->getMimeType();
+                            $EmployeeImage = base64_encode(file_get_contents($file)); 
+                            $EmployeeImageBase64Link = 'data:' . $mimeType . ';base64,' . $EmployeeImage;
+                        }else{
+                            $EmployeeImageBase64Link ="";
+                        }
                         
                         $file2 = $request->EmployeeSignature;
-                        $EmployeeSignature = base64_encode($file2); 
+                        if($file2){
+                            $mimeType = $file2->getMimeType();
+                            $EmployeeSignature = base64_encode(file_get_contents($file2)); 
+                            $EmployeeSignatureBase64Link = 'data:' . $mimeType . ';base64,' . $EmployeeSignature;
+                        }else{
+                            $EmployeeSignatureBase64Link ="";
+                        }
 
-                        // DB::table('Employee')->insert([
-                        //     'EmployeeId'=>Str::uuid(),
-                        //     'OrgId'=>$OrgId = auth()->user()->OrgId,
-                        //     'EmployeeCode'=>$request->EmployeeCode,
-                        //     'RegistrationNumber'=>$request->RegistrationNumber,
-                        //     'FirstName'=>$request->FirstName,
-                        //     'LastName'=>$request->LastName,
-                        //     'GenderId'=>$request->GenderId,
-                        //     'BirthDate'=>$request->BirthDate,
-                        //     'JoiningDate'=>$request->JoiningDate,
-                        //     'MaritalStatusId'=>$request->MaritalStatusId,
-                        //     'EducationId'=>$request->EducationId,
-                        //     'Designation'=>$request->Designation,
-                        //     'ReligionId'=>$request->ReligionId,
-                        //     'RoleId'=>$request->RoleId,
-                        //     'Email'=>$request->Email,
-                        //     'Phone'=>$request->Phone,
-                        //     'NationalIdNumber'=>$request->NationalIdNumber,
-                        //     'EmployeeImage'=>$EmployeeImage,
-                        //     'EmployeeSignature'=>$EmployeeSignature,
-                        //     'Status'=>1,
-                        //     'CreateUser'=>Auth::user()->id??'',
-                        //     'CreateDate'=>Carbon::now()
-                        // ]);
+                        DB::table('Employee')->insert([
+                            'EmployeeId'=>Str::uuid(),
+                            'OrgId'=>$OrgId = auth()->user()->OrgId,
+                            'EmployeeCode'=>$request->EmployeeCode,
+                            'RegistrationNumber'=>$request->RegistrationNumber,
+                            'FirstName'=>$request->FirstName,
+                            'LastName'=>$request->LastName,
+                            'GenderId'=>$request->GenderId,
+                            'BirthDate'=>$request->BirthDate,
+                            'JoiningDate'=>$request->JoiningDate,
+                            'MaritalStatusId'=>$request->MaritalStatusId,
+                            'Designation'=>$request->Designation,
+                            'ReligionId'=>$request->ReligionId,
+                            'RoleId'=>$request->RoleId,
+                            'Email'=>$request->Email,
+                            'Phone'=>$request->Phone,
+                            'NationalIdNumber'=>$request->NationalIdNumber,
+                            'EmployeeImage'=>$EmployeeImageBase64Link,
+                            'EmployeeSignature'=>$EmployeeSignatureBase64Link,
+                            'Status'=>1,
+                            'CreateUser'=>Auth::user()->id??'',
+                            'CreateDate'=>Carbon::now()
+                        ]);
+                        $output = ['status'=>'success','message'=>'Data has been saved successfully!'];
+                        return response()->json($output);
                     }
 
                 }catch(\Exception $e){
@@ -260,7 +314,7 @@ class EmployeeController extends BaseController
         if($request->ajax()){
             if (permission('employee-delete')) {
                 $result = $this->model->where('EmployeeId',$request->id)->delete();
-                $output = $this->store_message($result,$request->EmployeeId);
+                $output = $this->delete_message($result,$request->id);
                 return response()->json($output);
             }else{
                 return response()->json($this->access_blocked());
