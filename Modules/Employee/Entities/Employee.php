@@ -6,32 +6,41 @@ use Modules\Base\Entities\BaseModel;
 
 class Employee extends BaseModel
 {
-    protected $fillable = ['name','status','created_by','updated_by'];
+    protected $table = 'Employee';
+    protected $primaryKey = 'EmployeeId';
+    public $timestamps = false;
+
+    protected $fillable = ['EmployeeId','OrgId','EmployeeCode','RegistrationNumber','FirstName'
+    ,'LastName','GenderId','BirthDate','JoiningDate','MaritalStatusId','EducationId','Designation'
+    ,'ReligionId','RoleId','Email','Phone','NationalIdNumber','EmployeeImage','EmployeeSignature',
+    'Status','CreateUser','CreateDate','UpdateUser','UpdateDate'];
+
+    protected $order = ['CreateDate'=>'desc'];
     
     protected $name;
-
-    protected $table = 'Employee';
 
     public function setName($name)
     {
         $this->name = $name;
     }
-
+    
     private function get_datatable_query()
     {
-        if(permission('category-bulk-delete')){
-            $this->column_order = [null,'id','name','status',null];
+        if(permission('refdesignation-bulk-delete')){
+            //datatable display data from the below fields
+            $this->column_order = [null,'EmployeeCode','RegistrationNumber','FirstName','LastName','Designation',null];
         }else{
-            $this->column_order = ['id','name','status',null];
+            $this->column_order = ['EmployeeCode','RegistrationNumber','FirstName','LastName','Designation',null];
         }
 
         $query = self::toBase();
 
         /*****************
-         * *Search Data **
-         ******************/
+            * *Search Data **
+            ******************/
+        //    
         if (!empty($this->name)) {
-            $query->where('name', 'like', '%' . $this->name . '%');
+            $query->where('EmployeeCode','like', '%'.$this->name.'%');
         }
 
         if (isset($this->orderValue) && isset($this->dirValue)) {

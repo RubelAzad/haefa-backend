@@ -186,8 +186,9 @@ class RefInstructionController extends BaseController
                 
             }else{
                 $output = $this->access_blocked();
+                return response()->json($output);
             }
-            return response()->json($output);
+            
         }else{
            return response()->json($this->access_blocked());
         }
