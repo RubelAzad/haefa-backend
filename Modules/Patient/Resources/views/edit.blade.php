@@ -43,7 +43,7 @@
                         <input type="hidden" name="RegistrationId" id="RegistrationId" value="{{ $patient->RegistrationId }}"/>
                         <div class="col-md-12">
                             <div class="row">
-                                <x-form.textbox type="text" labelName="First Name" name="GivenName" col="col-md-6" value="{{ $patient->GivenName }}" placeholder="Enter First Name" readonly/>
+                                <x-form.textbox type="text" labelName="First Name" name="GivenName" col="col-md-6" value="{{ $patient->GivenName }}" placeholder="Enter First Name"/>
                                 <x-form.textbox type="text" labelName="Last Name" name="FamilyName" col="col-md-6" value="{{ $patient->FamilyName }}" placeholder="Enter Last Name" />
                                 <x-form.textbox type="date" labelName="Date Of Birth" name="BirthDate" required="required" col="col-md-6" value="{{ $patient->BirthDate }}" placeholder="Enter Date Of Birth" />
                                 <x-form.textbox type="number" labelName="Patient Age" name="Age" col="col-md-6" value="{{ $patient->Age }}" placeholder="Enter name" />
