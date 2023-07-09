@@ -353,9 +353,16 @@ $(document).ready(function() {
             processData: false,
             cache: false,
             success: function(data) {
-                console.log(data);
-                
-                if(EmployeeId){
+                console.log(data.errors.EmployeeCode[0]);
+                if(data.errors.EmployeeCode[0]){
+                    Swal.fire({
+                        type:'info',
+                        title:'Validate',
+                        text:data.errors.EmployeeCode[0],
+                        icon: 'info',
+                    });
+                }
+                else if(EmployeeId){
                     Swal.fire({
                         type:'success',
                         title:'success',

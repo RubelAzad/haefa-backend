@@ -193,6 +193,9 @@ class EmployeeController extends BaseController
             if(permission('employee-add') || permission('employee-edit')){
                 try{
                     $collection = collect($request->validated());
+                    if($collection){
+                        $output = ['status'=>'error','message'=>'Please provide Employee Code'];
+                    }
                     if(isset($request->EmployeeId) && !empty($request->EmployeeId)){
                         $employee = DB::table('Employee')->where('EmployeeId',$request->EmployeeId)->first();
 
@@ -290,8 +293,8 @@ class EmployeeController extends BaseController
                     }
 
                 }catch(\Exception $e){
-                    // return response()->json(['status'=>'error','message'=>'Something went wrong !']);
-                    return response()->json(['status'=>'error','message'=>$e->getMessage()]);
+                    return response()->json(['status'=>'error','message'=>'Something went wrong !']);
+                    // return response()->json(['status'=>'error','message'=>$e->getMessage()]);
                 }
                 
             }else{

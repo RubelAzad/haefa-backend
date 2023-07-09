@@ -27,7 +27,7 @@
 
                         <div class="col-md-6">
                             <x-form.textbox labelName="Registration Number" name="RegistrationNumber"
-                                id="RegistrationNumber" required="required" col="col-md-12"
+                                id="RegistrationNumber" col="col-md-12"
                                 placeholder="Enter Registration Number" />
                         </div>
 
@@ -92,10 +92,10 @@
 
                         <div class="col-md-6">
                             <x-form.textbox labelName="Designation" name="Designation" id="Designation"
-                                required="required" col="col-md-12" placeholder="Enter Designation" />
+                                 col="col-md-12" placeholder="Enter Designation" />
                         </div>
 
-                        <div class="col-md-6 required">
+                        <div class="col-md-6">
                             <x-form.selectbox labelName="Religion" name="ReligionId" id="ReligionId" col="col-md-12"
                                 class="selectpicker">
                                 @foreach($religions as $religion)
@@ -140,7 +140,7 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group col-md-12 required">
+                            <div class="form-group col-md-12">
                                 <label for="EmployeeImage">Employee Image</label>
                                 <div class="col-md-12 px-0 text-center">
                                     
@@ -153,7 +153,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <div class="form-group col-md-12 required">
+                            <div class="form-group col-md-12">
                                 <label for="EmployeeSignature">Employee Signature</label>
                                 <div class="col-md-12 px-0 text-center">
                                     <input type="file" name="EmployeeSignature" data-allowed-formats="portrait square"
