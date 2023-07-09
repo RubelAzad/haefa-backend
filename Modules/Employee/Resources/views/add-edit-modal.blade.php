@@ -23,6 +23,7 @@
                             <input type="hidden" name="SortOrder" value="8" />
                             <x-form.textbox labelName="Employee Code" name="EmployeeCode" id="EmployeeCode"
                                 required="required" col="col-md-12" placeholder="Enter Employee Code" />
+                            <div class="error dn text-danger"></div>
                         </div>
 
                         <div class="col-md-6">

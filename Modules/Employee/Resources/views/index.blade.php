@@ -355,12 +355,8 @@ $(document).ready(function() {
             success: function(data) {
                 console.log(data.errors.EmployeeCode[0]);
                 if(data.errors.EmployeeCode[0]){
-                    Swal.fire({
-                        type:'info',
-                        title:'Validate',
-                        text:data.errors.EmployeeCode[0],
-                        icon: 'info',
-                    });
+                    $('#EmployeeCode').addClass('is-invalid');
+                    document.getElementsByClassName('dn').innerHTML="The Employee Code field is required.";
                 }
                 else if(EmployeeId){
                     Swal.fire({
