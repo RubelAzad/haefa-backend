@@ -18,6 +18,7 @@
 
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/datatables.bundle.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
   @stack('stylesheet')
 </head>
 <body class="dt-sidebar--fixed dt-header--fixed">
