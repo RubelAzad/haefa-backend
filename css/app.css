@@ -18018,7 +18018,8 @@ a:focus {
 
 .dt-side-nav__sub-menu .dt-side-nav__link {
     color: #f2f2f2;
-    padding-left: 80px
+    padding-left: 60px !important;
+    font-size: 13px !important;
 }
 
 .dt-side-nav__sub-menu .dt-side-nav__link.active {

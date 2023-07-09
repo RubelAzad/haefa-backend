@@ -79,22 +79,22 @@
               <i>{{ $TMS->Frequency }} - {{ $TMS->SpecialInstruction }}
 
 
-<?php 
+              <?php 
 
-   $durationValue = $TMS->DrugDurationValue;
-    if (stripos($durationValue, 'd') !== false || stripos($durationValue, 'D') !== false) {
-        $durationValue = str_ireplace('d', ' দিন', $durationValue);
-        echo $durationValue;
-    } elseif (stripos($durationValue, 'm') !== false || stripos($durationValue, 'M') !== false) {
-        $durationValue = str_ireplace('m', ' মাস', $durationValue);
-    } elseif (stripos($durationValue, 'y') !== false || stripos($durationValue, 'Y') !== false) {
-        $durationValue = str_ireplace('y', ' বছর', $durationValue);
-    } elseif (stripos($durationValue, 'c') !== false || stripos($durationValue, 'C') !== false) {
-        $durationValue = str_ireplace('c', ' চলবে', $durationValue);
-    }
+                $durationValue = $TMS->DrugDurationValue;
+                  if (stripos($durationValue, 'd') !== false || stripos($durationValue, 'D') !== false) {
+                      $durationValue = str_ireplace('d', ' দিন', $durationValue);
+                      echo $durationValue;
+                  } elseif (stripos($durationValue, 'm') !== false || stripos($durationValue, 'M') !== false) {
+                      $durationValue = str_ireplace('m', ' মাস', $durationValue);
+                  } elseif (stripos($durationValue, 'y') !== false || stripos($durationValue, 'Y') !== false) {
+                      $durationValue = str_ireplace('y', ' বছর', $durationValue);
+                  } elseif (stripos($durationValue, 'c') !== false || stripos($durationValue, 'C') !== false) {
+                      $durationValue = str_ireplace('c', ' চলবে', $durationValue);
+                  }
 
 
-?>
+              ?>
 
               </i>
               @endforeach
@@ -104,7 +104,10 @@
               <div class="medicine mb-4">
                 <p class="mb-0"><b>Follow-up / পরবর্তী সাক্ষাৎ</b></p>
                 @foreach($FollowUpDate as $key =>$FD)
-                <p class="mb-0"><b>{{ ++$key }} . </b>{{ date('d-m-Y', strtotime($FD->FollowUpDate)) }}: {{ $FD->Comment }}</p>
+                @php 
+                 $followDate=date('d-m-Y', strtotime($FD->FollowUpDate))
+                @endphp
+                <p class="mb-0">{{  $followDate == "01-01-1900" ? "" : $followDate.':'.$FD->Comment }}</p>
                 @endforeach
               </div>
               <div class="medicine mb-4">
