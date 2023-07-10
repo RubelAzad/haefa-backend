@@ -68,7 +68,7 @@ class EmployeeController extends BaseController
                         $action .= ' <a class="dropdown-item edit_data" data-id="' . $value->EmployeeId . '"><i class="fas fa-edit text-primary"></i> Edit</a>';
                     }
                     if(permission('employee-view')){
-                       // $action .= ' <a class="dropdown-item view_data" data-id="' . $value->EmployeeId . '"><i class="fas fa-eye text-success"></i> View</a>';
+                       $action .= ' <a class="dropdown-item view_data" data-id="' . $value->EmployeeId . '"><i class="fas fa-eye text-success"></i> View</a>';
                     }
                     if(permission('employee-delete')){
                         $action .= ' <a class="dropdown-item delete_data"  data-id="' . $value->EmployeeId . '" data-name="' . $value->EmployeeId . '"><i class="fas fa-trash text-danger"></i> Delete</a>';
@@ -136,14 +136,19 @@ class EmployeeController extends BaseController
         if(permission('employee-view')){
             if($request->ajax()){
                 if (permission('employee-view')) {
-                    $Employee = DB::select("SELECT  rd.DesignationTitle,rd.Description,
-                    wp.WorkPlaceName,rfd.DepartmentCode
-                    FROM Employee AS rd
-                    INNER JOIN WorkPlace AS wp ON rd.WorkPlaceId = wp.WorkPlaceId 
-                    INNER JOIN RefDepartment AS rfd ON rd.RefDepartmentId = rfd.RefDepartmentId
-                    WHERE rd.EmployeeId='$request->id'");
+                    $Employee = DB::select("SELECT em.EmployeeId,em.OrgId,em.EmployeeCode,em.RegistrationNumber,em.FirstName,em.FirstName,em.LastName,em.LastName,em.GenderId,em.BirthDate,
+                    em.JoiningDate,em.MaritalStatusId,em.EducationId,em.Designation,em.ReligionId,em.RoleId,em.Email,em.Phone,em.NationalIdNumber,em.EmployeeImage,em.EmployeeSignature,
+                    em.Status,gnd.GenderCode,mar.MaritalStatusCode,edu.EducationCode,reli.ReligionCode
+                    FROM Employee AS em
+                    LEFT JOIN RefGender AS gnd ON em.GenderId = gnd.GenderId 
+                    LEFT JOIN RefMaritalStatus AS mar ON mar.MaritalStatusId = em.MaritalStatusId 
+                    LEFT JOIN RefEducation as edu ON edu.EducationId = em.EducationId 
+                    LEFT JOIN RefReligion as reli ON reli.ReligionId = em.ReligionId 
+                   --  LEFT JOIN Role rl ON rl.RoleId = em.RoleId 
+                    WHERE em.EmployeeId='$request->id'");
                 }
             }
+            
             return view('employee::details',compact('Employee'))->render();
         
         }else{
@@ -160,13 +165,13 @@ class EmployeeController extends BaseController
     {
          $data1 = DB::select("SELECT em.EmployeeId,em.OrgId,em.EmployeeCode,em.RegistrationNumber,em.FirstName,em.FirstName,em.LastName,em.LastName,em.GenderId,em.BirthDate,
          em.JoiningDate,em.MaritalStatusId,em.EducationId,em.Designation,em.ReligionId,em.RoleId,em.Email,em.Phone,em.NationalIdNumber,em.EmployeeImage,em.EmployeeSignature,
-         em.Status,gnd.GenderCode,mar.MaritalStatusCode,edu.EducationCode,reli.ReligionCode,rl.RoleCode 
+         em.Status,gnd.GenderCode,mar.MaritalStatusCode,edu.EducationCode,reli.ReligionCode
          FROM Employee AS em
          LEFT JOIN RefGender AS gnd ON em.GenderId = gnd.GenderId 
          LEFT JOIN RefMaritalStatus AS mar ON mar.MaritalStatusId = em.MaritalStatusId 
          LEFT JOIN RefEducation as edu ON edu.EducationId = em.EducationId 
          LEFT JOIN RefReligion as reli ON reli.ReligionId = em.ReligionId 
-         LEFT JOIN Role rl ON rl.RoleId = em.RoleId 
+        --  LEFT JOIN Role rl ON rl.RoleId = em.RoleId 
          WHERE em.EmployeeId='$request->id'");
 
          $data2 = DB::select("SELECT * FROM RefGender");  
@@ -231,7 +236,7 @@ class EmployeeController extends BaseController
                             'MaritalStatusId'=>$request->MaritalStatusId,
                             'Designation'=>$request->Designation,
                             'ReligionId'=>$request->ReligionId,
-                            'RoleId'=>$request->RoleId,
+                            // 'RoleId'=>$request->RoleId,
                             'Email'=>$request->Email,
                             'Phone'=>$request->Phone,
                             'NationalIdNumber'=>$request->NationalIdNumber,
@@ -278,7 +283,7 @@ class EmployeeController extends BaseController
                             'MaritalStatusId'=>$request->MaritalStatusId,
                             'Designation'=>$request->Designation,
                             'ReligionId'=>$request->ReligionId,
-                            'RoleId'=>$request->RoleId,
+                            // 'RoleId'=>$request->RoleId,
                             'Email'=>$request->Email,
                             'Phone'=>$request->Phone,
                             'NationalIdNumber'=>$request->NationalIdNumber,

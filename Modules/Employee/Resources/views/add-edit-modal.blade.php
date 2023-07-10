@@ -19,17 +19,18 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="hidden" name="EmployeeId" value="" id="EmployeeId" />
-                            <input type="hidden" name="SortOrder" value="8" />
-                            <x-form.textbox labelName="Employee Code" name="EmployeeCode" id="EmployeeCode"
-                                required="required" col="col-md-12" placeholder="Enter Employee Code" />
-                            <div class="error dn text-danger"></div>
+                            <input type="hidden" name="EmployeeId" value="" id="EmployeeId">
+                            <input type="hidden" name="SortOrder" value="8">
+                            <div class="form-group col-md-12 required">
+                                <label for="EmployeeCode">Employee Code</label>
+                                <input type="text" name="EmployeeCode" id="EmployeeCode" class="form-control " value=""
+                                    placeholder="Enter Employee Code">
+                            </div>
                         </div>
 
                         <div class="col-md-6">
                             <x-form.textbox labelName="Registration Number" name="RegistrationNumber"
-                                id="RegistrationNumber" col="col-md-12"
-                                placeholder="Enter Registration Number" />
+                                id="RegistrationNumber" col="col-md-12" placeholder="Enter Registration Number" />
                         </div>
 
                     </div>
@@ -92,8 +93,8 @@
                     <div class="row">
 
                         <div class="col-md-6">
-                            <x-form.textbox labelName="Designation" name="Designation" id="Designation"
-                                 col="col-md-12" placeholder="Enter Designation" />
+                            <x-form.textbox labelName="Designation" name="Designation" id="Designation" col="col-md-12"
+                                placeholder="Enter Designation" />
                         </div>
 
                         <div class="col-md-6">
@@ -104,25 +105,6 @@
                                 </option>
                                 @endforeach
                             </x-form.selectbox>
-                        </div>
-
-                    </div>
-
-                    <div class="row">
-
-                        <div class="col-md-6">
-                            <x-form.selectbox labelName="Role" name="RoleId" id="RoleId" col="col-md-12"
-                                class="selectpicker">
-                                @foreach($roles as $role)
-                                <option value="{{$role->RoleId??''}}">{{$role->RoleCode??""}}
-                                </option>
-                                @endforeach
-                            </x-form.selectbox>
-                        </div>
-
-                        <div class="col-md-6">
-                            <x-form.textbox labelName="Email" name="Email" id="Email" col="col-md-12"
-                                placeholder="Enter Email" />
                         </div>
 
                     </div>
@@ -140,11 +122,30 @@
                     </div>
 
                     <div class="row">
+
+                        <!-- <div class="col-md-6">
+                            <x-form.selectbox labelName="Role" name="RoleId" id="RoleId" col="col-md-12"
+                                class="selectpicker">
+                                @foreach($roles as $role)
+                                <option value="{{$role->RoleId??''}}">{{$role->RoleCode??""}}
+                                </option>
+                                @endforeach
+                            </x-form.selectbox>
+                        </div> -->
+
+                        <div class="col-md-6">
+                            <x-form.textbox labelName="Email" name="Email" id="Email" col="col-md-12"
+                                placeholder="Enter Email" />
+                        </div>
+
+                    </div>
+
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group col-md-12">
                                 <label for="EmployeeImage">Employee Image</label>
                                 <div class="col-md-12 px-0 text-center">
-                                    
+
                                     <input type="file" name="EmployeeImage" id="EmployeeImage">
                                     <div id="PrevEmployeeImage"></div>
                                 </div>
@@ -159,13 +160,12 @@
                                 <div class="col-md-12 px-0 text-center">
                                     <input type="file" name="EmployeeSignature" data-allowed-formats="portrait square"
                                         id="EmployeeSignature">
-                                    <div id="PrevEmployeeSignature"></div>    
+                                    <div id="PrevEmployeeSignature"></div>
                                 </div>
                             </div>
                         </div>
 
                     </div>
-                   
 
                 </div>
                 <!-- /modal body -->

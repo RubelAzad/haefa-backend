@@ -307,7 +307,7 @@ $(document).ready(function() {
         var MaritalStatusId = $('#MaritalStatusId').val();
         var Designation = $('#Designation').val();
         var ReligionId = $('#ReligionId').val();
-        var RoleId = $('#RoleId').val();
+        // var RoleId = $('#RoleId').val();
         var Email = $('#Email').val();
         var Phone = $('#Phone').val();
         var NationalIdNumber = $('#NationalIdNumber').val();
@@ -330,7 +330,7 @@ $(document).ready(function() {
         data.append('MaritalStatusId', MaritalStatusId);
         data.append('Designation', Designation);
         data.append('ReligionId', ReligionId);
-        data.append('RoleId', RoleId);
+        // data.append('RoleId', RoleId);
         data.append('Email', Email);
         data.append('Phone', Phone);
         data.append('NationalIdNumber', NationalIdNumber);
@@ -356,7 +356,7 @@ $(document).ready(function() {
                 console.log(data.errors.EmployeeCode[0]);
                 if(data.errors.EmployeeCode[0]){
                     $('#EmployeeCode').addClass('is-invalid');
-                    document.getElementsByClassName('dn').innerHTML="The Employee Code field is required.";
+                    document.getElementsByClassName('dn').innerHTML="";
                 }
                 else if(EmployeeId){
                     Swal.fire({
@@ -401,7 +401,8 @@ $(document).ready(function() {
                     _token: _token
                 },
                 success: function(data) {
-
+                    console.log(data);
+                    console.log(data[0].EmployeeCode);
                     $('#view_modal .details').html();
                     $('#view_modal .details').html(data);
 
@@ -524,7 +525,7 @@ $(document).on('click', '.edit_data', function() {
                 $('#MaritalStatusId').val(data.employee[0].MaritalStatusId);
                 $('#Designation').val(data.employee[0].Designation);
                 $('#ReligionId').val(data.employee[0].ReligionId);
-                $('#RoleId').val(data.employee[0].RoleId);
+                // $('#RoleId').val(data.employee[0].RoleId);
                 $('#EducationId').val(data.employee[0].EducationId);
                 $('#Email').val(data.employee[0].Email);
                 $('#Phone').val(data.employee[0].Phone);
