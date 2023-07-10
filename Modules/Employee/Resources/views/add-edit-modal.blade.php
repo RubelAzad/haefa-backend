@@ -123,7 +123,7 @@
 
                     <div class="row">
 
-                        <!-- <div class="col-md-6">
+                        <div class="col-md-6">
                             <x-form.selectbox labelName="Role" name="RoleId" id="RoleId" col="col-md-12"
                                 class="selectpicker">
                                 @foreach($roles as $role)
@@ -131,7 +131,7 @@
                                 </option>
                                 @endforeach
                             </x-form.selectbox>
-                        </div> -->
+                        </div>
 
                         <div class="col-md-6">
                             <x-form.textbox labelName="Email" name="Email" id="Email" col="col-md-12"

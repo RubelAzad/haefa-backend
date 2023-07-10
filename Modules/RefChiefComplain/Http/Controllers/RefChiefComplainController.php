@@ -75,7 +75,7 @@ class RefChiefComplainController extends BaseController
                     $row[] = $no;
                     $row[] = $value->CCCode;
                     $row[] = $value->Description;
-                    $row[] = permission('refchiefcomplain-edit') ? change_status($value->CCId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
+                    // $row[] = permission('refchiefcomplain-edit') ? change_status($value->CCId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
                     $row[] = action_button($action);
                     $data[] = $row;
                 }

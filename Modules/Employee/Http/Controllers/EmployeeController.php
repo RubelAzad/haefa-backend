@@ -68,7 +68,7 @@ class EmployeeController extends BaseController
                         $action .= ' <a class="dropdown-item edit_data" data-id="' . $value->EmployeeId . '"><i class="fas fa-edit text-primary"></i> Edit</a>';
                     }
                     if(permission('employee-view')){
-                       $action .= ' <a class="dropdown-item view_data" data-id="' . $value->EmployeeId . '"><i class="fas fa-eye text-success"></i> View</a>';
+                       // $action .= ' <a class="dropdown-item view_data" data-id="' . $value->EmployeeId . '"><i class="fas fa-eye text-success"></i> View</a>';
                     }
                     if(permission('employee-delete')){
                         $action .= ' <a class="dropdown-item delete_data"  data-id="' . $value->EmployeeId . '" data-name="' . $value->EmployeeId . '"><i class="fas fa-trash text-danger"></i> Delete</a>';
@@ -136,19 +136,14 @@ class EmployeeController extends BaseController
         if(permission('employee-view')){
             if($request->ajax()){
                 if (permission('employee-view')) {
-                    $Employee = DB::select("SELECT em.EmployeeId,em.OrgId,em.EmployeeCode,em.RegistrationNumber,em.FirstName,em.FirstName,em.LastName,em.LastName,em.GenderId,em.BirthDate,
-                    em.JoiningDate,em.MaritalStatusId,em.EducationId,em.Designation,em.ReligionId,em.RoleId,em.Email,em.Phone,em.NationalIdNumber,em.EmployeeImage,em.EmployeeSignature,
-                    em.Status,gnd.GenderCode,mar.MaritalStatusCode,edu.EducationCode,reli.ReligionCode
-                    FROM Employee AS em
-                    LEFT JOIN RefGender AS gnd ON em.GenderId = gnd.GenderId 
-                    LEFT JOIN RefMaritalStatus AS mar ON mar.MaritalStatusId = em.MaritalStatusId 
-                    LEFT JOIN RefEducation as edu ON edu.EducationId = em.EducationId 
-                    LEFT JOIN RefReligion as reli ON reli.ReligionId = em.ReligionId 
-                   --  LEFT JOIN Role rl ON rl.RoleId = em.RoleId 
-                    WHERE em.EmployeeId='$request->id'");
+                    $Employee = DB::select("SELECT  rd.DesignationTitle,rd.Description,
+                    wp.WorkPlaceName,rfd.DepartmentCode
+                    FROM Employee AS rd
+                    INNER JOIN WorkPlace AS wp ON rd.WorkPlaceId = wp.WorkPlaceId 
+                    INNER JOIN RefDepartment AS rfd ON rd.RefDepartmentId = rfd.RefDepartmentId
+                    WHERE rd.EmployeeId='$request->id'");
                 }
             }
-            
             return view('employee::details',compact('Employee'))->render();
         
         }else{
@@ -165,13 +160,13 @@ class EmployeeController extends BaseController
     {
          $data1 = DB::select("SELECT em.EmployeeId,em.OrgId,em.EmployeeCode,em.RegistrationNumber,em.FirstName,em.FirstName,em.LastName,em.LastName,em.GenderId,em.BirthDate,
          em.JoiningDate,em.MaritalStatusId,em.EducationId,em.Designation,em.ReligionId,em.RoleId,em.Email,em.Phone,em.NationalIdNumber,em.EmployeeImage,em.EmployeeSignature,
-         em.Status,gnd.GenderCode,mar.MaritalStatusCode,edu.EducationCode,reli.ReligionCode
+         em.Status,gnd.GenderCode,mar.MaritalStatusCode,edu.EducationCode,reli.ReligionCode,rl.RoleCode 
          FROM Employee AS em
          LEFT JOIN RefGender AS gnd ON em.GenderId = gnd.GenderId 
          LEFT JOIN RefMaritalStatus AS mar ON mar.MaritalStatusId = em.MaritalStatusId 
          LEFT JOIN RefEducation as edu ON edu.EducationId = em.EducationId 
          LEFT JOIN RefReligion as reli ON reli.ReligionId = em.ReligionId 
-        --  LEFT JOIN Role rl ON rl.RoleId = em.RoleId 
+         LEFT JOIN Role rl ON rl.RoleId = em.RoleId 
          WHERE em.EmployeeId='$request->id'");
 
          $data2 = DB::select("SELECT * FROM RefGender");  
@@ -203,7 +198,7 @@ class EmployeeController extends BaseController
                     }
                     if(isset($request->EmployeeId) && !empty($request->EmployeeId)){
                         $employee = DB::table('Employee')->where('EmployeeId',$request->EmployeeId)->first();
-
+                        
                         $file = $request->EmployeeImage;
 
                         if(!empty($file) && $file !=='undefined'){
@@ -224,8 +219,8 @@ class EmployeeController extends BaseController
                         }
 
                         DB::table('Employee')->where('EmployeeId',$request->EmployeeId)->update([
-                            'EmployeeId'=>Str::uuid(),
-                            'OrgId'=>$OrgId = auth()->user()->OrgId,
+                            'EmployeeId'=>(string) Str::uuid(),
+                            'OrgId'=>(string)auth()->user()->OrgId,
                             'EmployeeCode'=>$request->EmployeeCode,
                             'RegistrationNumber'=>$request->RegistrationNumber,
                             'FirstName'=>$request->FirstName,
@@ -236,7 +231,7 @@ class EmployeeController extends BaseController
                             'MaritalStatusId'=>$request->MaritalStatusId,
                             'Designation'=>$request->Designation,
                             'ReligionId'=>$request->ReligionId,
-                            // 'RoleId'=>$request->RoleId,
+                            'RoleId'=>$request->RoleId,
                             'Email'=>$request->Email,
                             'Phone'=>$request->Phone,
                             'NationalIdNumber'=>$request->NationalIdNumber,
@@ -253,7 +248,7 @@ class EmployeeController extends BaseController
                         
                         $file = $request->EmployeeImage;
 
-                        if($file){
+                        if($file && $file !=='undefined'){
                             $mimeType = $file->getMimeType();
                             $EmployeeImage = base64_encode(file_get_contents($file)); 
                             $EmployeeImageBase64Link = 'data:' . $mimeType . ';base64,' . $EmployeeImage;
@@ -262,7 +257,7 @@ class EmployeeController extends BaseController
                         }
                         
                         $file2 = $request->EmployeeSignature;
-                        if($file2){
+                        if($file2 && $file2 !=='undefined'){
                             $mimeType = $file2->getMimeType();
                             $EmployeeSignature = base64_encode(file_get_contents($file2)); 
                             $EmployeeSignatureBase64Link = 'data:' . $mimeType . ';base64,' . $EmployeeSignature;
@@ -271,8 +266,8 @@ class EmployeeController extends BaseController
                         }
 
                         DB::table('Employee')->insert([
-                            'EmployeeId'=>Str::uuid(),
-                            'OrgId'=>$OrgId = auth()->user()->OrgId,
+                            'EmployeeId'=> Str::uuid(),
+                            'OrgId'=> auth()->user()->OrgId,
                             'EmployeeCode'=>$request->EmployeeCode,
                             'RegistrationNumber'=>$request->RegistrationNumber,
                             'FirstName'=>$request->FirstName,
@@ -283,7 +278,7 @@ class EmployeeController extends BaseController
                             'MaritalStatusId'=>$request->MaritalStatusId,
                             'Designation'=>$request->Designation,
                             'ReligionId'=>$request->ReligionId,
-                            // 'RoleId'=>$request->RoleId,
+                            'RoleId'=>$request->RoleId,
                             'Email'=>$request->Email,
                             'Phone'=>$request->Phone,
                             'NationalIdNumber'=>$request->NationalIdNumber,
@@ -298,8 +293,8 @@ class EmployeeController extends BaseController
                     }
 
                 }catch(\Exception $e){
-                    return response()->json(['status'=>'error','message'=>'Something went wrong !']);
-                    // return response()->json(['status'=>'error','message'=>$e->getMessage()]);
+                    // return response()->json(['status'=>'error','message'=>'Something went wrong !']);
+                    return response()->json(['status'=>'error','message'=>$e->getMessage()]);
                 }
                 
             }else{

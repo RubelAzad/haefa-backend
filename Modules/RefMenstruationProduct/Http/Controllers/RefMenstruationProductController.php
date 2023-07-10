@@ -75,7 +75,7 @@ class RefMenstruationProductController extends BaseController
                     $row[] = $no;
                     $row[] = $value->MenstruationProductCode;
                     $row[] = $value->Description;
-                    $row[] = permission('refmenstruationproduct-edit') ? change_status($value->MenstruationProductId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
+                    // $row[] = permission('refmenstruationproduct-edit') ? change_status($value->MenstruationProductId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
                     $row[] = action_button($action);
                     $data[] = $row;
                 }

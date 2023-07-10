@@ -73,7 +73,7 @@ class RefGenderController extends BaseController
                     $row[] = $no;
                     $row[] = $value->GenderCode;
                     $row[] = $value->Description;
-                    $row[] = permission('refgender-edit') ? change_status($value->GenderId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
+                    // $row[] = permission('refgender-edit') ? change_status($value->GenderId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
                     $row[] = action_button($action);
                     $data[] = $row;
                 }

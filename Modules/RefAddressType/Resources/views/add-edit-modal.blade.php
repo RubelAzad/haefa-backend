@@ -35,22 +35,6 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group col-md-12">
-                            <label>Status</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" id="activeCheckbox" name="status" value="active">
-                                <label class="form-check-label" for="activeCheckbox">Active</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" id="inactiveCheckbox" name="status" value="inactive">
-                                <label class="form-check-label" for="inactiveCheckbox">Inactive</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
             <!-- /modal body -->
 

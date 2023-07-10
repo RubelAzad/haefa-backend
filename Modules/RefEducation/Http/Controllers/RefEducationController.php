@@ -76,7 +76,7 @@ class RefEducationController extends BaseController
                     $row[] = $no;
                     $row[] = $value->EducationCode;
                     $row[] = $value->Description;
-                    $row[] = permission('refeducation-edit') ? change_status($value->EducationId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
+                    // $row[] = permission('refeducation-edit') ? change_status($value->EducationId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
                     $row[] = action_button($action);
                     $data[] = $row;
                 }

@@ -307,11 +307,9 @@ $(document).ready(function() {
         var MaritalStatusId = $('#MaritalStatusId').val();
         var Designation = $('#Designation').val();
         var ReligionId = $('#ReligionId').val();
-        // var RoleId = $('#RoleId').val();
         var Email = $('#Email').val();
         var Phone = $('#Phone').val();
         var NationalIdNumber = $('#NationalIdNumber').val();
-
         var EmployeeImage = $('#EmployeeImage').prop('files')[0];
         var EmployeeSignature = $('#EmployeeSignature').prop('files')[0];
         //console.log(EmployeeImage);
@@ -319,7 +317,6 @@ $(document).ready(function() {
         var data = new FormData();
         data.append('EmployeeImage', EmployeeImage);
         data.append('EmployeeSignature', EmployeeSignature);
-
         data.append('EmployeeCode', EmployeeCode);
         data.append('RegistrationNumber', RegistrationNumber);
         data.append('FirstName', FirstName);
@@ -330,7 +327,6 @@ $(document).ready(function() {
         data.append('MaritalStatusId', MaritalStatusId);
         data.append('Designation', Designation);
         data.append('ReligionId', ReligionId);
-        // data.append('RoleId', RoleId);
         data.append('Email', Email);
         data.append('Phone', Phone);
         data.append('NationalIdNumber', NationalIdNumber);
@@ -401,8 +397,7 @@ $(document).ready(function() {
                     _token: _token
                 },
                 success: function(data) {
-                    console.log(data);
-                    console.log(data[0].EmployeeCode);
+
                     $('#view_modal .details').html();
                     $('#view_modal .details').html(data);
 
@@ -525,7 +520,6 @@ $(document).on('click', '.edit_data', function() {
                 $('#MaritalStatusId').val(data.employee[0].MaritalStatusId);
                 $('#Designation').val(data.employee[0].Designation);
                 $('#ReligionId').val(data.employee[0].ReligionId);
-                // $('#RoleId').val(data.employee[0].RoleId);
                 $('#EducationId').val(data.employee[0].EducationId);
                 $('#Email').val(data.employee[0].Email);
                 $('#Phone').val(data.employee[0].Phone);
@@ -546,6 +540,27 @@ $(document).on('click', '.edit_data', function() {
                 $('#store_or_update_modal #save-btn').text('Update');
             },
             error: function(xhr, ajaxOption, thrownError) {
+                console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
+            }
+        });
+    }
+});
+
+$('#EmployeeImage').click(function(){
+    console.log('EmployeeImage');
+    document.getElementById('PrevEmployeeImage').innerHTML ="";
+});
+
+$('#EmployeeSignature').click(function(){
+    console.log('EmployeeSignature');
+    document.getElementById('PrevEmployeeSignature').innerHTML ="";
+});
+
+function removeId(){
+    $('#EmployeeId').val('');
+}
+</script>
+@endpushnction(xhr, ajaxOption, thrownError) {
                 console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
             }
         });

@@ -133,7 +133,7 @@
                                 <th>Sl</th>
                                 <th>QuestionTypeCode</th>
                                 <th>QuestionTypeTitle</th>
-                                <th>Status</th>
+                                <!-- <th>Status</th> -->
                                 <th>Action</th>
                             </tr>
                         </thead>

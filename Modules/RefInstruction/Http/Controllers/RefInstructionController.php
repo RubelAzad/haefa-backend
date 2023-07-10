@@ -77,7 +77,7 @@ class RefInstructionController extends BaseController
                     $row[] = $value->InstructionInEnglish;
                     $row[] = $value->InstructionInBangla;
                     $row[] = $value->Description;
-                    $row[] = permission('refinstruction-edit') ? change_status($value->RefInstructionId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
+                    // $row[] = permission('refinstruction-edit') ? change_status($value->RefInstructionId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
                     $row[] = action_button($action);
                     $data[] = $row;
                 }

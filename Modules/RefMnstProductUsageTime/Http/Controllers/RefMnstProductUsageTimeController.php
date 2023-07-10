@@ -76,7 +76,7 @@ class RefMnstProductUsageTimeController extends BaseController
                     $row[] = $no;
                     $row[] = $value->MenstruationProductUsageTimeCode;
                     $row[] = $value->Description;
-                    $row[] = permission('refmnstproductusagetime-edit') ? change_status($value->MenstruationProductUsageTimeId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
+                    // $row[] = permission('refmnstproductusagetime-edit') ? change_status($value->MenstruationProductUsageTimeId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
                     $row[] = action_button($action);
                     $data[] = $row;
                 }

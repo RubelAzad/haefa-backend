@@ -76,7 +76,7 @@ class RefillnessController extends BaseController
                     $row[] = $no;
                     $row[] = $value->IllnessCode;
                     $row[] = $value->Description;
-                    $row[] = permission('refillness-edit') ? change_status($value->IllnessId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
+                    // $row[] = permission('refillness-edit') ? change_status($value->IllnessId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
                     $row[] = action_button($action);
                     $data[] = $row;
                 }

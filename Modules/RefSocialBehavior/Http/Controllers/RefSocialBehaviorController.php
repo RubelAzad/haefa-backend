@@ -76,7 +76,7 @@ class RefSocialBehaviorController extends BaseController
                     $row[] = $no;
                     $row[] = $value->SocialBehaviorCode;
                     $row[] = $value->Description;
-                    $row[] = permission('refsocialbehavior-edit') ? change_status($value->SocialBehaviorId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
+                    // $row[] = permission('refsocialbehavior-edit') ? change_status($value->SocialBehaviorId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
                     $row[] = action_button($action);
                     $data[] = $row;
                 }
