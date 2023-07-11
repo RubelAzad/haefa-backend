@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Union\Http\Requests;
+namespace Modules\Upazila\Http\Requests;
 
 use App\Http\Requests\FormRequest;
 
-class UnionFormRequest extends FormRequest
+class UpazilaFormRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,7 +14,7 @@ class UnionFormRequest extends FormRequest
     public function rules()
     {
         $rules = [];
-        $rules['UnionName'] = ['required'];
+        $rules['UpazilaName'] = ['required'];
         return $rules;
     }
 

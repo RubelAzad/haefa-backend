@@ -24,3 +24,4 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('change-status', 'UpazilaController@change_status')->name('change.status');
     });
 });
+

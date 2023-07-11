@@ -80,14 +80,14 @@
 
             <!-- Entry Header -->
             <div class="dt-entry__header">
-            
+
                 <!-- Entry Heading -->
                 <div class="dt-entry__heading">
                     <h2 class="dt-page__title mb-0 text-primary"><i class="{{ $page_icon }}"></i> {{ $sub_title }}</h2>
                 </div>
                 <!-- /entry heading -->
-                @if (permission('union-add'))
-                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add Union','Save');removeId()">
+                @if (permission('upazila-add'))
+                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add Upazila','Save');removeId()">
                     <i class="fas fa-plus-square"></i> Add New
                  </button>
                 @endif
@@ -105,7 +105,7 @@
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label for="name">Gender Code</label>
-                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter Gender Code">
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter Upazila Name">
                             </div>
                             <div class="form-group col-md-8 pt-24">
                                <button type="button" class="btn btn-danger btn-sm float-right" id="btn-reset"
@@ -122,7 +122,7 @@
                     <table id="dataTable" class="table table-striped table-bordered table-hover">
                         <thead class="bg-primary">
                             <tr>
-                                @if (permission('union-bulk-delete'))
+                                @if (permission('upazila-bulk-delete'))
                                 <th>
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="select_all" onchange="select_all()">
@@ -131,7 +131,7 @@
                                 </th>
                                 @endif
                                 <th>Sl</th>
-                                <th>Union Name</th>
+                                <th>Upazila Name</th>
                                 <th>Short Name</th>
                                 <!-- <th>Status</th> -->
                                 <th>Action</th>
@@ -153,8 +153,8 @@
     <!-- /grid -->
 
 </div>
-@include('union::view-modal')
-@include('union::add-edit-modal')
+@include('upazila::view-modal')
+@include('upazila::add-edit-modal')
 @endsection
 
 @push('script')
@@ -170,14 +170,14 @@ $(document).ready(function(){
         "bInfo": true, //TO show the total number of data
         "bFilter": false, //For datatable default search box show/hide
         "pageLength": 10, //number of data show per page
-        "language": { 
+        "language": {
             processing: `<i class="fas fa-spinner fa-spin fa-3x fa-fw text-primary"></i> `,
             emptyTable: '<strong class="text-danger">No Data Found</strong>',
             infoEmpty: '',
             zeroRecords: '<strong class="text-danger">No Data Found</strong>'
         },
         "ajax": {
-            "url": "{{route('union.datatable.data')}}",
+            "url": "{{route('upazila.datatable.data')}}",
             "type": "POST",
             "data": function (data) {
                 data.name = $("#form-filter #name").val();
@@ -185,18 +185,18 @@ $(document).ready(function(){
             }
         },
         "columnDefs": [{
-                @if (permission('union-bulk-delete'))
+                @if (permission('upazila-bulk-delete'))
                 "targets": [0,4],
-                @else 
+                @else
                 "targets": [3],
                 @endif
                 "orderable": false,
                 "className": "text-center"
             },
             {
-                @if (permission('union-bulk-delete'))
+                @if (permission('upazila-bulk-delete'))
                 "targets": [1,3],
-                @else 
+                @else
                 "targets": [0,2],
                 @endif
                 "className": "text-center"
@@ -207,7 +207,7 @@ $(document).ready(function(){
             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'<'float-right'p>>>",
 
         "buttons": [
-            @if (permission('union-report'))
+            @if (permission('upazila-report'))
             {
                 'extend':'colvis','className':'btn btn-secondary btn-sm text-white','text':'Column'
             },
@@ -216,7 +216,7 @@ $(document).ready(function(){
                 'text':'Excel',
                 'className':'btn btn-secondary btn-sm text-white',
                 "title": "Menu List",
-                "filename": "union",
+                "filename": "upazila",
                 "exportOptions": {
                     columns: function (index, data, node) {
                         return table.column(index).visible();
@@ -228,15 +228,15 @@ $(document).ready(function(){
                 'text':'PDF',
                 'className':'btn btn-secondary btn-sm text-white',
                 "title": "Menu List",
-                "filename": "union",
+                "filename": "upazila",
                 "orientation": "landscape", //portrait
                 "pageSize": "A4", //A3,A5,A6,legal,letter
                 "exportOptions": {
                     columns: [1, 2, 3]
                 },
             },
-            @endif 
-            @if (permission('union-bulk-delete'))
+            @endif
+            @if (permission('upazila-bulk-delete'))
             {
                 'className':'btn btn-danger btn-sm delete_btn d-none text-white',
                 'text':'Delete',
@@ -260,7 +260,7 @@ $(document).ready(function(){
     $(document).on('click', '#save-btn', function () {
         let form = document.getElementById('store_or_update_form');
         let formData = new FormData(form);
-        let url = "{{route('union.store.or.update')}}";
+        let url = "{{route('upazila.store.or.update')}}";
         let id = $('#Id').val();
         let method;
         if (id) {
@@ -271,14 +271,14 @@ $(document).ready(function(){
         store_or_update_data(table, method, url, formData);
     });
 
-    
+
 
     $(document).on('click', '.view_data', function () {
         let id = $(this).data('id');
        // let date = $(this).data('date');
         if (id) {
             $.ajax({
-                url: "{{route('union.show')}}",
+                url: "{{route('upazila.show')}}",
                 type: "POST",
                 data: { id: id,_token: _token},
                 success: function (data) {
@@ -306,9 +306,9 @@ $(document).ready(function(){
         let name  = "union";
         console.log(name);
         let row   = table.row($(this).parent('tr'));
-        let url   = "{{ route('union.delete') }}";
+        let url   = "{{ route('upazila.delete') }}";
         let response = delete_data(id, url, table, row, name);
-        
+
     });
 
     function multi_delete(){
@@ -326,7 +326,7 @@ $(document).ready(function(){
                 icon: 'warning',
             });
         }else{
-            let url = "{{route('union.bulk.delete')}}";
+            let url = "{{route('upazila.bulk.delete')}}";
             bulk_delete(ids,url,table,rows);
         }
     }
@@ -338,7 +338,7 @@ $(document).on('click', '.change_status', function () {
     let Status    = $(this).data('status');
     let name  = $(this).data('name');
     let row   = table.row($(this).parent('tr'));
-    let url   = "{{ route('union.change.status') }}";
+    let url   = "{{ route('upazila.change.status') }}";
     Swal.fire({
         title: 'Are you sure to change ' + name + ' status?',
         icon: 'warning',
@@ -375,17 +375,17 @@ $(document).on('click', '.edit_data', function () {
     $('#store_or_update_form')[0].reset();
     // $('#store_or_update_form').find('.is-invalid').removeClass('is-invalid');
     // $('#store_or_update_form').find('.error').remove();
-    
+
     if (id) {
         $.ajax({
-            url: "{{route('union.edit')}}",
+            url: "{{route('upazila.edit')}}",
             type: "POST",
             data: { id: id,_token: _token},
             dataType: "JSON",
             success: function (data) {
                 console.log(data);
                 //$('#store_or_update_form #update_id').val(data.AddressTypeId);
-                $('#UnionName').val(data.UnionName);
+                $('#UpazilaName').val(data.UpazilaName);
                 $('#ShortName').val(data.ShortName);
                 $('#Id').val(data.Id);
 

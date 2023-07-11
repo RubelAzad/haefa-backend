@@ -9,11 +9,9 @@
 #prescription .container {
     background-color: #f2f2f2 !important;
 }
-
 .header p {
     font-size: 14px;
 }
-
 .aside {
     width: 400px;
     border-right: 1px solid #ddd;
@@ -349,7 +347,7 @@ $(document).ready(function() {
             processData: false,
             cache: false,
             success: function(data) {
-                console.log(data.errors.EmployeeCode[0]);
+
                 if(data.errors.EmployeeCode[0]){
                     $('#EmployeeCode').addClass('is-invalid');
                     document.getElementsByClassName('dn').innerHTML="";
@@ -375,7 +373,7 @@ $(document).ready(function() {
                     $('#store_or_update_modal').modal('hide');
                     table.ajax.reload();
                 }
-                
+
             },
             error: function(xhr, ajaxOption, thrownError) {
                 console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr
@@ -524,7 +522,7 @@ $(document).on('click', '.edit_data', function() {
                 $('#Email').val(data.employee[0].Email);
                 $('#Phone').val(data.employee[0].Phone);
                 $('#NationalIdNumber').val(data.employee[0].NationalIdNumber);
-        
+
                 document.getElementById('PrevEmployeeImage').innerHTML = '<img src="' + data.employee[0].EmployeeImage + '" alt="EmployeeImage" width="auto" height="70"/>';
                 document.getElementById('PrevEmployeeSignature').innerHTML = '<img src="' + data.employee[0].EmployeeSignature + '" alt="EmployeeSignature" width="auto" height="70"/>';
 
@@ -540,27 +538,6 @@ $(document).on('click', '.edit_data', function() {
                 $('#store_or_update_modal #save-btn').text('Update');
             },
             error: function(xhr, ajaxOption, thrownError) {
-                console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
-            }
-        });
-    }
-});
-
-$('#EmployeeImage').click(function(){
-    console.log('EmployeeImage');
-    document.getElementById('PrevEmployeeImage').innerHTML ="";
-});
-
-$('#EmployeeSignature').click(function(){
-    console.log('EmployeeSignature');
-    document.getElementById('PrevEmployeeSignature').innerHTML ="";
-});
-
-function removeId(){
-    $('#EmployeeId').val('');
-}
-</script>
-@endpushnction(xhr, ajaxOption, thrownError) {
                 console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
             }
         });

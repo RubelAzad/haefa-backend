@@ -16,21 +16,21 @@ class Employee extends BaseModel
     'Status','CreateUser','CreateDate','UpdateUser','UpdateDate'];
 
     protected $order = ['CreateDate'=>'desc'];
-    
+
     protected $name;
 
     public function setName($name)
     {
         $this->name = $name;
     }
-    
+
     private function get_datatable_query()
     {
         if(permission('refdesignation-bulk-delete')){
             //datatable display data from the below fields
-            $this->column_order = [null,'EmployeeCode','RegistrationNumber','FirstName','LastName','Designation',null];
+            $this->column_order = [null,'EmployeeCode','RegistrationNumber','FirstName','LastName',null];
         }else{
-            $this->column_order = ['EmployeeCode','RegistrationNumber','FirstName','LastName','Designation',null];
+            $this->column_order = ['EmployeeCode','RegistrationNumber','FirstName','LastName',null];
         }
 
         $query = self::toBase();
@@ -38,7 +38,7 @@ class Employee extends BaseModel
         /*****************
             * *Search Data **
             ******************/
-        //    
+        //
         if (!empty($this->name)) {
             $query->where('EmployeeCode','like', '%'.$this->name.'%');
         }
@@ -48,16 +48,23 @@ class Employee extends BaseModel
         } else if (isset($this->order)) {
             $query->orderBy(key($this->order), $this->order[key($this->order)]);
         }
+
         return $query;
     }
 
     public function getDatatableList()
     {
+
         $query = $this->get_datatable_query();
-        if ($this->lengthVlaue != -1) {
-            $query->offset($this->startVlaue)->limit($this->lengthVlaue);
+        try {
+            if ($this->lengthVlaue != -1) {
+                $query->offset($this->startVlaue)->limit($this->lengthVlaue);
+            }
+             var_dump($query); die();
+            return $query->get();
+        } catch (\Exception $e) {
+            dd($e->getMessage()); // Display only the error message
         }
-        return $query->get();
     }
 
     public function count_filtered()

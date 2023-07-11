@@ -19,10 +19,10 @@
                 <div class="row">
                     <div class="col-md-12">
                         <input type="hidden" name="Id" value="" id="Id"/>
-                        <x-form.textbox labelName="Union Name" name="UnionName" id="UnionName" required="required" col="col-md-12" placeholder="Enter union name"/>
+                        <x-form.textbox labelName="Upazila Name" name="UpazilaName" id="UpazilaName" required="required" col="col-md-12" placeholder="Enter upazila name"/>
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <div class="col-md-12">
                         <x-form.textbox labelName="Short Name" name="ShortName" id="ShortName" col="col-md-12" placeholder="Enter short name"/>

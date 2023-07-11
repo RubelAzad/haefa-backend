@@ -80,7 +80,7 @@
 
             <!-- Entry Header -->
             <div class="dt-entry__header">
-            
+
                 <!-- Entry Heading -->
                 <div class="dt-entry__heading">
                     <h2 class="dt-page__title mb-0 text-primary"><i class="{{ $page_icon }}"></i> {{ $sub_title }}</h2>
@@ -105,7 +105,7 @@
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label for="name">Gender Code</label>
-                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter Gender Code">
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter UnionName">
                             </div>
                             <div class="form-group col-md-8 pt-24">
                                <button type="button" class="btn btn-danger btn-sm float-right" id="btn-reset"
@@ -170,7 +170,7 @@ $(document).ready(function(){
         "bInfo": true, //TO show the total number of data
         "bFilter": false, //For datatable default search box show/hide
         "pageLength": 10, //number of data show per page
-        "language": { 
+        "language": {
             processing: `<i class="fas fa-spinner fa-spin fa-3x fa-fw text-primary"></i> `,
             emptyTable: '<strong class="text-danger">No Data Found</strong>',
             infoEmpty: '',
@@ -187,7 +187,7 @@ $(document).ready(function(){
         "columnDefs": [{
                 @if (permission('union-bulk-delete'))
                 "targets": [0,4],
-                @else 
+                @else
                 "targets": [3],
                 @endif
                 "orderable": false,
@@ -196,7 +196,7 @@ $(document).ready(function(){
             {
                 @if (permission('union-bulk-delete'))
                 "targets": [1,3],
-                @else 
+                @else
                 "targets": [0,2],
                 @endif
                 "className": "text-center"
@@ -235,7 +235,7 @@ $(document).ready(function(){
                     columns: [1, 2, 3]
                 },
             },
-            @endif 
+            @endif
             @if (permission('union-bulk-delete'))
             {
                 'className':'btn btn-danger btn-sm delete_btn d-none text-white',
@@ -271,7 +271,7 @@ $(document).ready(function(){
         store_or_update_data(table, method, url, formData);
     });
 
-    
+
 
     $(document).on('click', '.view_data', function () {
         let id = $(this).data('id');
@@ -308,7 +308,7 @@ $(document).ready(function(){
         let row   = table.row($(this).parent('tr'));
         let url   = "{{ route('union.delete') }}";
         let response = delete_data(id, url, table, row, name);
-        
+
     });
 
     function multi_delete(){
@@ -375,7 +375,7 @@ $(document).on('click', '.edit_data', function () {
     $('#store_or_update_form')[0].reset();
     // $('#store_or_update_form').find('.is-invalid').removeClass('is-invalid');
     // $('#store_or_update_form').find('.error').remove();
-    
+
     if (id) {
         $.ajax({
             url: "{{route('union.edit')}}",

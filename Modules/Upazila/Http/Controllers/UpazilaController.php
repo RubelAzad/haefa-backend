@@ -5,96 +5,16 @@ namespace Modules\Upazila\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-
-class UpazilaController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
-    public function index()
-    {
-        return view('upazila::index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('upazila::create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
-    {
-        return view('upazila::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('upazila::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
-    }
-}
-
-<?php
-
-namespace Modules\Union\Http\Controllers;
-
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Modules\Union\Entities\Union;
+use Modules\Upazila\Entities\Upazila;
 use Modules\Base\Http\Controllers\BaseController;
-use Modules\Union\Http\Requests\UnionFormRequest;
+use Modules\Upazila\Http\Requests\UpazilaFormRequest;
 use Illuminate\Support\Str;
 use DB;
 
-class UnionController extends BaseController
+class UpazilaController extends BaseController
 {
     protected $model;
-    public function __construct(Union $model)
+    public function __construct(Upazila $model)
     {
         $this->model = $model;
     }
@@ -105,9 +25,9 @@ class UnionController extends BaseController
      */
     public function index()
     {
-        if(permission('union-access')){
-            $this->setPageData('Union','Union','fas fa-th-list');
-            return view('union::index');
+        if(permission('upazila-access')){
+            $this->setPageData('Upazila','Upazila','fas fa-th-list');
+            return view('upazila::index');
         }else{
             return $this->unauthorized_access_blocked();
         }
@@ -118,9 +38,9 @@ class UnionController extends BaseController
      * @return $data
      */
     public function get_datatable_data(Request $request){
-        if(permission('union-access')){
+        if(permission('upazila-access')){
             if($request->ajax()){
-                
+
                 if (!empty($request->name)) {
                     $this->model->setName($request->name);
                 }
@@ -134,26 +54,26 @@ class UnionController extends BaseController
                     $no++;
                     $action = '';
 
-                    if(permission('union-edit')){
+                    if(permission('upazila-edit')){
                         $action .= ' <a class="dropdown-item edit_data" data-id="' . $value->Id . '"><i class="fas fa-edit text-primary"></i> Edit</a>';
                     }
-                    if(permission('union-view')){
+                    if(permission('upazila-view')){
                        // $action .= ' <a class="dropdown-item view_data" data-id="' . $value->Id . '"><i class="fas fa-eye text-success"></i> View</a>';
                     }
-                    if(permission('union-delete')){
+                    if(permission('upazila-delete')){
                         $action .= ' <a class="dropdown-item delete_data"  data-id="' . $value->Id . '" data-name="' . $value->Id . '"><i class="fas fa-trash text-danger"></i> Delete</a>';
                     }
-                    
+
                     $row = [];
 
-                    if(permission('union-bulk-delete')){
+                    if(permission('upazila-bulk-delete')){
                         $row[] = table_checkbox($value->Id);
                     }
-                    
+
                     $row[] = $no;
-                    $row[] = $value->UnionName;
+                    $row[] = $value->UpazilaName;
                     $row[] = $value->ShortName;
-                    // $row[] = permission('union-edit') ? change_status($value->Id,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
+                    // $row[] = permission('upazila-edit') ? change_status($value->Id,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
                     $row[] = action_button($action);
                     $data[] = $row;
                 }
@@ -173,10 +93,10 @@ class UnionController extends BaseController
      * @param int $id
      * @return Renderable
      */
-    public function store_or_update_data(UnionFormRequest $request)
+    public function store_or_update_data(UpazilaFormRequest $request)
     {
         if($request->ajax()){
-            if(permission('Union-add') || permission('union-edit')){
+            if(permission('Upazila-add') || permission('upazila-edit')){
                 try{
                     $collection = collect($request->validated());
                     if(isset($request->Id) && !empty($request->Id)){
@@ -202,12 +122,12 @@ class UnionController extends BaseController
                     // return response()->json(['status'=>'error','message'=>$e->getMessage()]);
                     return response()->json(['status'=>'error','message'=>'Something went wrong !']);
                 }
-                
+
             }else{
                 $output = $this->access_blocked();
                 return response()->json($output);
             }
-            
+
         }else{
            return response()->json($this->access_blocked());
         }
@@ -221,7 +141,7 @@ class UnionController extends BaseController
     public function delete(Request $request)
     {
         if($request->ajax()){
-            if (permission('union-delete')) {
+            if (permission('upazila-delete')) {
                 $result = $this->model->where('Id',$request->id)->delete();
                 $output = $this->store_message($result,$request->Id);
                 return response()->json($output);
@@ -242,7 +162,7 @@ class UnionController extends BaseController
     {
         try{
             if($request->ajax()){
-                if (permission('union-edit')) {
+                if (permission('upazila-edit')) {
                        $result = $this->update_change_status($request);
                     if($result){
                         return response()->json(['status'=>'success','message'=>'Status Changed Successfully']);
@@ -274,14 +194,14 @@ class UnionController extends BaseController
      */
     public function show(Request $request)
     {
-        if(permission('union-view')){
+        if(permission('upazila-view')){
             if($request->ajax()){
-                if (permission('union-view')) {
-                    $Unions= union::where('Id','=',$request->id)->first(); 
+                if (permission('upazila-view')) {
+                    $Upazilas= DB::table('Upazila')->where('Id','=',$request->id)->first();
                 }
             }
-            return view('union::details',compact('Unions'))->render();
-        
+            return view('upazila::details',compact('Upazilas'))->render();
+
         }else{
             return $this->unauthorized_access_blocked();
         }
@@ -294,14 +214,14 @@ class UnionController extends BaseController
      */
     public function edit(Request $request)
     {
-        return $data = DB::table('Union')->where('Id',$request->id)->first();
+        return $data = DB::table('Upazila')->where('Id',$request->id)->first();
     }
 
     public function bulk_delete(Request $request)
     {
         if($request->ajax()){
             try{
-                if(permission('union-bulk-delete')){
+                if(permission('upazila-bulk-delete')){
                     $result = $this->model->whereIn('Id',$request->ids)->delete();
                     $output = $this->bulk_delete_message($result);
                 }else{
