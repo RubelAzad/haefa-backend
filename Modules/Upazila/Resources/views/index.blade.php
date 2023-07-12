@@ -104,7 +104,7 @@
                     <form id="form-filter">
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="name">Gender Code</label>
+                                <label for="name">Upazila Name</label>
                                 <input type="text" class="form-control" name="name" id="name" placeholder="Enter Upazila Name">
                             </div>
                             <div class="form-group col-md-8 pt-24">
@@ -396,7 +396,7 @@ $(document).on('click', '.edit_data', function () {
                     backdrop: 'static',
                 });
                 $('#store_or_update_modal .modal-title').html(
-                    '<i class="fas fa-edit"></i> <span>Edit union</span>');
+                    '<i class="fas fa-edit"></i> <span>Edit Upazila</span>');
                 $('#store_or_update_modal #save-btn').text('Update');
 
             },

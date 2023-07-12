@@ -222,6 +222,11 @@ $(document).ready(function() {
             "data": function(data) {
                 data.name = $("#form-filter #name").val();
                 data._token = _token;
+            },
+            "error": function(xhr, status, error) {
+                console.log(xhr);
+                console.log(status);
+                console.log(error);
             }
         },
         "columnDefs": [{

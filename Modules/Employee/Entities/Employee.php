@@ -60,7 +60,6 @@ class Employee extends BaseModel
             if ($this->lengthVlaue != -1) {
                 $query->offset($this->startVlaue)->limit($this->lengthVlaue);
             }
-             var_dump($query); die();
             return $query->get();
         } catch (\Exception $e) {
             dd($e->getMessage()); // Display only the error message

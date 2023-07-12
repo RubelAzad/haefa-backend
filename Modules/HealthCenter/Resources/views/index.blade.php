@@ -86,8 +86,8 @@
                     <h2 class="dt-page__title mb-0 text-primary"><i class="{{ $page_icon }}"></i> {{ $sub_title }}</h2>
                 </div>
                 <!-- /entry heading -->
-                @if (permission('union-add'))
-                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add Union','Save');removeId()">
+                @if (permission('healthcenter-add'))
+                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add HealthCenter','Save');removeId()">
                     <i class="fas fa-plus-square"></i> Add New
                  </button>
                 @endif
@@ -104,8 +104,8 @@
                     <form id="form-filter">
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="name">Union Name</label>
-                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter UnionName">
+                                <label for="name">HealthCenter Code</label>
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter HealthCenter Code">
                             </div>
                             <div class="form-group col-md-8 pt-24">
                                <button type="button" class="btn btn-danger btn-sm float-right" id="btn-reset"
@@ -122,7 +122,7 @@
                     <table id="dataTable" class="table table-striped table-bordered table-hover">
                         <thead class="bg-primary">
                             <tr>
-                                @if (permission('union-bulk-delete'))
+                                @if (permission('healthcenter-bulk-delete'))
                                 <th>
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="select_all" onchange="select_all()">
@@ -131,8 +131,8 @@
                                 </th>
                                 @endif
                                 <th>Sl</th>
-                                <th>Union Name</th>
-                                <th>Short Name</th>
+                                <th>HealthCenter Code</th>
+                                <th>HealthCenter Name</th>
                                 <!-- <th>Status</th> -->
                                 <th>Action</th>
                             </tr>
@@ -153,8 +153,8 @@
     <!-- /grid -->
 
 </div>
-@include('union::view-modal')
-@include('union::add-edit-modal')
+@include('healthcenter::view-modal')
+@include('healthcenter::add-edit-modal')
 @endsection
 
 @push('script')
@@ -177,7 +177,7 @@ $(document).ready(function(){
             zeroRecords: '<strong class="text-danger">No Data Found</strong>'
         },
         "ajax": {
-            "url": "{{route('union.datatable.data')}}",
+            "url": "{{route('healthcenter.datatable.data')}}",
             "type": "POST",
             "data": function (data) {
                 data.name = $("#form-filter #name").val();
@@ -185,7 +185,7 @@ $(document).ready(function(){
             }
         },
         "columnDefs": [{
-                @if (permission('union-bulk-delete'))
+                @if (permission('healthcenter-bulk-delete'))
                 "targets": [0,4],
                 @else
                 "targets": [3],
@@ -194,7 +194,7 @@ $(document).ready(function(){
                 "className": "text-center"
             },
             {
-                @if (permission('union-bulk-delete'))
+                @if (permission('healthcenter-bulk-delete'))
                 "targets": [1,3],
                 @else
                 "targets": [0,2],
@@ -207,7 +207,7 @@ $(document).ready(function(){
             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'<'float-right'p>>>",
 
         "buttons": [
-            @if (permission('union-report'))
+            @if (permission('healthcenter-report'))
             {
                 'extend':'colvis','className':'btn btn-secondary btn-sm text-white','text':'Column'
             },
@@ -216,7 +216,7 @@ $(document).ready(function(){
                 'text':'Excel',
                 'className':'btn btn-secondary btn-sm text-white',
                 "title": "Menu List",
-                "filename": "union",
+                "filename": "HealthCenter",
                 "exportOptions": {
                     columns: function (index, data, node) {
                         return table.column(index).visible();
@@ -228,7 +228,7 @@ $(document).ready(function(){
                 'text':'PDF',
                 'className':'btn btn-secondary btn-sm text-white',
                 "title": "Menu List",
-                "filename": "union",
+                "filename": "HealthCenter",
                 "orientation": "landscape", //portrait
                 "pageSize": "A4", //A3,A5,A6,legal,letter
                 "exportOptions": {
@@ -236,7 +236,7 @@ $(document).ready(function(){
                 },
             },
             @endif
-            @if (permission('union-bulk-delete'))
+            @if (permission('healthcenter-bulk-delete'))
             {
                 'className':'btn btn-danger btn-sm delete_btn d-none text-white',
                 'text':'Delete',
@@ -260,7 +260,7 @@ $(document).ready(function(){
     $(document).on('click', '#save-btn', function () {
         let form = document.getElementById('store_or_update_form');
         let formData = new FormData(form);
-        let url = "{{route('union.store.or.update')}}";
+        let url = "{{route('healthcenter.store.or.update')}}";
         let id = $('#Id').val();
         let method;
         if (id) {
@@ -278,7 +278,7 @@ $(document).ready(function(){
        // let date = $(this).data('date');
         if (id) {
             $.ajax({
-                url: "{{route('union.show')}}",
+                url: "{{route('healthcenter.show')}}",
                 type: "POST",
                 data: { id: id,_token: _token},
                 success: function (data) {
@@ -303,10 +303,10 @@ $(document).ready(function(){
     $(document).on('click', '.delete_data', function () {
         let id    = $(this).data('id');
         // let name  = $(this).data('name');
-        let name  = "union";
+        let name  = "helthcenter";
         console.log(name);
         let row   = table.row($(this).parent('tr'));
-        let url   = "{{ route('union.delete') }}";
+        let url   = "{{ route('healthcenter.delete') }}";
         let response = delete_data(id, url, table, row, name);
 
     });
@@ -326,7 +326,7 @@ $(document).ready(function(){
                 icon: 'warning',
             });
         }else{
-            let url = "{{route('union.bulk.delete')}}";
+            let url = "{{route('healthcenter.bulk.delete')}}";
             bulk_delete(ids,url,table,rows);
         }
     }
@@ -338,7 +338,7 @@ $(document).on('click', '.change_status', function () {
     let Status    = $(this).data('status');
     let name  = $(this).data('name');
     let row   = table.row($(this).parent('tr'));
-    let url   = "{{ route('union.change.status') }}";
+    let url   = "{{ route('healthcenter.change.status') }}";
     Swal.fire({
         title: 'Are you sure to change ' + name + ' status?',
         icon: 'warning',
@@ -371,6 +371,7 @@ $(document).on('click', '.change_status', function () {
 });
 
 $(document).on('click', '.edit_data', function () {
+    console.log('data')
     let id = $(this).data('id');
     $('#store_or_update_form')[0].reset();
     // $('#store_or_update_form').find('.is-invalid').removeClass('is-invalid');
@@ -378,16 +379,16 @@ $(document).on('click', '.edit_data', function () {
 
     if (id) {
         $.ajax({
-            url: "{{route('union.edit')}}",
+            url: "{{route('healthcenter.edit')}}",
             type: "POST",
             data: { id: id,_token: _token},
             dataType: "JSON",
             success: function (data) {
                 console.log(data);
                 //$('#store_or_update_form #update_id').val(data.AddressTypeId);
-                $('#UnionName').val(data.UnionName);
-                $('#ShortName').val(data.ShortName);
-                $('#Id').val(data.Id);
+                $('#HealthCenterCode').val(data.HealthCenterCode);
+                $('#HealthCenterName').val(data.HealthCenterName);
+                $('#HealthCenterId').val(data.HealthCenterId);
 
                 //$('#store_or_update_form #AddressTypeCode').val(data.AddressTypeCode);
 
@@ -396,7 +397,7 @@ $(document).on('click', '.edit_data', function () {
                     backdrop: 'static',
                 });
                 $('#store_or_update_modal .modal-title').html(
-                    '<i class="fas fa-edit"></i> <span>Edit union</span>');
+                    '<i class="fas fa-edit"></i> <span>Edit HealthCenter</span>');
                 $('#store_or_update_modal #save-btn').text('Update');
 
             },
@@ -408,7 +409,7 @@ $(document).on('click', '.edit_data', function () {
 });
 
 function removeId(){
-    $('#Id').val('');
+    $('#HealthCenterId').val('');
 }
 
 </script>
