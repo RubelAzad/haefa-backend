@@ -6,28 +6,56 @@
 
 @section('content')
 <div class="dt-content">
-    <!-- <div class="row">
-      <div class="col-md-12">
-        <div class="filter-toggle btn-group float-right">
-          <div class="btn btn-primary data-btn" data-start_date="{{ date('Y-m-d') }}" data-end_date="{{ date('Y-m-d') }}">Today</div>
-          <div class="btn btn-primary data-btn" data-start_date="{{ date('Y-m-d',strtotime('-7 day')) }}" data-end_date="{{ date('Y-m-d') }}">This Week</div>
-          <div class="btn btn-primary data-btn active" data-start_date="{{ date('Y-m').'-01' }}" data-end_date="{{ date('Y-m-d') }}">This Month</div>
-          <div class="btn btn-primary data-btn" data-start_date="{{ date('Y').'-01-01' }}" data-end_date="{{ date('Y').'-12-31' }}">This Year</div>
+    
+    <div class="row pt-5">
+      <div class="col-xl-2 col-sm-4">
+        <div class="dt-card dt-chart dt-card__full-height bg-warning align-items-center pt-5">
+        <img src="images/patient.png" alt="Customer" width="30px;">
+          <h4 class="text-white mt-3 mb-0">{{ $patient_count }}</h4>
+          <h2 class="text-white mt-1">All Patient</h2>
         </div>
       </div>
-    </div> -->
-    <!-- Grid -->
-
-
-    <div class="row pt-5">
+      <div class="col-xl-3 col-sm-5">
+        <div class="dt-card dt-chart dt-card__full-height bg-danger align-items-center pt-5">
+        <img src="images/patient.png" alt="Customer" width="30px;">
+          <h4 class="text-white mt-3 mb-0" id="expense">{{ $patient_today_count }}</h4>
+          <h2 class="text-white mt-1">Today Registration Patient</h2>
+        </div>
+      </div>
+      <div class="col-xl-2 col-sm-4">
+        <div class="dt-card dt-chart dt-card__full-height bg-info align-items-center pt-5">
+          <img src="images/customer.svg" alt="Customer" width="30px;">
+          <h4 class="text-white mt-3 mb-0">{{$prescription_total_count}}</h4>
+          <h2 class="text-white mt-1">Total Prescription</h2>
+        </div>
+      </div>
+      <div class="col-xl-2 col-sm-4">
+        <div class="dt-card dt-chart dt-card__full-height bg-info align-items-center pt-5">
+          <img src="images/customer.svg" alt="Customer" width="30px;">
+          <h4 class="text-white mt-3 mb-0">{{$prescription_today_count}}</h4>
+          <h2 class="text-white mt-1">Today Prescription</h2>
+        </div>
+      </div>
+      <div class="col-xl-2 col-sm-4">
+        <div class="dt-card dt-chart dt-card__full-height bg-success align-items-center pt-5">
+        <img src="images/customer.svg" alt="Customer" width="30px;">
+          <h4 class="text-white mt-3 mb-0">{{ $doctor_count }}</h4>
+          <h2 class="text-white mt-1">All Doctor</h2>
+        </div>
+      </div>
     </div>
-
-
-
     <!-- Start :: Bar Chart-->
-    <div class="row">
-    </div>
-    <!-- End :: Bar Chart-->
+        <div class="row py-5">
+            <div class="col-md-12">
+            <div class="card bar-chart">
+                <div class="card-header d-flex align-items-center">
+                <h4>Yearly Report </h4>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!-- End :: Bar Chart-->
+    
   </div>
 @endsection
 
@@ -43,9 +71,9 @@ $(document).ready(function(){
     var start_date = $(this).data('start_date');
     var end_date = $(this).data('end_date');
 
-    $.get("{{ url('dashboard-data') }}/"+start_date+'/'+end_date, function(data){
+    $.get("{{ url('dashboard-data') }}", function(data){
       $('#sale').text(data.sale);
-      $('#purchase').text(data.purchase);
+      $('#patient').text(data.patient);
       $('#profit').text(data.profit);
       $('#expense').text(data.expense);
       $('#customer').text(data.customer);

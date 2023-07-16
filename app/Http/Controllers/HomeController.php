@@ -5,12 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use Modules\Customer\Entities\Customer;
-use Modules\Expense\Entities\Expense;
-use Modules\HRM\Entities\Payroll;
-use Modules\Purchase\Entities\Purchase;
-use Modules\Sale\Entities\Sale;
-use Modules\Supplier\Entities\Supplier;
+use Modules\Patient\Entities\Patient;
+use Modules\Prescription\Entities\Prescription;
+use App\Models\User;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -23,44 +21,50 @@ class HomeController extends Controller
     {
         if (permission('dashboard-access')) {
             $this->setPageData('Dashboard','Dashboard','fas fa-tachometer-alt');
+            
+            $patient_count = Patient::all()->count();
+            $doctor_count = User::where('role_id','=',3)->get()->count();
+            $patient_today_count = Patient::whereDate('CreateDate', Carbon::today())->get()->count();
+            $prescription_total_count = Prescription::all()->count();
+            $prescription_today_count = Prescription::whereDate('CreateDate', Carbon::today())->get()->count();
+            $registrationId=Patient::select('RegistrationId')->get();
 
-            return view('home');
+            return view('home',compact('patient_count','doctor_count','patient_today_count','prescription_total_count','prescription_today_count','registrationId'));
         }else{
             return $this->unauthorized_access_blocked();
         }
     }
 
-    public function dashboard_data($start_date,$end_date)
-    {
-        if($start_date && $end_date)
-        {
-            $sale = Sale::toBase()->whereDate('created_at','>=',$start_date)
-            ->whereDate('created_at','<=',$end_date)->sum('grand_total');
+    // public function dashboard_data()
+    // {
+    //     if($start_date && $end_date)
+    //     {
+    //         $patient = Patient::get()->count();
 
-            $purchase = Purchase::toBase()->whereDate('created_at','>=',$start_date)
-            ->whereDate('created_at','<=',$end_date)->sum('grand_total');
+    //         // $purchase = Purchase::toBase()->whereDate('created_at','>=',$start_date)
+    //         // ->whereDate('created_at','<=',$end_date)->sum('grand_total');
 
-            $customer = Customer::toBase()->whereDate('created_at','>=',$start_date)
-            ->whereDate('created_at','<=',$end_date)->get()->count();
+    //         // $customer = Customer::toBase()->whereDate('created_at','>=',$start_date)
+    //         // ->whereDate('created_at','<=',$end_date)->get()->count();
 
-            $supplier = Supplier::toBase()->whereDate('created_at','>=',$start_date)
-            ->whereDate('created_at','<=',$end_date)->get()->count();
+    //         // $supplier = Supplier::toBase()->whereDate('created_at','>=',$start_date)
+    //         // ->whereDate('created_at','<=',$end_date)->get()->count();
 
-            $expense = Expense::toBase()->whereDate('created_at','>=',$start_date)
-            ->whereDate('created_at','<=',$end_date)->sum('amount');
+    //         // $expense = Expense::toBase()->whereDate('created_at','>=',$start_date)
+    //         // ->whereDate('created_at','<=',$end_date)->sum('amount');
 
-            $data = [
-                'sale' => number_format($sale,2,'.',','),
-                'purchase' => number_format($purchase,2,'.',','),
-                'profit' => number_format(($sale - $purchase),2,'.',','),
-                'customer' => $customer,
-                'supplier' => $supplier,
-                'expense' => number_format($expense,2,'.',','),
-            ];
+    //         $data = [
+    //             'sale' => number_format($sale,2,'.',','),
+    //             'patient' => $patient,
+    //             'profit' => number_format(($sale - $purchase),2,'.',','),
+    //             'customer' => $customer,
+    //             'supplier' => $supplier,
+    //             'expense' => number_format($expense,2,'.',','),
+    //         ];
 
-            return response()->json($data);
-        }
-    }
+    //         return response()->json($data);
+    //     }
+    // }
 
     public function unauthorized()
     {
