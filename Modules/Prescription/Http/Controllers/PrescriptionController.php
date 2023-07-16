@@ -156,7 +156,7 @@ class PrescriptionController extends BaseController
             INNER JOIN RefLabInvestigation as RI on RI.RefLabInvestigationId = I.InvestigationId
             WHERE I.PatientId ='$patient_id' AND  CAST(I.CreateDate AS date)='$create_date' ORDER BY CAST(I.CreateDate AS date) DESC");
 
-            $Treatment= DB::select("SELECT T.Frequency, T.DrugDurationValue, T.OtherDrug, T.SpecialInstruction, Dr.DrugCode, Dr.Description, Dr.DrugDose, Ins.InstructionInBangla, T.CreateDate
+            $Treatment= DB::select("SELECT T.Frequency, T.DrugDurationValue, T.OtherDrug, T.SpecialInstruction,T.DrugDose, Dr.DrugCode, Dr.Description, Dr.DrugDose, Ins.InstructionInBangla, T.CreateDate
             FROM MDataTreatmentSuggestion as T
             INNER JOIN RefDrug as Dr on Dr.DrugId = T.DrugId
             INNER JOIN RefInstruction as Ins on Ins.RefInstructionId = T.RefInstructionId
