@@ -7,7 +7,6 @@ use Modules\Base\Entities\BaseModel;
 class Employee extends BaseModel
 {
     protected $table = 'Employee';
-    protected $primaryKey = 'EmployeeId';
     public $timestamps = false;
 
     protected $fillable = ['EmployeeId','OrgId','EmployeeCode','RegistrationNumber','FirstName'

@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0",
+        "dyrynda/laravel-model-uuid": "^6.6",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
         "gladcodes/keygen": "^1.1",
@@ -19,7 +20,8 @@
         "milon/barcode": "^10.0",
         "nwidart/laravel-modules": "8.2.*",
         "picqer/php-barcode-generator": "^2.2",
-        "typicms/nestablecollection": "^1.1"
+        "typicms/nestablecollection": "^1.1",
+        "webpatser/laravel-uuid": "^4.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",
