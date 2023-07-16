@@ -76,7 +76,7 @@ class RefDepartmentController extends BaseController
                     $row[] = $no;
                     $row[] = $value->DepartmentCode;
                     $row[] = $value->Description;
-                    $row[] = permission('refdepartment-edit') ? change_status($value->RefDepartmentId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
+                    // $row[] = permission('refdepartment-edit') ? change_status($value->RefDepartmentId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
                     $row[] = action_button($action);
                     $data[] = $row;
                 }

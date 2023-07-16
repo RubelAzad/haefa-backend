@@ -133,7 +133,7 @@
                                 <th>Sl</th>
                                 <th>RCode</th>
                                 <th>Description</th>
-                                <th>Status</th>
+                                <!-- <th>Status</th> -->
                                 <th>Action</th>
                             </tr>
                         </thead>

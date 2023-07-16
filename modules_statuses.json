@@ -51,5 +51,8 @@
     "RefQuestion": true,
     "RefReferral": true,
     "RefSocialBehavior": true,
-    "RefQuestionType": true
+    "RefQuestionType": true,
+    "Union": true,
+    "Upazila": true,
+    "HealthCenter": true
 }

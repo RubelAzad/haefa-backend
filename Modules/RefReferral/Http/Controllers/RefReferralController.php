@@ -76,7 +76,7 @@ class RefReferralController extends BaseController
                     $row[] = $no;
                     $row[] = $value->RCode;
                     $row[] = $value->Description;
-                    $row[] = permission('refreferral-edit') ? change_status($value->RId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
+                    // $row[] = permission('refreferral-edit') ? change_status($value->RId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
                     $row[] = action_button($action);
                     $data[] = $row;
                 }

@@ -76,7 +76,7 @@ class RefDesignationController extends BaseController
                     $row[] = $no;
                     $row[] = $value->DesignationTitle;
                     $row[] = $value->Description;
-                    $row[] = permission('refdesignation-edit') ? change_status($value->RefDesignationId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
+                    // $row[] = permission('refdesignation-edit') ? change_status($value->RefDesignationId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
                     $row[] = action_button($action);
                     $data[] = $row;
                 }

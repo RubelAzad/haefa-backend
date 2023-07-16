@@ -77,7 +77,7 @@ class RefQuestionController extends BaseController
                     $row[] = $value->QuestionModuleName;
                     $row[] = $value->QuestionTitle;
                     $row[] = $value->Description;
-                    $row[] = permission('refquestion-edit') ? change_status($value->QuestionId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
+                    // $row[] = permission('refquestion-edit') ? change_status($value->QuestionId,$value->Status,'refdepartment') : STATUS_LABEL[$value->Status];
                     $row[] = action_button($action);
                     $data[] = $row;
                 }

@@ -415,12 +415,6 @@ $(document).on('click', '.edit_data', function () {
                 $('#addressTypeCode').val(data.AddressTypeCode);
                 $('#description').val(data.Description);
                 $('#SortOrder').val(data.SortOrder);
-                var status = data.Status;
-                if(status=='A'){
-                    $('#activeCheckbox').prop('checked',true);
-                }else{
-                    $('#inactiveCheckbox').prop('checked', true);
-                }
 
                 //$('#store_or_update_form #AddressTypeCode').val(data.AddressTypeCode);
 

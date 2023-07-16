@@ -133,7 +133,7 @@
                                 <th>Sl</th>
                                 <th>CCCode</th>
                                 <th>Description</th>
-                                <th>Status</th>
+                                <!-- <th>Status</th> -->
                                 <th>Action</th>
                             </tr>
                         </thead>

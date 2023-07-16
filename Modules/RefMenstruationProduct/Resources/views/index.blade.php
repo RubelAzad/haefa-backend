@@ -133,7 +133,7 @@
                                 <th>Sl</th>
                                 <th>MenstruationProductCode</th>
                                 <th>Description</th>
-                                <th>Status</th>
+                                <!-- <th>Status</th> -->
                                 <th>Action</th>
                             </tr>
                         </thead>
