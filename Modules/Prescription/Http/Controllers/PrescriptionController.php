@@ -126,7 +126,7 @@ class PrescriptionController extends BaseController
             WHERE PPC.PatientId = '$patient_id' AND PPC.CreateDate ='$create_date_time'");
 
             
-                
+            
             $Complaints= DB::select("SELECT PC.ChiefComplain AS ChiefComplain, PC.CCDurationValue AS CCDurationValue,
             PC.OtherCC AS OtherCC, RD.DurationInEnglish AS DurationInEnglish, PC.CreateDate
             FROM MDataPatientCCDetails as PC
@@ -147,27 +147,27 @@ class PrescriptionController extends BaseController
             FROM MDataGlucoseHb
             WHERE PatientId ='$patient_id' AND  CAST(CreateDate AS date)='$create_date' ORDER BY CreateDate DESC");
 
-            $ProvisionalDx= DB::select("SELECT TOP 1 ProvisionalDiagnosis, DiagnosisStatus, OtherProvisionalDiagnosis, CreateDate
+            $ProvisionalDx= DB::select("SELECT ProvisionalDiagnosis, DiagnosisStatus, OtherProvisionalDiagnosis, CreateDate
             FROM MDataProvisionalDiagnosis
             WHERE PatientId ='$patient_id' AND  CAST(CreateDate AS date) ='$create_date'ORDER BY CAST(CreateDate AS date) DESC");
 
-            $Investigation= DB::select("SELECT TOP 1 RI.Investigation, I.OtherInvestigation, I.CreateDate
+            $Investigation= DB::select("SELECT RI.Investigation, I.OtherInvestigation, I.CreateDate
             FROM MDataInvestigation as I
             INNER JOIN RefLabInvestigation as RI on RI.RefLabInvestigationId = I.InvestigationId
             WHERE I.PatientId ='$patient_id' AND  CAST(I.CreateDate AS date)='$create_date' ORDER BY CAST(I.CreateDate AS date) DESC");
 
-            $Treatment= DB::select("SELECT TOP 1 T.Frequency, T.DrugDurationValue, T.OtherDrug, T.SpecialInstruction, Dr.DrugCode, Dr.Description, Dr.DrugDose, Ins.InstructionInBangla, T.CreateDate
+            $Treatment= DB::select("SELECT T.Frequency, T.DrugDurationValue, T.OtherDrug, T.SpecialInstruction, Dr.DrugCode, Dr.Description, Dr.DrugDose, Ins.InstructionInBangla, T.CreateDate
             FROM MDataTreatmentSuggestion as T
             INNER JOIN RefDrug as Dr on Dr.DrugId = T.DrugId
             INNER JOIN RefInstruction as Ins on Ins.RefInstructionId = T.RefInstructionId
             WHERE T.PatientId ='$patient_id' AND  CAST(T.CreateDate AS date)='$create_date' ORDER BY CAST(T.CreateDate AS date) DESC");
 
-            $Advice= DB::select("SELECT TOP 1 RA.AdviceInBangla, RA.AdviceInEnglish, A.CreateDate
+            $Advice= DB::select("SELECT RA.AdviceInBangla, RA.AdviceInEnglish, A.CreateDate
             FROM MDataAdvice as A
             INNER JOIN RefAdvice as RA on RA.AdviceId = A.AdviceId
             WHERE A.PatientId ='$patient_id' AND  CAST(A.CreateDate AS date)='$create_date' ORDER BY CAST(A.CreateDate AS date) DESC");
 
-            $PatientReferral= DB::select("SELECT TOP 1 RR.Description, HC.HealthCenterName, PR.CreateDate
+            $PatientReferral= DB::select("SELECT RR.Description, HC.HealthCenterName, PR.CreateDate
             FROM MDataPatientReferral as PR
             INNER JOIN RefReferral as RR on RR.RId = PR.RId
             INNER JOIN HealthCenter as HC on HC.HealthCenterId = PR.HealthCenterId
