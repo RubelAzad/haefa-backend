@@ -53,9 +53,9 @@
 
               <p class="mb-0 mt-2  pe-2">Date:</p>
               <p class="mb-0 mt-2  pe-2">{{ ++$key }}.{{ $PDX->ProvisionalDiagnosis !="" ? $PDX->ProvisionalDiagnosis : $PDX->OtherProvisionalDiagnosis }} [
-                <?php if($PDX->DiagnosisStatus == "P"){?>
+                <?php if($PDX->DiagnosisStatus == "N" || $PDX->DiagnosisStatus == "n"){?>
                   Presumptive
-                  <?php }elseif($PDX->DiagnosisStatus == "C"){?>
+                  <?php }elseif($PDX->DiagnosisStatus == "Y" || $PDX->DiagnosisStatus == "y"){?>
                     Confirmed
                   <?php }else{?>
                     Unspecified
@@ -75,8 +75,8 @@
             <h2 class="mb-4">℞</h2>
             <div class="medicine mb-4">
               @foreach($Treatment as $key => $TMS)
-              <p class="mb-0"><b>{{ ++$key }} .</b> {{ $TMS->Description }}</p>
-              <i>{{ $TMS->Frequency }} - {{ $TMS->SpecialInstruction }}
+              <p class="mb-0"><b>{{ ++$key }} .</b> {{ $TMS->DrugCode }}({{ $TMS->DrugDose }})</p>
+              <i>{{ $TMS->Frequency }} - {{ $TMS->InstructionInBangla }}
 
 
               <?php 
