@@ -3,7 +3,7 @@
 var HeartRate1 = {!! json_encode($HeartRate1) !!};
 
 
-Highcharts.chart('container', {
+Highcharts.chart('container_heart', {
     chart: {
         type: 'spline'
     },
