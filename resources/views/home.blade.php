@@ -4,6 +4,12 @@
 <link rel="stylesheet" href="css/chart.min.css">
 @endpush
 
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
 @section('content')
 <div class="dt-content">
     
@@ -49,9 +55,73 @@
             <div class="col-md-12">
             <div class="card bar-chart">
                 <div class="card-header d-flex align-items-center">
-                <h4>Yearly Report </h4>
+                <h4>Patient wise Blood Pressure Graph </h4>
                 </div>
             </div>
+
+            <!-- Card -->
+            <div class="dt-card">
+                <!-- Card Body -->
+                <div class="dt-card__body">
+
+                    <form id="form-filter" method="GET" action="{{url('patient-blood-pressure-graph')}}">
+
+                        <div class="row">
+                            <div class="form-group col-md-2">
+                                <label for="name">Date From</label>
+                                <input type="date" class="form-control" value="<?php echo $_GET['starting_date']??'' ?>" name="starting_date" id="starting_date"
+                                    placeholder="Date From">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="name">Date To </label>
+                                <input type="date" class="form-control" value="<?php echo $_GET['ending_date']??'' ?>" name="ending_date" id="ending_date"
+                                    placeholder="Date To">
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label for="name">Registration Id</label>
+
+                                <select class="selectpicker" data-live-search="true" name="registration_id" id="registration_id">
+                                    <option value="">Select Registration ID</option> <!-- Empty option added -->
+
+                                    @foreach($registrationId as $registration_id)
+                                        <option value="{{$registration_id->RegistrationId}}">{{$registration_id->RegistrationId}}</option>
+
+                                    @endforeach
+
+                                </select>
+                            </div>
+                            <div class="col-md-2 warning-searching invisible" id="warning-searching">
+                                <span class="text-danger" id="warning-message">Searching...Please Wait</span>
+                                <span class="spinner-border text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-md-2 pt-24">
+
+                                <button type="button" id="search" class="btn btn-primary btn-sm float-right mr-2">
+                                    <i class="fas fa-search"></i>
+                                </button>
+
+                                <button type="button" id="refresh" class="btn btn-primary btn-sm float-right mr-2 refresh">
+                                <i class="fas fa-sync-alt"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <figure class="highcharts-figure">
+                                    <div id="container"></div>
+                                </figure>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <!-- /card body -->
+
+                </div>
+                <!-- /card -->
+
             </div>
         </div>
         <!-- End :: Bar Chart-->
@@ -62,6 +132,7 @@
 
 @push('script')
 <script src="js/chart.min.js"></script>
+
 <script>
 $(document).ready(function(){
 
@@ -288,5 +359,43 @@ $(document).ready(function(){
     });
   }
 });
+
+
+// Report patient blood pressure
+
+$('#refresh').click(function(){
+    $('#starting_date').val('');
+    $('#ending_date').val('');
+
+    $('.selectpicker').selectpicker('val', '');
+    $('#container').html('');
+});
+
+$('#search').click(function() {
+    var starting_date = $('#starting_date').val();
+    var ending_date = $('#ending_date').val();
+    var registration_id = $('#registration_id').val();
+
+    $.ajax({
+        url: "{{ url('ajax-patient-blood-pressure') }}",
+        type: "get",
+        data: { starting_date: starting_date, ending_date: ending_date, registration_id: registration_id },
+        dataType: "html",
+        beforeSend: function(){
+            $('#warning-searching').removeClass('invisible');
+        },
+        complete: function(){
+            $('#warning-searching').addClass('invisible');
+        },
+        success: function(data) {
+            $('#container').html(data);
+        },
+        error: function(xhr, ajaxOption, thrownError) {
+            console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
+        }
+    });
+});
+
+
 </script>
 @endpush
