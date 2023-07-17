@@ -229,13 +229,12 @@
 
 @push('script')
     <script src="js/spartan-multi-image-picker-min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+    <script src="js/JsBarcode.all.min.js"></script>
+    <script src="js/pdfmake.min.js"></script>
+    <script src="js/vfs_fonts.js"></script>
+    <script src="js/html2canvas.min.js"></script>
+    <script src="js/jspdf.min.js"></script>
+    <script src="js/html2pdf.bundle.min.js"></script>
 
     <script>
         var table;
@@ -244,17 +243,6 @@
 
 
 
-            $('.summernote').summernote({
-                tabsize: 2,
-                height: 120,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
             table = $('#dataTable').DataTable({
                 "processing": true, //Feature control the processing indicator
                 "serverSide": true, //Feature control DataTable server side processing mode

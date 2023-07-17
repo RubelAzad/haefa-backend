@@ -4,11 +4,11 @@
 <link rel="stylesheet" href="css/chart.min.css">
 @endpush
 
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/series-label.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="js/highcharts.js"></script>
+    <script src="js/series-label.js"></script>
+    <script src="js/exporting.js"></script>
+    <script src="js/export-data.js"></script>
+    <script src="js/accessibility.js"></script>
 
 @section('content')
 <div class="dt-content">
