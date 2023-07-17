@@ -28,9 +28,9 @@
 
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="form-group col-md-12 ">
+                            <div class="form-group col-md-12 required">
                                 <label for="HOIllness">HOIllness</label>
-                                <input type="number" name="HOIllness" id="HOIllness" class="form-control " value=""
+                                <input type="number" required="required" name="HOIllness" id="HOIllness" class="form-control " value=""
                                     placeholder="Enter HOIllness">
                             </div>
                         </div>

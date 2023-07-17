@@ -14,6 +14,7 @@ class RefDesignationFormRequest extends FormRequest
     public function rules()
     {
         $rules = [];
+        $rules['DesignationTitle'] = ['required','unique:RefDesignation,DesignationTitle'];
         $rules['WorkPlaceId'] = ['required'];
         $rules['RefDepartmentId'] = ['required'];
         return $rules;

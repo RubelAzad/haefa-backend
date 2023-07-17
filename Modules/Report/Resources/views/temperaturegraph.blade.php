@@ -262,7 +262,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <figure class="highcharts-figure">
-                                    <div id="container"></div>
+                                    <div id="container_temperature"></div>
                                 </figure>
                             </div>
                         </div>
@@ -292,7 +292,7 @@ $('#refresh').click(function(){
     $('#starting_date').val('');
     $('#ending_date').val('');
     $('.selectpicker').selectpicker('val', '');
-    $('#container').html('');
+    $('#container_temperature').html('');
 });
 
 $('#search').click(function() {
@@ -312,7 +312,7 @@ $('#search').click(function() {
             $('#warning-searching').addClass('invisible');
         },
         success: function(data) {
-            $('#container').html(data);
+            $('#container_temperature').html(data);
         },
         error: function(xhr, ajaxOption, thrownError) {
             console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);

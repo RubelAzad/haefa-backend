@@ -3,7 +3,7 @@
 var CurrentTemparature1 = {!! json_encode($CurrentTemparature1) !!};
 
 
-Highcharts.chart('container', {
+Highcharts.chart('container_temperature', {
     chart: {
         type: 'spline'
     },

@@ -14,7 +14,7 @@ class RefMenstruationProductFormRequest extends FormRequest
     public function rules()
     {
         $rules = [];
-        $rules['MenstruationProductCode'] = ['required'];
+        $rules['MenstruationProductCode'] = ['required','unique:RefMenstruationProduct,MenstruationProductCode'];
         return $rules;
     }
 
