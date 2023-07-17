@@ -131,7 +131,18 @@ class PrescriptionController extends BaseController
             PC.OtherCC AS OtherCC, RD.DurationInEnglish AS DurationInEnglish, PC.CreateDate
             FROM MDataPatientCCDetails as PC
             INNER JOIN RefDuration as RD on RD.DurationId = PC.DurationId
-            WHERE PC.PatientId ='$patient_id' AND PC.CreateDate ='$create_date'");
+            WHERE PC.PatientId ='$patient_id' AND PC.CreateDate ='$create_date' ORDER BY CreateDate DESC");
+
+$Complaints= DB::select("SELECT PC.ChiefComplain AS ChiefComplain, PC.CCDurationValue AS CCDurationValue, PC.OtherCC AS OtherCC, RD.DurationInEnglish AS DurationInEnglish, PC.CreateDate AS CreateDate
+FROM MDataPatientCCDetails as PC
+INNER JOIN RefDuration as RD on RD.DurationId = PC.DurationId
+WHERE PatientId = '$request->id' AND CAST(PC.CreateDate AS date)
+= CAST(
+    (SELECT TOP 1 MAX(CreateDate) AS MaxCreateDate
+    FROM MDataPatientCCDetails WHERE PatientId = '$request->id'
+    GROUP BY CAST(CreateDate AS date)
+    ORDER BY MaxCreateDate DESC)
+    AS date) ORDER BY PC.CreateDate");
 
             
 
