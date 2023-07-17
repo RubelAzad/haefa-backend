@@ -52,7 +52,7 @@
               
 
               <p class="mb-0 mt-2  pe-2">Date:</p>
-              <p class="mb-0 mt-2  pe-2">{{ ++$key }}.{{ $PDX->ProvisionalDiagnosis !="" ? $PDX->ProvisionalDiagnosis : $PDX->OtherProvisionalDiagnosis }} [ {{ $PDX->DiseaseGroupName }} ] [
+              <p class="mb-0 mt-2  pe-2">{{ ++$key }}.{{ $PDX->ProvisionalDiagnosis !="" ? $PDX->ProvisionalDiagnosis : $PDX->OtherProvisionalDiagnosis }} [ {{ $PDX->OtherProvisionalDiagnosis }} ] [
                 <?php if($PDX->DiagnosisStatus == "N" || $PDX->DiagnosisStatus == "n"){?>
                   Presumptive
                   <?php }elseif($PDX->DiagnosisStatus == "Y" || $PDX->DiagnosisStatus == "y"){?>

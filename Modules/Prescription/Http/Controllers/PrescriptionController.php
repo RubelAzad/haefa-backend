@@ -166,7 +166,7 @@ class PrescriptionController extends BaseController
             WHERE PatientId ='$patient_id' AND  CAST(CreateDate AS date)='$create_date' ORDER BY CreateDate DESC");
 
             $ProvisionalDx= DB::select("SELECT ProvisionalDiagnosis, DiagnosisStatus, OtherProvisionalDiagnosis,
-            DiseaseGroupName, CreateDate
+            OtherProvisionalDiagnosis, CreateDate
             FROM MDataProvisionalDiagnosis
             WHERE PatientId ='$patient_id' AND  CAST(CreateDate AS date) ='$create_date'ORDER BY CAST(CreateDate AS date) DESC");
 
