@@ -103,21 +103,10 @@
 
 @push('script')
 <script src="js/spartan-multi-image-picker-min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 <script>
 var table;
 $(document).ready(function(){
-      $('.summernote').summernote({
-        tabsize: 2,
-        height: 120,
-        toolbar: [
-          ['style', ['style']],
-          ['font', ['bold', 'underline', 'clear']],
-          ['para', ['ul', 'ol', 'paragraph']],
-          ['table', ['table']],
-          ['view', ['fullscreen', 'codeview', 'help']]
-        ]
-      });
+    
     table = $('#dataTable').DataTable({
         "processing": true, //Feature control the processing indicator
         "serverSide": true, //Feature control DataTable server side processing mode
