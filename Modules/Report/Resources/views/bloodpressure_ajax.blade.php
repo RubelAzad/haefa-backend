@@ -9,7 +9,7 @@ var BPSystolic2 = {!! json_encode($BPSystolic2) !!};
 var BPDiastolic2 = {!! json_encode($BPDiastolic2) !!};
 
 
-Highcharts.chart('container', {
+Highcharts.chart('container_bloodp', {
     chart: {
         type: 'spline'
     },

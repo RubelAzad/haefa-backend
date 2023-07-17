@@ -110,7 +110,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <figure class="highcharts-figure">
-                                    <div id="container"></div>
+                                    <div id="container_bloodp"></div>
                                 </figure>
                             </div>
                         </div>
@@ -121,6 +121,156 @@
 
                 </div>
                 <!-- /card -->
+
+
+
+
+            <!-- heart rate graph -->
+
+            <div class="card bar-chart">
+                <div class="card-header d-flex align-items-center">
+                <h4>Hear Rate Graph </h4>
+                </div>
+            </div>
+
+            <!-- Card -->
+            <div class="dt-card">
+
+                <!-- Card Body -->
+                <div class="dt-card__body">
+
+                    <form id="form-filter" method="GET" action="{{url('patient-blood-pressure-graph')}}">
+
+                        <div class="row">
+                            <div class="form-group col-md-2">
+                                <label for="name">Date From</label>
+                                <input type="date" class="form-control" value="<?php echo $_GET['starting_date']??'' ?>" name="starting_date_heart" id="starting_date_heart"
+                                    placeholder="Date From">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="name">Date To </label>
+                                <input type="date" class="form-control" value="<?php echo $_GET['ending_date']??'' ?>" name="ending_date_heart" id="ending_date_heart"
+                                    placeholder="Date To">
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label for="name">Registration Id</label>
+
+                                <select class="selectpicker" data-live-search="true" name="registration_id_heart" id="registration_id_heart">
+                                    <option value="">Select Registration ID</option> <!-- Empty option added -->
+
+                                    @foreach($registrationId as $registration_id)
+                                        <option value="{{$registration_id->RegistrationId}}">{{$registration_id->RegistrationId}}</option>
+
+                                    @endforeach
+
+                                </select>
+                            </div>
+                            <div class="col-md-2 warning-searching invisible" id="warning-searching_heart">
+                                <span class="text-danger" id="warning-message">Searching...Please Wait</span>
+                                <span class="spinner-border text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-md-2 pt-24">
+
+                                <button type="button" id="search_heart" class="btn btn-primary btn-sm float-right mr-2">
+                                    <i class="fas fa-search"></i>
+                                </button>
+
+                                <button type="button" id="refresh_heart" class="btn btn-primary btn-sm float-right mr-2 refresh">
+                                <i class="fas fa-sync-alt"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <figure class="highcharts-figure">
+                                    <div id="container_heart"></div>
+                                </figure>
+                            </div>
+                        </div>
+                    </form>
+
+
+
+                </div>
+                <!-- /card body -->
+
+            </div>
+            <!-- /card -->
+
+          <!-- Temperature graph  -->
+
+          <div class="card bar-chart">
+                <div class="card-header d-flex align-items-center">
+                <h4>Temperature Graph </h4>
+                </div>
+            </div>
+
+          <!-- Card -->
+          <div class="dt-card">
+
+          <!-- Card Body -->
+          <div class="dt-card__body">
+
+              <form id="form-filter" method="GET" action="{{url('patient-blood-pressure-graph')}}">
+
+                  <div class="row">
+                      <div class="form-group col-md-2">
+                          <label for="name">Date From</label>
+                          <input type="date" class="form-control" value="<?php echo $_GET['starting_date']??'' ?>" name="starting_date_temperature" id="starting_date_temperature"
+                              placeholder="Date From">
+                      </div>
+                      <div class="form-group col-md-2">
+                          <label for="name">Date To </label>
+                          <input type="date" class="form-control" value="<?php echo $_GET['ending_date']??'' ?>" name="ending_date_temperature" id="ending_date_temperature"
+                              placeholder="Date To">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                          <label for="name">Registration Id</label>
+
+                          <select class="selectpicker" data-live-search="true" name="registration_id_temperature" id="registration_id_temperature">
+                              <option value="">Select Registration ID</option> <!-- Empty option added -->
+
+                              @foreach($registrationId as $registration_id)
+                                  <option value="{{$registration_id->RegistrationId}}">{{$registration_id->RegistrationId}}</option>
+
+                              @endforeach
+
+                          </select>
+                      </div>
+                      <div class="col-md-2 warning-searching invisible" id="warning-searching_temperature">
+                          <span class="text-danger" id="warning-message">Searching...Please Wait</span>
+                          <span class="spinner-border text-danger"></span>
+                      </div>
+
+                      <div class="form-group col-md-2 pt-24">
+
+                          <button type="button" id="search_temperature" class="btn btn-primary btn-sm float-right mr-2">
+                              <i class="fas fa-search"></i>
+                          </button>
+
+                          <button type="button" id="refresh_temperature" class="btn btn-primary btn-sm float-right mr-2 refresh_temperature">
+                          <i class="fas fa-sync-alt"></i></button>
+                      </div>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-md-12">
+                          <figure class="highcharts-figure">
+                              <div id="container_temperature"></div>
+                          </figure>
+                      </div>
+                  </div>
+              </form>
+
+          </div>
+          <!-- /card body -->
+
+          </div>
+          <!-- /card -->
+
 
             </div>
         </div>
@@ -368,7 +518,7 @@ $('#refresh').click(function(){
     $('#ending_date').val('');
 
     $('.selectpicker').selectpicker('val', '');
-    $('#container').html('');
+    $('#container_bloodp').html('');
 });
 
 $('#search').click(function() {
@@ -388,7 +538,7 @@ $('#search').click(function() {
             $('#warning-searching').addClass('invisible');
         },
         success: function(data) {
-            $('#container').html(data);
+            $('#container_bloodp').html(data);
         },
         error: function(xhr, ajaxOption, thrownError) {
             console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
@@ -396,6 +546,74 @@ $('#search').click(function() {
     });
 });
 
+//hear rate graph 
+$('#refresh_heart').click(function(){
+    $('#starting_date_heart').val('');
+    $('#ending_date_heart').val('');
+    $('.selectpicker').selectpicker('val', '');
+    $('#container_heart').html('');
+});
+
+$('#search_heart').click(function() {
+    var starting_date_heart = $('#starting_date_heart').val();
+    var ending_date_heart = $('#ending_date_heart').val();
+    var registration_id_heart = $('#registration_id_heart').val();
+    console.log(starting_date_heart);
+    console.log(starting_date_heart);
+
+    $.ajax({
+        url: "{{ url('ajax-heart-rate-graph') }}",
+        type: "get",
+        data: { starting_date: starting_date_heart, ending_date: ending_date_heart, registration_id: registration_id_heart },
+        dataType: "html",
+        beforeSend: function(){
+            $('#warning-searching_heart').removeClass('invisible');
+        },
+        complete: function(){
+            $('#warning-searching_heart').addClass('invisible');
+        },
+        success: function(data) {
+            $('#container_heart').html(data);
+        },
+        error: function(xhr, ajaxOption, thrownError) {
+            console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
+        }
+    });
+});
+
+// temperature graph
+$('#refresh_temperature').click(function(){
+    $('#starting_date_temperature').val('');
+    $('#ending_date_temperature').val('');
+    $('.selectpicker').selectpicker('val', '');
+    $('#container_temperature').html('');
+});
+
+$('#search_temperature').click(function() {
+    var starting_date_temperature = $('#starting_date_temperature').val();
+    var ending_date_temperature = $('#ending_date_temperature').val();
+    var registration_id_temperature = $('#registration_id_temperature').val();
+
+    $.ajax({
+        url: "{{ url('ajax-temperature-graph') }}",
+        type: "get",
+        data: { starting_date: starting_date_temperature, ending_date: ending_date_temperature, registration_id: registration_id_temperature },
+        dataType: "html",
+        beforeSend: function(){
+            $('#warning-searching_temperature').removeClass('invisible');
+        },
+        complete: function(){
+            $('#warning-searching_temperature').addClass('invisible');
+        },
+        success: function(data) {
+          console.log(data)
+            $('#container_temperature').html(data);
+        },
+        error: function(xhr, ajaxOption, thrownError) {
+            console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
+        }
+    });
+});
 
 </script>
 @endpush

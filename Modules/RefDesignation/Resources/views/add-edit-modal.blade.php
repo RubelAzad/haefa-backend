@@ -28,7 +28,7 @@
 
                     <div class="row">
                         <div class="col-md-12 required">
-                            <x-form.selectbox labelName="WorkPlace" name="WorkPlaceId" id="WorkPlaceId" col="col-md-12" class="selectpicker">
+                            <x-form.selectbox labelName="WorkPlace" required="required" name="WorkPlaceId" id="WorkPlaceId" col="col-md-12" class="selectpicker">
                                 @foreach($workplaces as $workplace)
                                     <option value="{{$workplace->WorkPlaceId??''}}">{{$workplace->WorkPlaceName??""}}</option>
                                 @endforeach
@@ -38,7 +38,7 @@
                     
                     <div class="row">
                         <div class="col-md-12 required">
-                            <x-form.selectbox labelName="Department" name="RefDepartmentId" id="RefDepartmentId" col="col-md-12" class="selectpicker">
+                            <x-form.selectbox labelName="Department" required="required" name="RefDepartmentId" id="RefDepartmentId" col="col-md-12" class="selectpicker">
                                 @foreach($departments as $department)
                                     <option value="{{$department->RefDepartmentId??''}}">{{$department->DepartmentCode??""}}</option>
                                 @endforeach
@@ -47,7 +47,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-12 required">
+                        <div class="col-md-12">
                             <x-form.textbox labelName="Description" name="Description" id="Description" col="col-md-12"
                                 placeholder="Enter description" />
                         </div>        

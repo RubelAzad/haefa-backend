@@ -14,7 +14,7 @@ class UpazilaFormRequest extends FormRequest
     public function rules()
     {
         $rules = [];
-        $rules['UpazilaName'] = ['required'];
+        $rules['UpazilaName'] = ['required','unique:Upazila,UpazilaName'];
         return $rules;
     }
 

@@ -14,7 +14,7 @@ class RefInstructionFormRequest extends FormRequest
     public function rules()
     {
         $rules = [];
-        $rules['InstructionCode'] = ['required'];
+        $rules['InstructionCode'] = ['required','unique:RefInstruction,InstructionCode'];
         return $rules;
     }
 

@@ -221,19 +221,19 @@
                         <div class="row">
                             <div class="form-group col-md-2">
                                 <label for="name">Date From</label>
-                                <input type="date" class="form-control" value="<?php echo $_GET['starting_date']??'' ?>" name="starting_date" id="starting_date"
+                                <input type="date" class="form-control" value="<?php echo $_GET['starting_date']??'' ?>" name="starting_date_heart" id="starting_date_heart"
                                     placeholder="Date From">
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="name">Date To </label>
-                                <input type="date" class="form-control" value="<?php echo $_GET['ending_date']??'' ?>" name="ending_date" id="ending_date"
+                                <input type="date" class="form-control" value="<?php echo $_GET['ending_date']??'' ?>" name="ending_date_heart" id="ending_date_heart"
                                     placeholder="Date To">
                             </div>
 
                             <div class="form-group col-md-3">
                                 <label for="name">Registration Id</label>
 
-                                <select class="selectpicker" data-live-search="true" name="registration_id" id="registration_id">
+                                <select class="selectpicker" data-live-search="true" name="registration_id_heart" id="registration_id_heart">
                                     <option value="">Select Registration ID</option> <!-- Empty option added -->
 
                                     @foreach($registrationId as $registration_id)
@@ -243,18 +243,18 @@
 
                                 </select>
                             </div>
-                            <div class="col-md-2 warning-searching invisible" id="warning-searching">
+                            <div class="col-md-2 warning-searching invisible" id="warning-searching_heart">
                                 <span class="text-danger" id="warning-message">Searching...Please Wait</span>
                                 <span class="spinner-border text-danger"></span>
                             </div>
 
                             <div class="form-group col-md-2 pt-24">
 
-                                <button type="button" id="search" class="btn btn-primary btn-sm float-right mr-2">
+                                <button type="button" id="search_heart" class="btn btn-primary btn-sm float-right mr-2">
                                     <i class="fas fa-search"></i>
                                 </button>
 
-                                <button type="button" id="refresh" class="btn btn-primary btn-sm float-right mr-2 refresh">
+                                <button type="button" id="refresh_heart" class="btn btn-primary btn-sm float-right mr-2 refresh">
                                 <i class="fas fa-sync-alt"></i></button>
                             </div>
                         </div>
@@ -262,7 +262,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <figure class="highcharts-figure">
-                                    <div id="container"></div>
+                                    <div id="container_heart"></div>
                                 </figure>
                             </div>
                         </div>
@@ -288,118 +288,37 @@
 @push('script')
 
 <script>
-$('#refresh').click(function(){
-    $('#starting_date').val('');
-    $('#ending_date').val('');
+$('#refresh_heart').click(function(){
+    $('#starting_date_heart').val('');
+    $('#ending_date_heart').val('');
     $('.selectpicker').selectpicker('val', '');
-    $('#container').html('');
+    $('#container_heart').html('');
 });
 
-$('#search').click(function() {
-    var starting_date = $('#starting_date').val();
-    var ending_date = $('#ending_date').val();
-    var registration_id = $('#registration_id').val();
+$('#search_heart').click(function() {
+    var starting_date_heart = $('#starting_date_heart').val();
+    var ending_date_heart = $('#ending_date_heart').val();
+    var registration_id_heart = $('#registration_id_heart').val();
 
     $.ajax({
         url: "{{ url('ajax-heart-rate-graph') }}",
         type: "get",
-        data: { starting_date: starting_date, ending_date: ending_date, registration_id: registration_id },
+        data: { starting_date: starting_date_heart, ending_date: ending_date_heart, registration_id: registration_id_heart },
         dataType: "html",
         beforeSend: function(){
-            $('#warning-searching').removeClass('invisible');
+            $('#warning-searching_heart').removeClass('invisible');
         },
         complete: function(){
-            $('#warning-searching').addClass('invisible');
+            $('#warning-searching_heart').addClass('invisible');
         },
         success: function(data) {
-            $('#container').html(data);
+            $('#container_heart').html(data);
         },
         error: function(xhr, ajaxOption, thrownError) {
             console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
         }
     });
 });
-
-var HeartRate1 = {!! json_encode($HeartRate1) !!};
-
-
-Highcharts.chart('container', {
-    chart: {
-        type: 'spline'
-    },
-    credits: {
-        enabled: false
-    },
-    title: {
-        text: 'Heart Rate Graph'
-    },
-    xAxis: {
-
-        categories: {!! json_encode($DistinctDate) !!},
-
-        // categories: ['Jan 2003', 'Feb 2003', 'Mar', 'Apr', 'May', 'Jun',
-        //     'Jul'
-        // ],
-
-        accessibility: {
-            description: 'Months of the year'
-        },
-        labels: {
-            style: {
-                fontSize: '12px'
-            }
-        }
-    },
-    yAxis: {
-        title: {
-            text: 'Heart Rate '
-        },
-        labels: {
-            style: {
-                fontSize: '12px'
-            }
-        }
-    },
-    tooltip: {
-        crosshairs: true,
-        shared: false
-    },
-
-    plotOptions: {
-        spline: {
-            marker: {
-                radius: 4,
-                lineColor: '#666666',
-                lineWidth: 1
-            },
-            dataLabels: {
-                enabled: true,
-                formatter: function() {
-                    var index = this.point.index;
-                    var HeartRate = HeartRate1[index];
-
-                    var label =  HeartRate;
-                    return label;
-
-                },
-                style: {
-                    fontSize: '12px'
-                }
-            }
-        }
-    },
-    series: [{
-            name: 'Heart Rate',
-            marker: {
-                symbol: 'square'
-            },
-            // data: [5.22, 5.7, 8.7, 13.9, 18.2, 21.4, 1.0]
-            data: <?php echo $HeartRate1Numeric; ?>
-        }
-    ]
-
-});
-
 
 </script>
 @endpush

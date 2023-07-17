@@ -14,7 +14,7 @@ class UnionFormRequest extends FormRequest
     public function rules()
     {
         $rules = [];
-        $rules['UnionName'] = ['required'];
+        $rules['UnionName'] = ['required','unique:Union,UnionName'];
         return $rules;
     }
 
