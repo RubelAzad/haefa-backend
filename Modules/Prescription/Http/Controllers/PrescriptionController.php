@@ -131,18 +131,25 @@ class PrescriptionController extends BaseController
             PC.OtherCC AS OtherCC, RD.DurationInEnglish AS DurationInEnglish, PC.CreateDate
             FROM MDataPatientCCDetails as PC
             INNER JOIN RefDuration as RD on RD.DurationId = PC.DurationId
-            WHERE PC.PatientId ='$patient_id' AND PC.CreateDate ='$create_date' ORDER BY CreateDate DESC");
+            WHERE PC.PatientId ='$patient_id' AND CAST(PC.CreateDate AS date) ='$create_date'");
 
-$Complaints= DB::select("SELECT PC.ChiefComplain AS ChiefComplain, PC.CCDurationValue AS CCDurationValue, PC.OtherCC AS OtherCC, RD.DurationInEnglish AS DurationInEnglish, PC.CreateDate AS CreateDate
-FROM MDataPatientCCDetails as PC
-INNER JOIN RefDuration as RD on RD.DurationId = PC.DurationId
-WHERE PatientId = '$request->id' AND CAST(PC.CreateDate AS date)
-= CAST(
-    (SELECT TOP 1 MAX(CreateDate) AS MaxCreateDate
-    FROM MDataPatientCCDetails WHERE PatientId = '$request->id'
-    GROUP BY CAST(CreateDate AS date)
-    ORDER BY MaxCreateDate DESC)
-    AS date) ORDER BY PC.CreateDate");
+             
+// $Complaints= DB::select("SELECT PC.ChiefComplain AS ChiefComplain, PC.CCDurationValue AS CCDurationValue,
+// PC.OtherCC AS OtherCC, RD.DurationInEnglish AS DurationInEnglish, PC.CreateDate
+// FROM MDataPatientCCDetails as PC
+// INNER JOIN RefDuration as RD on RD.DurationId = PC.DurationId
+// WHERE PC.PatientId ='$patient_id' AND PC.CreateDate ='$create_date' ORDER BY CreateDate DESC");
+
+// $Complaints= DB::select("SELECT PC.ChiefComplain AS ChiefComplain, PC.CCDurationValue AS CCDurationValue, PC.OtherCC AS OtherCC, RD.DurationInEnglish AS DurationInEnglish, PC.CreateDate AS CreateDate
+// FROM MDataPatientCCDetails as PC
+// INNER JOIN RefDuration as RD on RD.DurationId = PC.DurationId
+// WHERE PatientId = '$request->id' AND CAST(PC.CreateDate AS date)
+// = CAST(
+//     (SELECT TOP 1 MAX(CreateDate) AS MaxCreateDate
+//     FROM MDataPatientCCDetails WHERE PatientId = '$request->id'
+//     GROUP BY CAST(CreateDate AS date)
+//     ORDER BY MaxCreateDate DESC)
+//     AS date) ORDER BY PC.CreateDate");
 
             
 
@@ -158,7 +165,8 @@ WHERE PatientId = '$request->id' AND CAST(PC.CreateDate AS date)
             FROM MDataGlucoseHb
             WHERE PatientId ='$patient_id' AND  CAST(CreateDate AS date)='$create_date' ORDER BY CreateDate DESC");
 
-            $ProvisionalDx= DB::select("SELECT ProvisionalDiagnosis, DiagnosisStatus, OtherProvisionalDiagnosis, CreateDate
+            $ProvisionalDx= DB::select("SELECT ProvisionalDiagnosis, DiagnosisStatus, OtherProvisionalDiagnosis,
+            DiseaseGroupName, CreateDate
             FROM MDataProvisionalDiagnosis
             WHERE PatientId ='$patient_id' AND  CAST(CreateDate AS date) ='$create_date'ORDER BY CAST(CreateDate AS date) DESC");
 
@@ -167,7 +175,7 @@ WHERE PatientId = '$request->id' AND CAST(PC.CreateDate AS date)
             INNER JOIN RefLabInvestigation as RI on RI.RefLabInvestigationId = I.InvestigationId
             WHERE I.PatientId ='$patient_id' AND  CAST(I.CreateDate AS date)='$create_date' ORDER BY CAST(I.CreateDate AS date) DESC");
 
-            $Treatment= DB::select("SELECT T.Frequency, T.DrugDurationValue, T.OtherDrug, T.SpecialInstruction,T.DrugDose, Dr.DrugCode, Dr.Description, Dr.DrugDose, Ins.InstructionInBangla, T.CreateDate
+            $Treatment= DB::select("SELECT T.Frequency, T.DrugDurationValue, T.OtherDrug, T.SpecialInstruction,T.DrugDose, Dr.DrugCode, Dr.Description,Ins.InstructionInBangla, T.CreateDate
             FROM MDataTreatmentSuggestion as T
             INNER JOIN RefDrug as Dr on Dr.DrugId = T.DrugId
             INNER JOIN RefInstruction as Ins on Ins.RefInstructionId = T.RefInstructionId
