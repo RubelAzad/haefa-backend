@@ -67,7 +67,7 @@
             <div class="item pt-3">
               <b class="d-block mb-0 py-2 border-bottom">Lab Investigations</b>
               @foreach($Investigation as $key => $IGS)
-              <p class="mb-0 mt-2 pe-2">{{ ++$key }}. {{ $IGS->Investigation !="" ? $IGS->Investigation : $IGS->OtherInvestigation }}</p>
+              <p class="mb-0 mt-2 pe-2">{{ ++$key }}. {{ $IGS->Investigation}}[{{ $IGS->OtherInvestigation }}]</p>
               @endforeach
             </div>
           </aside>
