@@ -210,6 +210,8 @@
 @endsection
 
 @push('script')
+<script src="js/dataTables.buttons.min.js"></script>
+ <script src="js/buttons.html5.min.js"></script>
 <script>
 var table;
 $(document).ready(function(){
