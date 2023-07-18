@@ -181,7 +181,7 @@ class PrescriptionController extends BaseController
             INNER JOIN RefInstruction as Ins on Ins.RefInstructionId = T.RefInstructionId
             WHERE T.PatientId ='$patient_id' AND  CAST(T.CreateDate AS date)='$create_date' ORDER BY CAST(T.CreateDate AS date) DESC");
 
-            $Advice= DB::select("SELECT RA.AdviceInBangla, RA.AdviceInEnglish, A.CreateDate
+            $Advice= DB::select("SELECT RA.AdviceInBangla, RA.AdviceInEnglish, A.CreateDate,A.Advice
             FROM MDataAdvice as A
             INNER JOIN RefAdvice as RA on RA.AdviceId = A.AdviceId
             WHERE A.PatientId ='$patient_id' AND  CAST(A.CreateDate AS date)='$create_date' ORDER BY CAST(A.CreateDate AS date) DESC");

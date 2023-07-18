@@ -26,7 +26,7 @@
             <div class="item pt-3">
               <b class="d-block mb-0 py-2 border-bottom">Complaints</b>
               @foreach($Complaints as $Complaint)
-              <p class="mb-0 mt-2 pe-2">{{ date('d-m-Y', strtotime($Complaint->CreateDate)) }}: {{ $Complaint->ChiefComplain }} for {{ $Complaint->CCDurationValue }} {{ $Complaint->DurationInEnglish }}</p>
+              <p class="mb-0 mt-2 pe-2">{{ date('d-m-Y', strtotime($Complaint->CreateDate)) }}: {{ $Complaint->ChiefComplain }}[{{$Complaint->OtherCC}}] for {{ $Complaint->CCDurationValue }} {{ $Complaint->DurationInEnglish }}</p>
               @endforeach
             </div>
             <div class="item pt-3">
