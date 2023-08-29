@@ -5,6 +5,7 @@ namespace Modules\Report\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Modules\BarcodeFormat\Entities\BarcodeFormat;
 use Modules\Patient\Entities\Patient;
 use Modules\Report\Entities\Report;
 use Illuminate\Routing\Controller;
@@ -98,6 +99,63 @@ class ReportController extends BaseController
 
         return view('report::index',compact('results','male','Total','female','maleAboveFive','maleBelowFive','femaleAboveFive','femaleBelowFive'));
 
+    }
+    public function branchWisePatients(Request $request){
+        $daterange = $request->daterange;
+        $dates = explode(' - ', $daterange);
+// Assign the start and end dates to separate variables
+        $first_date = $dates[0]??'';
+        $last_date = $dates[1]??'';
+
+        $barcode_prefix = $request->patient_id??"";
+
+        $male=$female=$Total=$femaleAboveFive=0;
+
+        //branches
+        $branches = DB::table('barcode_formats')
+            ->join('HealthCenter', 'barcode_formats.barcode_community_clinic', '=', 'HealthCenter.HealthCenterId')
+            ->select('barcode_formats.barcode_prefix', 'HealthCenter.HealthCenterName')
+            ->get();
+
+        $results = DB::table('barcode_formats')
+            ->join('HealthCenter', 'barcode_formats.barcode_community_clinic', '=', 'HealthCenter.HealthCenterId')
+            ->join('Patient', function ($join) use ($first_date, $last_date, $barcode_prefix) {
+                // Cast uniqueidentifier to string and then extract the first nine characters
+                $join->on(DB::raw('SUBSTRING(CONVERT(VARCHAR(36), Patient.RegistrationId), 1, 9)'), '=', 'barcode_formats.barcode_prefix')
+                    ->whereBetween('Patient.CreateDate', [$first_date, $last_date])
+                    ->Where('barcode_formats.barcode_prefix', $barcode_prefix);
+            })
+            ->join('RefGender','RefGender.GenderId','=','Patient.GenderId')
+            ->get();
+
+//            ->toSql(); $barcode_prefix
+
+//        print_r($results); exit();
+
+        $branchName = $results[0]->HealthCenterName??'';
+
+        foreach ($results as $result){
+            if ($result->GenderCode == 'Male'){
+                $male++;
+            }
+            if ($result->GenderCode == 'Female'){
+                $female++;
+            }
+        }
+
+        $Total=$male+$female;
+
+        $this->setPageData(
+            'Report-'. str_repeat(' ', 2).
+            'Total: '. $Total .','.  str_repeat(' ', 2).
+            'Male: '. $male .','.  str_repeat(' ', 2)  .
+            'Female: '.$female.','. str_repeat(' ', 2) .
+            'Female above 5: '. $femaleAboveFive,
+            'Branch Wise Patient Report',
+            'fas fa-th-list'
+        );
+
+        return view('report::branchwisepatients',compact('branches','branchName','results','male','Total','female'));
     }
     public function GlucoseGraph(Request $request){
         $registrationId=Patient::select('RegistrationId')->get();
