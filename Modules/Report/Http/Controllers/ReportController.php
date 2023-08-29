@@ -122,17 +122,23 @@ class ReportController extends BaseController
             ->join('Patient', function ($join) use ($first_date, $last_date, $barcode_prefix) {
                 // Cast uniqueidentifier to string and then extract the first nine characters
                 $join->on(DB::raw('SUBSTRING(CONVERT(VARCHAR(36), Patient.RegistrationId), 1, 9)'), '=', 'barcode_formats.barcode_prefix')
-                    ->whereBetween('Patient.CreateDate', [$first_date, $last_date])
-                    ->Where('barcode_formats.barcode_prefix', $barcode_prefix);
+                    ->whereBetween('Patient.CreateDate', [$first_date, $last_date]);
+                    if ($barcode_prefix) {
+                        $join->Where('barcode_formats.barcode_prefix', $barcode_prefix);
+                    }
             })
             ->join('RefGender','RefGender.GenderId','=','Patient.GenderId')
             ->get();
 
-//            ->toSql(); $barcode_prefix
-
-//        print_r($results); exit();
-
-        $branchName = $results[0]->HealthCenterName??'';
+        if($barcode_prefix){
+            $barcode_tbl = DB::table('barcode_formats')
+                ->join('HealthCenter', 'barcode_formats.barcode_community_clinic', '=', 'HealthCenter.HealthCenterId')
+                ->where('barcode_formats.barcode_prefix',$barcode_prefix)
+                ->first();
+            $branchName = $barcode_tbl->HealthCenterName??'';
+        }else{
+            $branchName = '';
+        }
 
         foreach ($results as $result){
             if ($result->GenderCode == 'Male'){
@@ -150,7 +156,7 @@ class ReportController extends BaseController
             'Total: '. $Total .','.  str_repeat(' ', 2).
             'Male: '. $male .','.  str_repeat(' ', 2)  .
             'Female: '.$female.','. str_repeat(' ', 2) .
-            'Female above 5: '. $femaleAboveFive,
+            'Branch Name: '. $branchName,
             'Branch Wise Patient Report',
             'fas fa-th-list'
         );
